@@ -1,0 +1,124 @@
+{
+  "users": [
+    {
+      "id": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001",
+      "email": "manager1@crm.ru",
+      "password": "123456",
+      "name": "Алексей Иванов",
+      "createdAt": "2026-03-01T10:00:00Z"
+    },
+    {
+      "id": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002",
+      "email": "manager2@crm.ru",
+      "password": "123456",
+      "name": "Мария Соколова",
+      "createdAt": "2026-03-02T10:00:00Z"
+    }
+  ],
+  "clients": [
+    {
+      "id": "a1b2c3d4-e5f6-4a7b-8c9d-000000000001",
+      "name": "Дмитрий Кузнецов",
+      "phone": "+79990001122",
+      "email": "kuznetsov@mail.ru",
+      "company": "ООО ТехСервис",
+      "website": "https://techservice.ru",
+      "comment": "Постоянный клиент",
+      "createdAt": "2026-02-10T09:00:00Z",
+      "deleted": false,
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
+    },
+    {
+      "id": "a1b2c3d4-e5f6-4a7b-8c9d-000000000002",
+      "name": "Екатерина Орлова",
+      "phone": "+79991112233",
+      "email": "orlova@mail.ru",
+      "company": "ИП Орлова",
+      "website": "https://orlova-shop.ru",
+      "comment": "Интересуется крупными закупками",
+      "createdAt": "2026-02-18T11:30:00Z",
+      "deleted": false,
+      "createdBy": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002"
+    },
+    {
+      "id": "a1b2c3d4-e5f6-4a7b-8c9d-000000000003",
+      "name": "Сергей Морозов",
+      "phone": "+79993334455",
+      "email": "morozov@mail.ru",
+      "company": "ООО СтройПроект",
+      "website": "https://stroyproekt.ru",
+      "comment": "Потенциальный крупный клиент",
+      "createdAt": "2026-03-01T14:00:00Z",
+      "deleted": false,
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
+    }
+  ],
+  "deals": [
+    {
+      "id": "d1000000-0000-4000-8000-000000000001",
+      "title": "Поставка оборудования",
+      "description": "Поставка серверного оборудования",
+      "clientId": "a1b2c3d4-e5f6-4a7b-8c9d-000000000001",
+      "amount": 450000,
+      "status": "in_progress",
+      "createdAt": "2026-03-01T12:00:00Z",
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
+    },
+    {
+      "id": "d1000000-0000-4000-8000-000000000002",
+      "title": "Разработка сайта",
+      "description": "Корпоративный сайт",
+      "clientId": "a1b2c3d4-e5f6-4a7b-8c9d-000000000002",
+      "amount": 120000,
+      "status": "completed",
+      "createdAt": "2026-02-15T10:00:00Z",
+      "completedAt": "2026-03-05T16:00:00Z",
+      "createdBy": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002"
+    },
+    {
+      "id": "d1000000-0000-4000-8000-000000000003",
+      "title": "Техническая поддержка",
+      "description": "Годовой контракт поддержки",
+      "clientId": "a1b2c3d4-e5f6-4a7b-8c9d-000000000003",
+      "amount": 80000,
+      "status": "new",
+      "createdAt": "2026-03-10T09:30:00Z",
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t2000000-0000-4000-8000-000000000001",
+      "title": "Позвонить клиенту",
+      "description": "Обсудить детали сделки",
+      "dealId": "d1000000-0000-4000-8000-000000000001",
+      "assigneeId": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001",
+      "status": "in_progress",
+      "dueDate": "2026-03-15T18:00:00Z",
+      "createdAt": "2026-03-10T10:00:00Z",
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
+    },
+    {
+      "id": "t2000000-0000-4000-8000-000000000002",
+      "title": "Подготовить коммерческое предложение",
+      "description": "Отправить PDF клиенту",
+      "dealId": "d1000000-0000-4000-8000-000000000003",
+      "assigneeId": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002",
+      "status": "new",
+      "dueDate": "2026-03-18T18:00:00Z",
+      "createdAt": "2026-03-11T09:00:00Z",
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
+    },
+    {
+      "id": "t2000000-0000-4000-8000-000000000003",
+      "title": "Закрыть сделку",
+      "description": "Подписать акт выполненных работ",
+      "dealId": "d1000000-0000-4000-8000-000000000002",
+      "assigneeId": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002",
+      "status": "completed",
+      "dueDate": "2026-03-05T15:00:00Z",
+      "createdAt": "2026-02-20T11:00:00Z",
+      "createdBy": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002"
+    }
+  ]
+}
