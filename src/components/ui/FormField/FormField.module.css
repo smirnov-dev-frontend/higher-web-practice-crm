@@ -1,0 +1,22 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  color: #6B7280;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.required {
+  color: #dc2626;
+}
+
+.error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 13px;
+  line-height: 1.4;
+}

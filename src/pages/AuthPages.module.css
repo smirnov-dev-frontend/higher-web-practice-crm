@@ -1,0 +1,121 @@
+.card {
+  width: 100%;
+  max-width:380px;
+  min-height: 370px;
+  padding: 40px 24px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgb(15 23 42 / 10%);
+}
+
+.title {
+  margin: 0 0 24px;
+  color: #1f2937;
+  font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.passwordGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.forgotLink {
+  align-self: flex-end;
+  margin-top: 8px;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.forgotLink:hover {
+  color: #2f80ed;
+}
+
+.submitButton {
+  margin-top: 36px;
+}
+
+.registerSubmitButton {
+  margin-top: 20px;
+}
+
+.error {
+  margin: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fef2f2;
+  color: #dc2626;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.footerText {
+  margin: 24px 0 0;
+  color: #6b7280;
+  text-align: center;
+}
+
+.footerText a {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+
+.recoverySubmitButton {
+  margin-top: 30px;
+}
+
+.confirmationSubmitButton {
+  margin-top: 28px;
+}
+
+.resendBlock {
+  margin-top: 34px;
+}
+
+.resendText {
+  margin: 0 0 12px;
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.success {
+  margin: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+@media (max-width: 560px) {
+  .card {
+    max-width: none;
+    min-height: auto;
+    padding: 40px 20px 24px;
+  }
+
+  .title {
+    margin-bottom: 28px;
+    font-size: 26px;
+  }
+
+  .forgotLink {
+    font-size: 16px;
+  }
+
+  .submitButton {
+    margin-top: 24px;
+  }
+}
