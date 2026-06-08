@@ -1,0 +1,97 @@
+.layout {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 480px 380px;
+  align-items: center;
+  justify-content: center;
+  gap: 120px;
+  padding: auto 230px;
+  background-color: #f8fafc;
+  background: url('/auth-bg.png');
+   background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.info {
+  max-width: 600px;
+}
+
+.logo {
+  display: block;
+  width: 176px;
+  height: auto;
+  margin-bottom: 28px;
+}
+
+.description {
+  max-width: 480px;
+  margin: 0;
+  color: #242b35;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.registerBlock {
+  margin-top: 48px;
+}
+
+.registerText {
+  margin: 0 0 8px;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.registerLink {
+  color: #2563EB;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.registerLink:hover {
+  color: #1d4ed8;
+}
+
+.content {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 48px 24px;
+  }
+
+  .info {
+    max-width: none;
+  }
+
+  .content {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .layout {
+    padding: 32px 16px;
+  }
+
+  .logo {
+    width: 150px;
+  }
+
+  .description {
+    font-size: 16px;
+  }
+
+  .registerBlock {
+    margin-top: 32px;
+  }
+}
