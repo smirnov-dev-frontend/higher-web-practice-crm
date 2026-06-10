@@ -1,0 +1,309 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f9fafb;
+  color: #1f2937;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  overflow: hidden;
+  flex: 0 0 310px;
+  flex-direction: column;
+  width: 310px;
+  height: 100vh;
+  padding: 28px 20px;
+  border-right: 1px solid #d1d5db;
+  background: #f9fafb;
+  transition:
+    flex-basis 0.3s ease,
+    width 0.3s ease;
+}
+
+.sidebarCollapsed {
+  flex-basis: 72px;
+  width: 72px;
+}
+
+.sidebarTop {
+  display: grid;
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) 24px;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sidebarCollapsed .sidebarTop {
+  display: flex;
+  justify-content: center;
+  margin-left: -14px;
+}
+
+.logo {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  min-width: 0;
+  max-width: 100px;
+  opacity: 1;
+  transition:
+    max-width 0.3s ease,
+    opacity 0.2s ease;
+}
+
+.logoImage {
+  display: block;
+  width: 100px;
+  min-width: 100px;
+  height: 24px;
+}
+
+.sidebarCollapsed .logo {
+  max-width: 0;
+  opacity: 0;
+}
+
+.collapseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: #1f2937;
+}
+
+.collapseButton:hover {
+  color: #1d4ed8;
+}
+
+.collapseIcon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  color: currentColor;
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+.collapseIconMirrored {
+  transform: scaleX(-1);
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  border-bottom: 1px solid #d1d5db;
+  padding: 8px 0 8px 3px;
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 400;
+  transition:
+    color 0.2s ease,
+    gap 0.3s ease,
+    padding 0.3s ease;
+}
+
+.navLink:last-child {
+  border-bottom: none;
+}
+
+.navLink:hover,
+.navLinkActive {
+  color: #1d4ed8;
+}
+
+.navIcon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  color: currentColor;
+}
+
+.navText {
+  overflow: hidden;
+  max-width: 180px;
+  opacity: 1;
+  text-overflow: ellipsis;
+  transition:
+    max-width 0.3s ease,
+    opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.sidebarCollapsed .navLink {
+  gap: 0;
+  padding: 8px 0 8px 3px;
+}
+
+.sidebarCollapsed .navText {
+  max-width: 0;
+  opacity: 0;
+}
+
+.sidebarBottom {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+}
+
+.profileButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  color: #1f2937;
+  text-align: left;
+  transition:
+    color 0.2s ease,
+    gap 0.3s ease;
+}
+
+.profileButton:hover,
+.profileButtonActive {
+  color: #1d4ed8;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: #f4c7c3;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebarCollapsed .avatar {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.profileButton:hover .avatar,
+.profileButtonActive .avatar {
+  border-color: #1d4ed8;
+}
+
+.profileInfo {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 180px;
+  opacity: 1;
+  transition:
+    max-width 0.3s ease,
+    opacity 0.2s ease;
+}
+
+.profileName {
+  overflow: hidden;
+  color: currentColor;
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profileEmail {
+  overflow: hidden;
+  color: #6b7280;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebarCollapsed .profileButton {
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.sidebarCollapsed .profileButton:hover,
+.sidebarCollapsed .profileButtonActive {
+  background: transparent;
+}
+
+.sidebarCollapsed .profileInfo {
+  max-width: 0;
+  opacity: 0;
+}
+
+.content {
+  min-width: 0;
+  flex: 1;
+  padding: 22px 26px 34px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    z-index: 20;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    padding: 0 12px;
+    border-top: 1px solid #e5e7eb;
+    border-right: none;
+  }
+
+  .sidebarTop,
+  .sidebarBottom {
+    display: none;
+  }
+
+  .navigation {
+    flex-direction: row;
+    justify-content: space-around;
+    height: 100%;
+  }
+
+  .navLink {
+    justify-content: center;
+    min-height: 64px;
+    border-bottom: none;
+    padding: 0;
+  }
+
+  .navText {
+    display: none;
+  }
+
+  .content {
+    padding: 20px 16px 84px;
+  }
+}

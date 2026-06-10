@@ -1,0 +1,255 @@
+.dashboard {
+  max-width: 1180px;
+}
+
+.header {
+  margin-bottom: 28px;
+}
+
+.title {
+  margin: 0 0 8px;
+  color: #1f2937;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.stats {
+  margin-bottom: 30px;
+}
+
+.statsHeader,
+.statsRow {
+  display: grid;
+  grid-template-columns: 190px repeat(5, 1fr);
+  align-items: center;
+}
+
+.statsHeader {
+  padding: 0 20px 6px;
+  color: #6b7280;
+  font-size: 12px;
+  text-align: center;
+}
+
+.statsRow {
+  min-height: 42px;
+  margin-bottom: 2px;
+  border-radius: 8px;
+  padding: 0 20px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgb(15 23 42 / 10%);
+}
+
+.statsRow strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.statsRow span {
+  color: #10b981;
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.mainNumber {
+  color: #3b82f6 !important;
+  font-size: 23px !important;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.sectionTitle {
+  margin: 0 0 12px;
+  color: #1f2937;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.clientsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.clientCard {
+  min-height: 104px;
+  border-radius: 7px;
+  padding: 14px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgb(15 23 42 / 10%);
+}
+
+.clientCard h3 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.clientCard p {
+  margin: 0 0 22px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.clientCard strong {
+  color: #10b981;
+  font-size: 22px;
+}
+
+.clientCard span {
+  margin-left: 4px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.dealsList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.dealRow {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr;
+  align-items: center;
+  min-height: 31px;
+  border-radius: 7px;
+  padding: 0 20px;
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgb(15 23 42 / 8%);
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.dealRow:nth-child(even) {
+  background: #eef6ff;
+}
+
+.dealRow strong {
+  color: #1f2937;
+  font-weight: 800;
+}
+
+.status {
+  color: #2563eb;
+}
+
+.tasksGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.taskCard {
+  min-height: 90px;
+  border-radius: 7px;
+  padding: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgb(15 23 42 / 10%);
+}
+
+.taskCard:nth-child(2n) {
+  background: #eef6ff;
+}
+
+.taskCardCompleted {
+  background: #ecfdf5 !important;
+}
+
+.taskCard h3 {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.taskCard p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.taskCard > span {
+  display: block;
+  margin-top: 2px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.taskFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.taskFooter strong {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.taskCardCompleted .taskFooter strong {
+  color: #10b981;
+}
+
+.message {
+  margin: 0;
+  color: #6b7280;
+}
+
+@media (max-width: 1100px) {
+  .clientsGrid,
+  .tasksGrid {
+    grid-template-columns: repeat(3, minmax(160px, 1fr));
+  }
+
+  .dealRow {
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dealRow span:nth-last-child(-n + 2) {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .statsHeader {
+    display: none;
+  }
+
+  .statsRow {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 12px;
+  }
+
+  .clientsGrid,
+  .tasksGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dealRow {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 12px;
+  }
+
+  .dealRow span:nth-last-child(-n + 2) {
+    display: block;
+  }
+}
