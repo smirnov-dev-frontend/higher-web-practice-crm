@@ -9,6 +9,7 @@ import { selectCurrentUser } from '../features/auth/authSelectors'
 import {
    formatCurrency,
    formatDate,
+   formatShortDate,
    getDashboardStats,
    getRecentDeals,
    getRecentTasks,
@@ -57,7 +58,7 @@ export function DashboardPage() {
    return (
       <div className={styles.dashboard}>
          <header className={styles.header}>
-            <h1 className={styles.title}>Добро пожаловать, {currentUser?.name ?? 'Пользователь'}!</h1>
+            <h1 className={styles.title}>Добро пожаловать, {currentUser?.name.split(' ')[0] ?? 'Пользователь'}!</h1>
             <p className={styles.subtitle}>
                Посмотрите сводную информацию по вашим клиентам, сделкам и задачам
             </p>
@@ -102,13 +103,13 @@ export function DashboardPage() {
          </section>
 
          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>топ 10 активных клиентов</h2>
+            <h2 className={styles.sectionTitle}>Топ 10 активных клиентов</h2>
 
             <div className={styles.clientsGrid}>
                {topClients.map(({ client, dealsCount }) => (
                   <article className={styles.clientCard} key={client.id}>
                      <h3>{client.name}</h3>
-                     <p>{client.company}</p>
+                     <p>«{client.company}»</p>
                      <strong>{dealsCount}</strong>
                      <span>сделок</span>
                   </article>
@@ -128,12 +129,27 @@ export function DashboardPage() {
                   const client = userClients.find((item) => item.id === deal.clientId)
 
                   return (
-                     <article className={styles.dealRow} key={deal.id}>
+                     <article
+                        className={
+                           deal.status === 'new'
+                              ? `${styles.dealRow} ${styles.dealRowNew}`
+                              : styles.dealRow
+                        }
+                        key={deal.id}
+                     >
                         <span>{deal.title}</span>
-                        <span>{client?.name ?? '—'}</span>
+                        <span className={styles.clientNameCell}>{client?.name ?? '—'}</span>
                         <strong>{formatCurrency(deal.amount)}</strong>
-                        <span className={styles.status}>{dealStatusLabels[deal.status]}</span>
-                        <span>{formatDate(deal.completedAt ?? deal.createdAt)}</span>
+                        <span
+                           className={
+                              deal.status === 'new'
+                                 ? `${styles.status} ${styles.statusNew}`
+                                 : styles.status
+                           }
+                        >
+                           {dealStatusLabels[deal.status]}
+                        </span>
+                        <span className={styles.dateCell}>{formatDate(deal.completedAt ?? deal.createdAt)}</span>
                      </article>
                   )
                })}
@@ -153,8 +169,13 @@ export function DashboardPage() {
 
                   return (
                      <article
-                        className={`${styles.taskCard} ${task.status === 'completed' ? styles.taskCardCompleted : ''
-                           }`}
+                        className={
+                           task.status === 'new'
+                              ? `${styles.taskCard} ${styles.taskCardNew}`
+                              : task.status === 'completed'
+                                 ? `${styles.taskCard} ${styles.taskCardCompleted}`
+                                 : styles.taskCard
+                        }
                         key={task.id}
                      >
                         <h3>{task.title}</h3>
@@ -162,8 +183,18 @@ export function DashboardPage() {
                         <span>{deal?.title ?? 'Без сделки'}</span>
 
                         <div className={styles.taskFooter}>
-                           <span>до {formatDate(task.dueDate)}</span>
-                           <strong>{taskStatusLabels[task.status]}</strong>
+                           <span>до {formatShortDate(task.dueDate)}</span>
+                           <strong
+                              className={
+                                 task.status === 'new'
+                                    ? styles.taskStatusNew
+                                    : task.status === 'in_progress'
+                                       ? styles.taskStatusInProgress
+                                       : styles.taskStatusCompleted
+                              }
+                           >
+                              {taskStatusLabels[task.status]}
+                           </strong>
                         </div>
                      </article>
                   )
