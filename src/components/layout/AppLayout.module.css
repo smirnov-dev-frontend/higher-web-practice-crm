@@ -304,6 +304,8 @@
   }
 
   .content {
-    padding: 20px 16px 84px;
-  }
+  min-width: 0;
+  flex: 1;
+  padding: 24px 32px;
+}
 }

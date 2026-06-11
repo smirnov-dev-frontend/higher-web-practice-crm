@@ -1,149 +1,177 @@
-.dashboard {
-  max-width: 1180px;
-}
-
 .header {
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
 .title {
   margin: 0 0 8px;
   color: #1f2937;
-  font-size: 26px;
-  font-weight: 800;
+  font-family: 'Roboto', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
   line-height: 1.2;
 }
 
 .subtitle {
   margin: 0;
-  color: #6b7280;
-  font-size: 15px;
+  color: #6B7280;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .stats {
-  margin-bottom: 30px;
+  margin-bottom: 3px;
 }
 
 .statsHeader,
 .statsRow {
   display: grid;
-  grid-template-columns: 190px repeat(5, 1fr);
+  width: 100%;
+  grid-template-columns: minmax(0, 240px) repeat(5, minmax(0, 203.2px));
   align-items: center;
+  justify-content: space-between;
 }
 
 .statsHeader {
   padding: 0 20px 6px;
-  color: #6b7280;
-  font-size: 12px;
-  text-align: center;
+  color: #6B7280;
+  font-size: 14px;
+  text-align: start;
 }
 
 .statsRow {
-  min-height: 42px;
+  min-height: 48px;
   margin-bottom: 2px;
   border-radius: 8px;
-  padding: 0 20px;
+  padding: 8px 24px;
   background: #ffffff;
-  box-shadow: 0 4px 14px rgb(15 23 42 / 10%);
+  box-shadow: 0 4px 8px #E5E7EB;
 }
 
 .statsRow strong {
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .statsRow span {
-  color: #10b981;
-  font-size: 18px;
-  font-weight: 800;
-  text-align: center;
+  color: #10B981;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: start;
+  font-family: 'Roboto', sans-serif;
+
 }
 
 .mainNumber {
-  color: #3b82f6 !important;
-  font-size: 23px !important;
+  color: #3B82F6 !important;
+  font-size: 24px !important;
+  font-family: 'Roboto', sans-serif;
+}
+
+.statsRow:last-child {
+   margin-bottom: 32px;
 }
 
 .section {
-  margin-bottom: 30px;
+  margin-bottom: 32px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
 }
 
 .sectionTitle {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   color: #1f2937;
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .clientsGrid {
   display: grid;
   grid-template-columns: repeat(5, minmax(160px, 1fr));
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .clientCard {
-  min-height: 104px;
-  border-radius: 7px;
-  padding: 14px;
+  min-height: 124px;
+  border-radius: 8px;
+  padding: 16px 12px;
   background: #ffffff;
-  box-shadow: 0 4px 14px rgb(15 23 42 / 10%);
+  box-shadow: 0 4px 8px #E5E7EB;
 }
 
 .clientCard h3 {
   margin: 0 0 4px;
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .clientCard p {
-  margin: 0 0 22px;
-  color: #6b7280;
-  font-size: 13px;
+  margin: 0 0 28px;
+  color: #6B7280;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .clientCard strong {
-  color: #10b981;
-  font-size: 22px;
+  color: #10B981;
+  font-size: 24px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .clientCard span {
   margin-left: 4px;
-  color: #9ca3af;
-  font-size: 12px;
+  color: #9CA3AF;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .dealsList {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-bottom: 10px;
+  gap: 4px;
+  margin-bottom: 12px;
 }
 
 .dealRow {
   display: grid;
-  grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr;
-  align-items: center;
-  min-height: 31px;
-  border-radius: 7px;
-  padding: 0 20px;
+  grid-template-columns: 556fr 300fr 140fr 140fr 120fr;
+  align-items: start;
+  min-height: 36px;
+  border-radius: 8px;
+  padding: 8px 24px;
   background: #ffffff;
-  box-shadow: 0 3px 10px rgb(15 23 42 / 8%);
-  color: #6b7280;
-  font-size: 13px;
+  box-shadow: 0 4px 8px #E5E7EB;
+  color: #1F2937;
+  font-size: 14px;
+  font-weight: 400;
 }
 
-.dealRow:nth-child(even) {
-  background: #eef6ff;
+.dealRow span:last-child { 
+   text-align: right; 
+}
+
+.dealRowNew {
+  background: #eff6ff;
 }
 
 .dealRow strong {
   color: #1f2937;
-  font-weight: 800;
+  font-weight: 700;
+}
+
+.clientNameCell,
+.dateCell {
+  color: #6b7280;
 }
 
 .status {
-  color: #2563eb;
+  color: #3B82F6;
+}
+
+.statusNew {
+  color: #1F2937;
 }
 
 .tasksGrid {
@@ -154,56 +182,66 @@
 }
 
 .taskCard {
-  min-height: 90px;
-  border-radius: 7px;
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 112px;
+  border-radius: 8px;
+  padding: 12px 16px;
   background: #ffffff;
-  box-shadow: 0 4px 14px rgb(15 23 42 / 10%);
+  box-shadow: 0 4px 8px #e5e7eb;
 }
 
-.taskCard:nth-child(2n) {
-  background: #eef6ff;
+.taskCardNew {
+  background: #eff6ff;
 }
 
 .taskCardCompleted {
-  background: #ecfdf5 !important;
+  background: #f0fdf4;
 }
 
 .taskCard h3 {
   margin: 0 0 2px;
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .taskCard p {
   margin: 0;
-  color: #9ca3af;
+  color: #9CA3AF;
   font-size: 12px;
 }
 
 .taskCard > span {
   display: block;
-  margin-top: 2px;
-  color: #6b7280;
-  font-size: 12px;
+  margin: 2px 0 8px 0;
+  color: #6B7280;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .taskFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: auto;
   color: #6b7280;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .taskFooter strong {
-  color: #2563eb;
-  font-weight: 500;
+  font-weight: 400;
 }
 
-.taskCardCompleted .taskFooter strong {
-  color: #10b981;
+.taskStatusNew {
+  color: #1f2937;
+}
+
+.taskStatusInProgress {
+  color: #3b82f6;
+}
+
+.taskStatusCompleted {
+  color: #9ca3af;
 }
 
 .message {

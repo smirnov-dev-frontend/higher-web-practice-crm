@@ -5,7 +5,7 @@
   min-height: 40px;
   border: none;
   border-radius: 6px;
-  padding: 12px 18px;
+  padding: 8px 16px;
   font-size: 16px;
   font-weight: 700;
   transition:
@@ -21,7 +21,7 @@
 
 .primary {
   background: #2f80ed;
-  color: #ffffff;
+  color: #F9FAFB;
 }
 
 .primary:hover:not(:disabled) {
