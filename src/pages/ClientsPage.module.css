@@ -1,0 +1,242 @@
+.page {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.title {
+   margin: 0 0 16px;
+   color: #1f2937;
+   font-family: 'Roboto', sans-serif;
+   font-size: 30px;
+   font-weight: 700;
+   line-height: 1.2;
+}
+
+.message {
+   padding: 40px 0;
+   color: #6b7280;
+   text-align: center;
+}
+
+.toolbar {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.searchWrapper {
+   position: relative;
+   display: flex;
+   flex: 1;
+   align-items: center;
+}
+
+.searchIcon {
+   position: absolute;
+   left: 14px;
+   color: #9ca3af;
+   pointer-events: none;
+}
+
+.searchInput {
+   width: 100%;
+   min-height: 40px;
+   border: 1px solid #d1d5db;
+   border-radius: 4px;
+   padding: 8px 14px 8px 44px;
+   background-color: transparent;
+   color: #1f2937;
+   font: inherit;
+   font-size: 14px;
+   outline: none;
+   transition: border-color 0.2s ease;
+}
+
+.searchInput:hover {
+   border-color: #9ca3af;
+}
+
+.searchInput:focus {
+   border-color: #3b82f6;
+}
+
+.searchInput::placeholder {
+   color: #9ca3af;
+}
+
+.searchInput::-webkit-search-cancel-button {
+   appearance: none;
+}
+
+.tableWrapper {
+   overflow-x: auto;
+   padding: 0 8px 8px;
+   margin: 0 -8px;
+}
+
+.tableHeader,
+.row {
+   display: grid;
+   grid-template-columns:
+      minmax(min-content, 79fr)
+      minmax(min-content, 120fr)
+      minmax(min-content, 160fr)
+      minmax(min-content, 148fr)
+      minmax(min-content, 140fr)
+      minmax(0, 393fr)
+      minmax(min-content, 120fr);
+   align-items: baseline;
+   gap: 16px;
+   padding: 0 24px;
+}
+
+.tableHeader {
+   padding-bottom: 4px;
+}
+
+.thBtn {
+   display: flex;
+   align-items: center;
+   border: none;
+   padding: 0;
+   background: transparent;
+   text-align: left;
+   cursor: pointer;
+   user-select: none;
+   white-space: nowrap;
+}
+
+.thBtn:last-child {
+   justify-content: flex-end;
+}
+
+.thContent {
+   display: inline-flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 2px;
+   height: 16px;
+   border-radius: 2px;
+   color: #9ca3af;
+   font-size: 12px;
+   font-weight: 400;
+   line-height: 16px;
+   transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+}
+
+.thContent:hover {
+   background: #f9fafb;
+   color: #3b82f6;
+}
+
+.thContentActive {
+   color: #3b82f6;
+}
+
+.thContent:active {
+   color: #1d4ed8;
+}
+
+.sortIcon {
+   flex-shrink: 0;
+   color: currentColor;
+   transition:
+      transform 0.15s ease,
+      color 0.15s ease;
+}
+
+.thContent:hover .sortIcon {
+   color: #2563eb;
+}
+
+.thContent:active .sortIcon {
+   color: #1d4ed8;
+}
+
+.sortIconAsc {
+   transform: rotate(180deg);
+}
+
+.rows {
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+}
+
+.row {
+   min-height: 36px;
+   padding: 8px 24px;
+   border: 1px solid transparent;
+   border-radius: 8px;
+   background: #ffffff;
+   box-shadow: 0 4px 8px #e5e7eb;
+   cursor: pointer;
+   transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+}
+
+.row:hover {
+   background: #f9fafb;
+   border-color: #d1d5db;
+}
+
+.rowDeleted {
+   background: #fef2f2;
+   box-shadow: none;
+}
+
+.cell {
+   overflow: hidden;
+   color: #1f2937;
+   font-size: 12px;
+   line-height: 16px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.cellName {
+   overflow: hidden;
+   color: #1f2937;
+   font-size: 14px;
+   line-height: 20px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.cellEmail {
+   color: #3b82f6;
+}
+
+.cellComment {
+   color: #6b7280;
+}
+
+.cellDate {
+   text-align: right;
+}
+
+.rowDeleted .cell,
+.rowDeleted .cellName {
+   color: #d1d5db;
+}
+
+.empty {
+   padding: 40px;
+   color: #9ca3af;
+   font-size: 14px;
+   text-align: center;
+}
+
+@media (max-width: 768px) {
+   .toolbar {
+      flex-wrap: wrap;
+   }
+
+   .searchWrapper {
+      flex: 1 1 100%;
+   }
+}

@@ -1,32 +1,46 @@
 .input {
   width: 100%;
-  min-height: 40px;
+  height: 40px;
   border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 8px 14px;
   background: #ffffff;
   color: #1f2937;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
   outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
+}
+
+.input:hover {
+  border-color: #9ca3af;
 }
 
 .input:focus {
-  border-color: #2f80ed;
-  box-shadow: 0 0 0 3px rgb(47 128 237 / 12%);
+  border-color: #3b82f6;
 }
 
 .input::placeholder {
   color: #9ca3af;
 }
 
+.input:disabled {
+  cursor: not-allowed;
+  color: #9ca3af;
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
 .error {
-  border-color: #dc2626;
+  border-color: #ef4444;
+}
+
+.error:hover {
+  border-color: #ef4444;
 }
 
 .error:focus {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 3px rgb(220 38 38 / 12%);
+  border-color: #ef4444;
 }

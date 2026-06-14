@@ -5,18 +5,19 @@
 }
 
 .label {
-  color: #6B7280;
+  color: #9ca3af;
   font-size: 12px;
   font-weight: 400;
+  line-height: 16px;
 }
 
 .required {
-  color: #dc2626;
+  color: #ef4444;
 }
 
 .error {
   margin: 0;
-  color: #dc2626;
-  font-size: 13px;
-  line-height: 1.4;
+  color: #ef4444;
+  font-size: 12px;
+  line-height: 16px;
 }
