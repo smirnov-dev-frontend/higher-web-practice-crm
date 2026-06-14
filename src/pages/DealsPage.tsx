@@ -4,9 +4,11 @@ import { useGetClientsQuery } from '../api/clientsApi'
 import { useGetDealsQuery } from '../api/dealsApi'
 import { useAppSelector } from '../app/hooks'
 import { Button } from '../components/ui/Button/Button'
+import { ColumnFilter } from '../components/ui/ColumnFilter/ColumnFilter'
 import { selectCurrentUser } from '../features/auth/authSelectors'
 import { DealModal } from '../features/deals/DealModal'
 import type { DealFormValues } from '../features/deals/dealSchema'
+import type { Client } from '../types/client'
 import type { Deal, DealStatus } from '../types/deal'
 import { formatCurrency, formatDate } from '../utils/format'
 
@@ -39,6 +41,17 @@ const COLUMNS: { key: SortKey; label: string; rightAlign?: boolean }[] = [
    { key: 'completedAt', label: 'Дата завершения', rightAlign: true },
 ]
 
+function getDealDisplayVal(deal: Deal, key: SortKey, clientMap: Map<string, Client>): string {
+   if (key === 'title') return deal.title
+   if (key === 'clientName') return clientMap.get(deal.clientId)?.name.split(' ')[0] ?? ''
+   if (key === 'description') return deal.description ?? ''
+   if (key === 'status') return STATUS_LABELS[deal.status]
+   if (key === 'amount') return formatCurrency(deal.amount)
+   if (key === 'createdAt') return formatDate(deal.createdAt)
+   if (key === 'completedAt') return formatDate(deal.completedAt)
+   return ''
+}
+
 export function DealsPage() {
    const currentUser = useAppSelector(selectCurrentUser)
    const { data: deals = [], isLoading: dealsLoading } = useGetDealsQuery()
@@ -48,6 +61,7 @@ export function DealsPage() {
    const [sortKey, setSortKey] = useState<SortKey>('createdAt')
    const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
    const [isSortActive, setIsSortActive] = useState(false)
+   const [columnFilters, setColumnFilters] = useState<Partial<Record<SortKey, string[]>>>({})
    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
    const [editingDeal, setEditingDeal] = useState<Deal | null>(null)
    const [addDraft, setAddDraft] = useState<Partial<DealFormValues>>({})
@@ -62,20 +76,36 @@ export function DealsPage() {
       [deals, currentUser?.id],
    )
 
-   const handleSort = (key: SortKey) => {
-      setIsSortActive(true)
-      if (key === sortKey) {
-         setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))
-      } else {
-         setSortKey(key)
-         setSortDirection('asc')
+   const columnOptions = useMemo(() => {
+      const opts: Partial<Record<SortKey, string[]>> = {}
+      for (const { key } of COLUMNS) {
+         opts[key] = [...new Set(userDeals.map((d) => getDealDisplayVal(d, key, clientMap)))]
+            .filter(Boolean)
+            .sort()
       }
+      return opts
+   }, [userDeals, clientMap])
+
+   const handleSortAsc = (key: SortKey) => {
+      setIsSortActive(true)
+      setSortKey(key)
+      setSortDirection('asc')
+   }
+
+   const handleSortDesc = (key: SortKey) => {
+      setIsSortActive(true)
+      setSortKey(key)
+      setSortDirection('desc')
+   }
+
+   const handleFilterChange = (key: SortKey, values: string[]) => {
+      setColumnFilters((prev) => ({ ...prev, [key]: values }))
    }
 
    const filteredAndSorted = useMemo(() => {
       const query = search.toLowerCase().trim()
 
-      const filtered = query
+      let result = query
          ? userDeals.filter((d) => {
               const clientName = clientMap.get(d.clientId)?.name ?? ''
               return [d.title, d.description, clientName, STATUS_LABELS[d.status]].some((f) =>
@@ -84,7 +114,14 @@ export function DealsPage() {
            })
          : userDeals
 
-      return [...filtered].sort((a, b) => {
+      for (const [key, values] of Object.entries(columnFilters)) {
+         if (!values || values.length === 0) continue
+         result = result.filter((d) =>
+            values.includes(getDealDisplayVal(d, key as SortKey, clientMap)),
+         )
+      }
+
+      return [...result].sort((a, b) => {
          const clientA = clientMap.get(a.clientId)?.name.split(' ')[0] ?? ''
          const clientB = clientMap.get(b.clientId)?.name.split(' ')[0] ?? ''
 
@@ -101,7 +138,7 @@ export function DealsPage() {
 
          return sortDirection === 'asc' ? cmp : -cmp
       })
-   }, [userDeals, search, sortKey, sortDirection, clientMap])
+   }, [userDeals, search, sortKey, sortDirection, columnFilters, clientMap])
 
    if (dealsLoading) {
       return <p className={styles.message}>Загрузка...</p>
@@ -128,19 +165,18 @@ export function DealsPage() {
          <div className={styles.tableWrapper}>
             <div className={styles.tableHeader} role="row">
                {COLUMNS.map(({ key, label, rightAlign }) => (
-                  <button
+                  <ColumnFilter
                      key={key}
-                     className={`${styles.thBtn} ${rightAlign ? styles.thBtnRight : ''}`}
-                     type="button"
-                     onClick={() => handleSort(key)}
-                  >
-                     <span
-                        className={`${styles.thContent} ${sortKey === key && isSortActive ? styles.thContentActive : ''}`}
-                     >
-                        {label}
-                        <SortChevron active={sortKey === key && isSortActive} direction={sortDirection} />
-                     </span>
-                  </button>
+                     isActive={sortKey === key && isSortActive}
+                     label={label}
+                     options={columnOptions[key] ?? []}
+                     rightAlign={rightAlign}
+                     selectedValues={columnFilters[key] ?? []}
+                     sortDirection={sortDirection}
+                     onFilterChange={(values) => handleFilterChange(key, values)}
+                     onSortAsc={() => handleSortAsc(key)}
+                     onSortDesc={() => handleSortDesc(key)}
+                  />
                ))}
             </div>
 
@@ -177,12 +213,12 @@ export function DealsPage() {
          </div>
 
          {isAddModalOpen && (
-         <DealModal
-            draft={addDraft}
-            onClose={() => setIsAddModalOpen(false)}
-            onDraftSave={setAddDraft}
-         />
-      )}
+            <DealModal
+               draft={addDraft}
+               onClose={() => setIsAddModalOpen(false)}
+               onDraftSave={setAddDraft}
+            />
+         )}
 
          {editingDeal && (
             <DealModal deal={editingDeal} onClose={() => setEditingDeal(null)} />
@@ -203,34 +239,6 @@ function SearchIcon({ className }: { className?: string }) {
       >
          <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.5" />
          <path d="M13 13L16 16" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-      </svg>
-   )
-}
-
-type SortChevronProps = { active: boolean; direction: SortDirection }
-
-function SortChevron({ active, direction }: SortChevronProps) {
-   return (
-      <svg
-         aria-hidden="true"
-         className={[
-            styles.sortIcon,
-            active && direction === 'asc' ? styles.sortIconAsc : '',
-         ]
-            .filter(Boolean)
-            .join(' ')}
-         fill="none"
-         height="16"
-         viewBox="0 0 16 16"
-         width="16"
-      >
-         <path
-            d="M4 6L8 10L12 6"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.5"
-         />
       </svg>
    )
 }

@@ -1,0 +1,215 @@
+.container {
+   position: relative;
+   display: flex;
+   align-items: center;
+   min-width: 0;
+}
+
+.containerRight {
+   justify-content: flex-end;
+}
+
+.btn {
+   display: inline-flex;
+   padding: 0;
+   border: none;
+   background: transparent;
+   cursor: pointer;
+   user-select: none;
+   white-space: nowrap;
+}
+
+.content {
+   display: inline-flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 2px;
+   height: 16px;
+   border-radius: 2px;
+   color: #9ca3af;
+   font-family: 'Inter', sans-serif;
+   font-size: 12px;
+   font-weight: 400;
+   line-height: 16px;
+   transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+}
+
+.btn:hover .content {
+   background: #f9fafb;
+   color: #3b82f6;
+}
+
+.contentActive {
+   color: #1d4ed8;
+}
+
+.chevron {
+   flex-shrink: 0;
+   color: currentColor;
+   transition: transform 0.15s ease;
+}
+
+.btn:hover .chevron {
+   color: #2563eb;
+}
+
+.chevronAsc {
+   transform: rotate(180deg);
+}
+
+.popover {
+   position: fixed;
+   z-index: 9999;
+   width: 194px;
+   padding: 12px 0 16px;
+   background: #ffffff;
+   border: 1px solid #d1d5db;
+   box-shadow: 0px 4px 8px #e5e7eb;
+   border-radius: 4px;
+   display: flex;
+   flex-direction: column;
+   gap: 7px;
+}
+
+
+.sortSection {
+   display: flex;
+   flex-direction: column;
+   gap: 0;
+}
+
+.sortTitle {
+   margin: 0;
+   padding: 0 16px;
+   height: 20px;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 700;
+   line-height: 20px;
+   color: #1f2937;
+}
+
+.sortOption {
+   width: 100%;
+   padding: 8px 16px;
+   border: none;
+   background: transparent;
+   text-align: left;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #1f2937;
+   cursor: pointer;
+}
+
+.sortOption:hover {
+   background: #f9fafb;
+}
+
+.sortOptionActive {
+   background: #f9fafb;
+}
+
+.divider {
+   width: 100%;
+   height: 1px;
+   background: #d1d5db;
+}
+
+.filterSection {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+   padding: 0 16px;
+}
+
+.searchWrapper {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 8px;
+   padding: 4px 14px;
+   border: 1px solid #d1d5db;
+   border-radius: 4px;
+   height: 28px;
+}
+
+.searchIcon {
+   flex-shrink: 0;
+}
+
+.searchInput {
+   flex: 1;
+   border: none;
+   outline: none;
+   background: transparent;
+   font-family: 'Inter', sans-serif;
+   font-size: 12px;
+   font-weight: 400;
+   color: #1f2937;
+   min-width: 0;
+}
+
+.searchInput::placeholder {
+   color: #9ca3af;
+}
+
+.searchInput::-webkit-search-cancel-button {
+   appearance: none;
+}
+
+.checkboxList {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   max-height: 140px;
+   overflow-y: auto;
+}
+
+.checkboxItem {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 8px;
+   cursor: pointer;
+}
+
+.checkbox {
+   position: relative;
+   appearance: none;
+   -webkit-appearance: none;
+   flex-shrink: 0;
+   width: 16px;
+   height: 16px;
+   border: 1px solid #1d4ed8;
+   border-radius: 2px;
+   cursor: pointer;
+}
+
+.checkbox:checked::after {
+   content: '';
+   position: absolute;
+   inset: 3px;
+   background: #1d4ed8;
+   border-radius: 2px;
+}
+
+.checkboxLabel {
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #1f2937;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.noOptions {
+   font-family: 'Inter', sans-serif;
+   font-size: 12px;
+   color: #9ca3af;
+}
