@@ -216,50 +216,35 @@
 }
 
 .cell {
-   overflow: hidden;
    color: #1f2937;
    font-size: 12px;
    line-height: 16px;
-   text-overflow: ellipsis;
-   white-space: nowrap;
 }
 
 .cellTitle {
-   overflow: hidden;
    color: #1f2937;
    font-size: 14px;
    line-height: 20px;
-   text-overflow: ellipsis;
-   white-space: nowrap;
 }
 
 .cellDesc {
-   overflow: hidden;
    color: #1f2937;
    font-size: 12px;
    line-height: 16px;
-   text-overflow: ellipsis;
-   white-space: nowrap;
 }
 
 .cellAmount {
-   overflow: hidden;
    color: #1f2937;
    font-size: 14px;
    line-height: 20px;
    text-align: right;
-   text-overflow: ellipsis;
-   white-space: nowrap;
 }
 
 .cellDate {
-   overflow: hidden;
    color: #1f2937;
    font-size: 12px;
    line-height: 16px;
    text-align: right;
-   text-overflow: ellipsis;
-   white-space: nowrap;
 }
 
 .status_new {
