@@ -9,6 +9,7 @@ import { Select } from '../components/ui/Select/Select'
 import { selectCurrentUser } from '../features/auth/authSelectors'
 import type { Client } from '../types/client'
 import type { Deal, DealStatus } from '../types/deal'
+import { exportToExcel, exportToPDF, type ExportRow } from '../utils/export'
 import { formatCurrency, formatDate } from '../utils/format'
 
 import styles from './ReportsPage.module.css'
@@ -229,6 +230,60 @@ export function ReportsPage() {
       setStagesColFilters((prev) => ({ ...prev, [key]: values })); setStagesPage(1)
    }
 
+   const handleSalesExportExcel = () => {
+      const columns = [
+         { key: 'index', label: 'ID сделки' },
+         { key: 'title', label: 'Название' },
+         { key: 'clientName', label: 'Клиент' },
+         { key: 'amount', label: 'Сумма, ₽', numFmt: '#,##0' },
+         { key: 'completedAt', label: 'Дата завершения', numFmt: 'dd.mm.yyyy' },
+      ]
+      const rows: ExportRow[] = salesDeals.map((deal, i) => ({
+         index: i + 1,
+         title: deal.title,
+         clientName: firstName(clientMap.get(deal.clientId)?.name ?? '—'),
+         amount: deal.amount,
+         completedAt: deal.completedAt ? new Date(deal.completedAt) : '',
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === salesPeriod)?.label ?? ''
+      exportToExcel(`Отчёт по продажам — ${periodLabel}`, columns, rows)
+   }
+
+   const handleSalesExportPDF = () => {
+      const columns = SALES_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
+      const rows: ExportRow[] = salesDeals.map((deal, i) => ({
+         index: String(i + 1),
+         title: deal.title,
+         clientName: firstName(clientMap.get(deal.clientId)?.name ?? '—'),
+         amount: formatCurrency(deal.amount),
+         completedAt: formatDate(deal.completedAt),
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === salesPeriod)?.label ?? ''
+      void exportToPDF(`Отчёт по продажам — ${periodLabel}`, columns, rows)
+   }
+
+   const handleStagesExportExcel = () => {
+      const columns = STAGES_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
+      const rows: ExportRow[] = stagesData.map((stage) => ({
+         label: stage.label,
+         count: String(stage.count),
+         total: formatCurrency(stage.total),
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === stagesPeriod)?.label ?? ''
+      exportToExcel(`Этапы сделок — ${periodLabel}`, columns, rows)
+   }
+
+   const handleStagesExportPDF = () => {
+      const columns = STAGES_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
+      const rows: ExportRow[] = stagesData.map((stage) => ({
+         label: stage.label,
+         count: String(stage.count),
+         total: formatCurrency(stage.total),
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === stagesPeriod)?.label ?? ''
+      void exportToPDF(`Этапы сделок — ${periodLabel}`, columns, rows)
+   }
+
    return (
       <div className={styles.page}>
          <h1 className={styles.pageTitle}>Отчёты</h1>
@@ -259,6 +314,8 @@ export function ReportsPage() {
                   <SectionToolbar
                      period={salesPeriod}
                      viewMode={salesViewMode}
+                     onExportExcel={handleSalesExportExcel}
+                     onExportPDF={handleSalesExportPDF}
                      onPeriodChange={(p) => { setSalesPeriod(p); setSalesPage(1) }}
                      onViewModeChange={setSalesViewMode}
                   />
@@ -335,6 +392,8 @@ export function ReportsPage() {
                   <SectionToolbar
                      period={stagesPeriod}
                      viewMode={stagesViewMode}
+                     onExportExcel={handleStagesExportExcel}
+                     onExportPDF={handleStagesExportPDF}
                      onPeriodChange={(p) => { setStagesPeriod(p); setStagesPage(1) }}
                      onViewModeChange={setStagesViewMode}
                   />
@@ -416,13 +475,15 @@ const VIEW_OPTIONS: { value: 'list' | 'cards'; label: string }[] = [
 ]
 
 type ToolbarProps = {
+   onExportExcel: () => void
+   onExportPDF: () => void
    onPeriodChange: (p: Period) => void
    onViewModeChange: (v: 'list' | 'cards') => void
    period: Period
    viewMode: 'list' | 'cards'
 }
 
-function SectionToolbar({ onPeriodChange, onViewModeChange, period, viewMode }: ToolbarProps) {
+function SectionToolbar({ onExportExcel, onExportPDF, onPeriodChange, onViewModeChange, period, viewMode }: ToolbarProps) {
    return (
       <div className={styles.toolbar}>
          <Select
@@ -436,10 +497,10 @@ function SectionToolbar({ onPeriodChange, onViewModeChange, period, viewMode }: 
             onChange={(v) => onViewModeChange(v as 'list' | 'cards')}
          />
          <div className={styles.toolbarSpacer} />
-         <button className={styles.exportBtn} type="button">
+         <button className={styles.exportBtn} type="button" onClick={onExportPDF}>
             Экспорт в PDF
          </button>
-         <button className={styles.exportBtn} type="button">
+         <button className={styles.exportBtn} type="button" onClick={onExportExcel}>
             Экспорт в XLSX
          </button>
       </div>
