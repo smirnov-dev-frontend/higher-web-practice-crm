@@ -86,7 +86,7 @@
       minmax(min-content, 140fr)
       minmax(0, 393fr)
       minmax(min-content, 120fr);
-   align-items: baseline;
+   align-items: center;
    gap: 16px;
    padding: 0 24px;
 }
