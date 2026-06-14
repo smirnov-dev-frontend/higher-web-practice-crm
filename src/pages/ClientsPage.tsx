@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { useGetClientsQuery } from '../api/clientsApi'
 import { useAppSelector } from '../app/hooks'
 import { Button } from '../components/ui/Button/Button'
+import { ColumnFilter } from '../components/ui/ColumnFilter/ColumnFilter'
 import { selectCurrentUser } from '../features/auth/authSelectors'
 import { ClientModal } from '../features/clients/ClientModal'
 import type { ClientFormValues } from '../features/clients/clientsSchema'
@@ -17,15 +18,26 @@ type SortKey = keyof Pick<
 >
 type SortDirection = 'asc' | 'desc'
 
-const COLUMNS: { key: SortKey; label: string }[] = [
+const COLUMNS: { key: SortKey; label: string; rightAlign?: boolean }[] = [
    { key: 'name', label: 'Имя' },
    { key: 'phone', label: 'Телефон' },
    { key: 'email', label: 'Email' },
    { key: 'company', label: 'Название компании' },
    { key: 'website', label: 'Сайт' },
    { key: 'comment', label: 'Комментарий' },
-   { key: 'createdAt', label: 'Добавлен' },
+   { key: 'createdAt', label: 'Добавлен', rightAlign: true },
 ]
+
+function getClientDisplayVal(c: Client, key: SortKey): string {
+   if (key === 'name') return c.name.split(' ')[0]
+   if (key === 'phone') return formatPhone(c.phone)
+   if (key === 'email') return c.email
+   if (key === 'company') return c.company ?? ''
+   if (key === 'website') return formatWebsite(c.website)
+   if (key === 'comment') return c.comment ?? ''
+   if (key === 'createdAt') return formatDate(c.createdAt)
+   return ''
+}
 
 export function ClientsPage() {
    const currentUser = useAppSelector(selectCurrentUser)
@@ -35,6 +47,7 @@ export function ClientsPage() {
    const [sortKey, setSortKey] = useState<SortKey>('createdAt')
    const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
    const [isSortActive, setIsSortActive] = useState(false)
+   const [columnFilters, setColumnFilters] = useState<Partial<Record<SortKey, string[]>>>({})
    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
    const [editingClient, setEditingClient] = useState<Client | null>(null)
    const [addDraft, setAddDraft] = useState<Partial<ClientFormValues>>({})
@@ -44,35 +57,58 @@ export function ClientsPage() {
       [clients, currentUser?.id],
    )
 
-   const handleSort = (key: SortKey) => {
-      setIsSortActive(true)
-      if (key === sortKey) {
-         setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))
-      } else {
-         setSortKey(key)
-         setSortDirection('asc')
+   const columnOptions = useMemo(() => {
+      const opts: Partial<Record<SortKey, string[]>> = {}
+      for (const { key } of COLUMNS) {
+         opts[key] = [...new Set(userClients.map((c) => getClientDisplayVal(c, key)))]
+            .filter(Boolean)
+            .sort()
       }
+      return opts
+   }, [userClients])
+
+   const handleSortAsc = (key: SortKey) => {
+      setIsSortActive(true)
+      setSortKey(key)
+      setSortDirection('asc')
+   }
+
+   const handleSortDesc = (key: SortKey) => {
+      setIsSortActive(true)
+      setSortKey(key)
+      setSortDirection('desc')
+   }
+
+   const handleFilterChange = (key: SortKey, values: string[]) => {
+      setColumnFilters((prev) => ({ ...prev, [key]: values }))
    }
 
    const filteredAndSorted = useMemo(() => {
       const query = search.toLowerCase().trim()
 
-      const filtered = query
+      let result = query
          ? userClients.filter((c) =>
-              [c.name, c.phone, c.email, c.company, c.website, c.comment].some((field) =>
-                 field?.toLowerCase().includes(query),
+              [c.name, c.phone, c.email, c.company, c.website, c.comment].some((f) =>
+                 f?.toLowerCase().includes(query),
               ),
            )
          : userClients
 
-      return [...filtered].sort((a, b) => {
+      for (const [key, values] of Object.entries(columnFilters)) {
+         if (!values || values.length === 0) continue
+         result = result.filter((c) =>
+            values.includes(getClientDisplayVal(c, key as SortKey)),
+         )
+      }
+
+      return [...result].sort((a, b) => {
          if (a.deleted !== b.deleted) return a.deleted ? 1 : -1
          const aVal = a[sortKey] ?? ''
          const bVal = b[sortKey] ?? ''
          const cmp = String(aVal).localeCompare(String(bVal), 'ru')
          return sortDirection === 'asc' ? cmp : -cmp
       })
-   }, [userClients, search, sortKey, sortDirection])
+   }, [userClients, search, sortKey, sortDirection, columnFilters])
 
    if (isLoading) {
       return <p className={styles.message}>Загрузка...</p>
@@ -98,20 +134,19 @@ export function ClientsPage() {
 
          <div className={styles.tableWrapper}>
             <div className={styles.tableHeader} role="row">
-               {COLUMNS.map(({ key, label }) => (
-                  <button
+               {COLUMNS.map(({ key, label, rightAlign }) => (
+                  <ColumnFilter
                      key={key}
-                     className={`${styles.thBtn} ${key === 'createdAt' ? styles.thBtnRight : ''}`}
-                     type="button"
-                     onClick={() => handleSort(key)}
-                  >
-                     <span
-                        className={`${styles.thContent} ${sortKey === key && isSortActive ? styles.thContentActive : ''}`}
-                     >
-                        {label}
-                        <SortChevron active={sortKey === key && isSortActive} direction={sortDirection} />
-                     </span>
-                  </button>
+                     isActive={sortKey === key && isSortActive}
+                     label={label}
+                     options={columnOptions[key] ?? []}
+                     rightAlign={rightAlign}
+                     selectedValues={columnFilters[key] ?? []}
+                     sortDirection={sortDirection}
+                     onFilterChange={(values) => handleFilterChange(key, values)}
+                     onSortAsc={() => handleSortAsc(key)}
+                     onSortDesc={() => handleSortDesc(key)}
+                  />
                ))}
             </div>
 
@@ -178,34 +213,6 @@ function SearchIcon({ className }: { className?: string }) {
       >
          <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.5" />
          <path d="M13 13L16 16" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-      </svg>
-   )
-}
-
-type SortChevronProps = { active: boolean; direction: SortDirection }
-
-function SortChevron({ active, direction }: SortChevronProps) {
-   return (
-      <svg
-         aria-hidden="true"
-         className={[
-            styles.sortIcon,
-            active && direction === 'asc' ? styles.sortIconAsc : '',
-         ]
-            .filter(Boolean)
-            .join(' ')}
-         fill="none"
-         height="16"
-         viewBox="0 0 16 16"
-         width="16"
-      >
-         <path
-            d="M4 6L8 10L12 6"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.5"
-         />
       </svg>
    )
 }
