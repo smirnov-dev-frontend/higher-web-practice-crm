@@ -1,0 +1,100 @@
+.container {
+   position: relative;
+   display: inline-block;
+}
+
+.trigger {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   padding: 10px 14px;
+   gap: 16px;
+   height: 40px;
+   width: 100%;
+   background: #ffffff;
+   border: 1px solid #d1d5db;
+   border-radius: 4px;
+   cursor: pointer;
+   outline: none;
+   transition: border-color 0.15s ease;
+}
+
+.trigger:hover:not(:disabled) {
+   border-color: #2563eb;
+}
+
+.triggerOpen {
+   border-color: #3b82f6;
+}
+
+.trigger:disabled {
+   background: #f9fafb;
+   cursor: default;
+   border-color: #d1d5db;
+}
+
+.triggerText {
+   flex: 1;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #1f2937;
+   text-align: left;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.trigger:disabled .triggerText {
+   color: #d1d5db;
+}
+
+.chevron {
+   flex-shrink: 0;
+   color: #6b7280;
+   transition: transform 0.15s ease;
+}
+
+.chevronOpen {
+   transform: rotate(180deg);
+}
+
+.list {
+   position: fixed;
+   z-index: 9999;
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+   background: #ffffff;
+   border: 1px solid #d1d5db;
+   box-shadow: 0px 4px 8px #e5e7eb;
+   border-radius: 4px;
+   overflow: hidden;
+}
+
+.option {
+   display: flex;
+   align-items: center;
+   padding: 8px 16px;
+   height: 36px;
+   width: 100%;
+   border: none;
+   background: transparent;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #1f2937;
+   cursor: pointer;
+   text-align: left;
+   white-space: nowrap;
+}
+
+.option:hover {
+   background: #f9fafb;
+}
+
+.optionSelected {
+   background: #f9fafb;
+}

@@ -1,9 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import SelectDownIcon from '../../../icons/select-down.svg?react'
+import SelectIcon from '../../../icons/select.svg?react'
+import SelectUpIcon from '../../../icons/select-up.svg?react'
+
 import styles from './ColumnFilter.module.css'
 
 type ColumnFilterProps = {
+   className?: string
+   filterType?: 'checkbox' | 'radio'
+   iconVariant?: 'chevron' | 'select'
    isActive: boolean
    label: string
    onFilterChange: (values: string[]) => void
@@ -16,6 +23,9 @@ type ColumnFilterProps = {
 }
 
 export function ColumnFilter({
+   className,
+   filterType = 'checkbox',
+   iconVariant = 'chevron',
    isActive,
    label,
    onFilterChange,
@@ -34,7 +44,6 @@ export function ColumnFilter({
 
    useEffect(() => {
       if (!isOpen) return
-
       const handleMouseDown = (e: MouseEvent) => {
          const target = e.target as Node
          if (
@@ -53,9 +62,7 @@ export function ColumnFilter({
       if (!btnRef.current) return
       const rect = btnRef.current.getBoundingClientRect()
       const POPOVER_WIDTH = 194
-      const left = rightAlign
-         ? rect.right - POPOVER_WIDTH
-         : rect.left
+      const left = rightAlign ? rect.right - POPOVER_WIDTH : rect.left
       setPopoverPos({ top: rect.bottom + 4, left })
       setIsOpen(true)
    }
@@ -78,15 +85,58 @@ export function ColumnFilter({
    const isHighlighted = isActive || hasFilter
 
    const toggleValue = (value: string) => {
-      if (selectedValues.includes(value)) {
-         onFilterChange(selectedValues.filter((v) => v !== value))
+      if (filterType === 'radio') {
+         onFilterChange(selectedValues.includes(value) ? [] : [value])
       } else {
-         onFilterChange([...selectedValues, value])
+         if (selectedValues.includes(value)) {
+            onFilterChange(selectedValues.filter((v) => v !== value))
+         } else {
+            onFilterChange([...selectedValues, value])
+         }
       }
    }
 
+   const renderIcon = () => {
+      if (iconVariant === 'select') {
+         if (isActive && sortDirection === 'asc') {
+            return <SelectUpIcon aria-hidden="true" className={styles.selectIcon} />
+         }
+         if (isActive && sortDirection === 'desc') {
+            return <SelectDownIcon aria-hidden="true" className={styles.selectIcon} />
+         }
+         return <SelectIcon aria-hidden="true" className={styles.selectIcon} />
+      }
+      return (
+         <svg
+            aria-hidden="true"
+            className={[
+               styles.chevron,
+               isActive && sortDirection === 'asc' ? styles.chevronAsc : '',
+            ].filter(Boolean).join(' ')}
+            fill="none"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+         >
+            <path
+               d="M4 6L8 10L12 6"
+               stroke="currentColor"
+               strokeLinecap="round"
+               strokeLinejoin="round"
+               strokeWidth="1.5"
+            />
+         </svg>
+      )
+   }
+
    return (
-      <div className={[styles.container, rightAlign ? styles.containerRight : ''].filter(Boolean).join(' ')}>
+      <div
+         className={[
+            styles.container,
+            rightAlign ? styles.containerRight : '',
+            className,
+         ].filter(Boolean).join(' ')}
+      >
          <button
             ref={btnRef}
             className={styles.btn}
@@ -100,25 +150,7 @@ export function ColumnFilter({
                ].filter(Boolean).join(' ')}
             >
                {label}
-               <svg
-                  aria-hidden="true"
-                  className={[
-                     styles.chevron,
-                     isActive && sortDirection === 'asc' ? styles.chevronAsc : '',
-                  ].filter(Boolean).join(' ')}
-                  fill="none"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
-               >
-                  <path
-                     d="M4 6L8 10L12 6"
-                     stroke="currentColor"
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     strokeWidth="1.5"
-                  />
-               </svg>
+               {renderIcon()}
             </span>
          </button>
 
@@ -177,8 +209,8 @@ export function ColumnFilter({
                            <label key={option} className={styles.checkboxItem}>
                               <input
                                  checked={selectedValues.includes(option)}
-                                 className={styles.checkbox}
-                                 type="checkbox"
+                                 className={filterType === 'radio' ? styles.radio : styles.checkbox}
+                                 type={filterType === 'radio' ? 'radio' : 'checkbox'}
                                  onChange={() => toggleValue(option)}
                               />
                               <span className={styles.checkboxLabel}>{option}</span>

@@ -108,6 +108,17 @@
       "status": "new",
       "createdAt": "2026-03-10T09:30:00Z",
       "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
+    },
+    {
+      "title": "Разработка сайта",
+      "clientId": "be1146c3-b622-4331-851a-57cd53786a9f",
+      "amount": 50000,
+      "description": "Подготовка условий для контракта",
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001",
+      "id": "8a5b759f-cd30-4a64-8205-71b0e0200a4f",
+      "status": "completed",
+      "createdAt": "2026-06-14T13:52:04.689Z",
+      "completedAt": "2026-06-14T13:52:10.021Z"
     }
   ],
   "tasks": [
