@@ -505,6 +505,16 @@
 .cardClient.stageLabel_completed { color: #065f46; }
 .cardClient.stageLabel_cancelled { color: #f59e0b; }
 
+.taskRow_new { background: #eff6ff; }
+.taskRow_in_progress { background: #ffffff; }
+.taskRow_completed { background: #ecfdf5; }
+.taskRow_overdue { background: #fef2f2; }
+
+.taskStatus_new { color: #1f2937; }
+.taskStatus_in_progress { color: #3b82f6; }
+.taskStatus_completed { color: #10b981; }
+.taskStatus_overdue { color: #ef4444; }
+
 .stub {
    font-family: 'Inter', sans-serif;
    font-size: 14px;
