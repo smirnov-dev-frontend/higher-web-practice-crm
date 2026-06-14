@@ -1,0 +1,208 @@
+.page {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.title {
+   margin: 0 0 16px;
+   color: #1f2937;
+   font-family: 'Roboto', sans-serif;
+   font-size: 30px;
+   font-weight: 700;
+   line-height: 1.2;
+}
+
+.message {
+   padding: 40px 0;
+   color: #6b7280;
+   text-align: center;
+}
+
+.toolbar {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.searchWrapper {
+   position: relative;
+   display: flex;
+   flex: 1;
+   align-items: center;
+}
+
+.searchIcon {
+   position: absolute;
+   left: 14px;
+   color: #9ca3af;
+   pointer-events: none;
+}
+
+.searchInput {
+   width: 100%;
+   min-height: 40px;
+   border: 1px solid #d1d5db;
+   border-radius: 4px;
+   padding: 8px 14px 8px 44px;
+   background-color: transparent;
+   color: #1f2937;
+   font: inherit;
+   font-size: 14px;
+   outline: none;
+   transition: border-color 0.2s ease;
+}
+
+.searchInput:hover {
+   border-color: #9ca3af;
+}
+
+.searchInput:focus {
+   border-color: #3b82f6;
+}
+
+.searchInput::placeholder {
+   color: #9ca3af;
+}
+
+.searchInput::-webkit-search-cancel-button {
+   appearance: none;
+}
+
+.tableWrapper {
+   overflow-x: auto;
+   padding: 0 8px 8px;
+   margin: 0 -8px;
+}
+
+.tableHeader,
+.row {
+   display: grid;
+   grid-template-columns:
+      minmax(min-content, 180fr)
+      minmax(min-content, 150fr)
+      minmax(0, 394fr)
+      minmax(min-content, 144fr)
+      minmax(min-content, 130fr)
+      minmax(min-content, 110fr)
+      minmax(min-content, 144fr);
+   align-items: center;
+   gap: 16px;
+   padding: 0 24px;
+}
+
+.tableHeader {
+   padding-bottom: 4px;
+}
+
+.rows {
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+}
+
+.row {
+   min-height: 36px;
+   padding: 8px 24px;
+   border: 1px solid transparent;
+   border-radius: 8px;
+   box-shadow: 0 4px 8px #e5e7eb;
+   cursor: pointer;
+   transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+}
+
+.row:hover {
+   border-color: #d1d5db;
+}
+
+.row_new {
+   background: #ffffff;
+}
+
+.row_new:hover {
+   background: #f9fafb;
+}
+
+.row_in_progress {
+   background: #eff6ff;
+}
+
+.row_in_progress:hover {
+   background: #dbeafe;
+}
+
+.row_completed {
+   background: #f0fdf4;
+}
+
+.row_completed:hover {
+   background: #dcfce7;
+}
+
+.row_overdue {
+   background: #fef2f2;
+}
+
+.row_overdue:hover {
+   background: #fee2e2;
+}
+
+.cell {
+   color: #1f2937;
+   font-size: 12px;
+   line-height: 16px;
+}
+
+.cellTitle {
+   color: #1f2937;
+   font-size: 12px;
+   line-height: 16px;
+}
+
+.cellDesc {
+   color: #1f2937;
+   font-size: 12px;
+   line-height: 16px;
+}
+
+.cellDate {
+   color: #1f2937;
+   font-size: 12px;
+   line-height: 16px;
+   text-align: right;
+}
+
+.status_new {
+   color: #1f2937;
+}
+
+.status_in_progress {
+   color: #3b82f6;
+}
+
+.status_completed {
+   color: #10b981;
+}
+
+.status_overdue {
+   color: #ef4444;
+}
+
+.empty {
+   padding: 40px;
+   color: #9ca3af;
+   font-size: 14px;
+   text-align: center;
+}
+
+@media (max-width: 768px) {
+   .toolbar {
+      flex-wrap: wrap;
+   }
+
+   .searchWrapper {
+      flex: 1 1 100%;
+   }
+}
