@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import RowIcon from '../icons/row.svg?react'
 import { useGetClientsQuery } from '../api/clientsApi'
 import { useGetDealsQuery } from '../api/dealsApi'
+import { useGetTasksQuery } from '../api/tasksApi'
 import { useAppSelector } from '../app/hooks'
 import { ColumnFilter } from '../components/ui/ColumnFilter/ColumnFilter'
 import { Select } from '../components/ui/Select/Select'
@@ -21,6 +22,10 @@ type SortDirection = 'asc' | 'desc'
 type SalesSortKey = 'index' | 'title' | 'clientName' | 'amount' | 'completedAt'
 type StagesSortKey = 'label' | 'count' | 'total'
 type StageRow = { count: number; key: DealStatus; label: string; total: number }
+
+type NewClientsSortKey = 'clientId' | 'name' | 'company' | 'createdAt'
+type ActivitySortKey = 'clientId' | 'name' | 'dealCount' | 'completedTasks'
+type ActivityRow = { clientId: string; completedTasks: number; createdAt: string; dealCount: number; name: string }
 
 const TABS: { id: Tab; label: string }[] = [
    { id: 'sales', label: 'Отчёты по продажам' },
@@ -58,6 +63,20 @@ const STAGES_COLUMNS: { key: StagesSortKey; label: string; rightAlign?: boolean 
    { key: 'total', label: 'Общая сумма сделок на этапе', rightAlign: true },
 ]
 
+const NEW_CLIENTS_COLUMNS: { key: NewClientsSortKey; label: string; rightAlign?: boolean }[] = [
+   { key: 'clientId', label: 'ID клиента' },
+   { key: 'name', label: 'Имя клиента' },
+   { key: 'company', label: 'Компания' },
+   { key: 'createdAt', label: 'Дата добавления', rightAlign: true },
+]
+
+const ACTIVITY_COLUMNS: { key: ActivitySortKey; label: string; rightAlign?: boolean }[] = [
+   { key: 'clientId', label: 'ID клиента' },
+   { key: 'name', label: 'Имя клиента' },
+   { key: 'dealCount', label: 'Количество сделок' },
+   { key: 'completedTasks', label: 'Завершённые задачи' },
+]
+
 const PAGE_SIZE = 5
 
 function cutoffDate(period: Period): Date | null {
@@ -89,6 +108,22 @@ function getStagesDisplayVal(stage: StageRow, key: StagesSortKey): string {
    return ''
 }
 
+function getNewClientDisplayVal(client: Client, key: NewClientsSortKey): string {
+   if (key === 'clientId') return ''
+   if (key === 'name') return firstName(client.name)
+   if (key === 'company') return client.company
+   if (key === 'createdAt') return formatDate(client.createdAt)
+   return ''
+}
+
+function getActivityDisplayVal(row: ActivityRow, key: ActivitySortKey): string {
+   if (key === 'clientId') return ''
+   if (key === 'name') return row.name
+   if (key === 'dealCount') return String(row.dealCount)
+   if (key === 'completedTasks') return String(row.completedTasks)
+   return ''
+}
+
 export function ReportsPage() {
    const [activeTab, setActiveTab] = useState<Tab>('sales')
 
@@ -109,8 +144,25 @@ export function ReportsPage() {
    const [stagesSortActive, setStagesSortActive] = useState(false)
    const [stagesColFilters, setStagesColFilters] = useState<Partial<Record<StagesSortKey, string[]>>>({})
 
+   const [newClientsPeriod, setNewClientsPeriod] = useState<Period>('year')
+   const [newClientsPage, setNewClientsPage] = useState(1)
+   const [newClientsSortKey, setNewClientsSortKey] = useState<NewClientsSortKey>('createdAt')
+   const [newClientsSortDir, setNewClientsSortDir] = useState<SortDirection>('desc')
+   const [newClientsSortActive, setNewClientsSortActive] = useState(false)
+   const [newClientsColFilters, setNewClientsColFilters] = useState<Partial<Record<NewClientsSortKey, string[]>>>({})
+   const [newClientsViewMode, setNewClientsViewMode] = useState<'list' | 'cards'>('list')
+
+   const [activityPeriod, setActivityPeriod] = useState<Period>('year')
+   const [activityPage, setActivityPage] = useState(1)
+   const [activitySortKey, setActivitySortKey] = useState<ActivitySortKey>('name')
+   const [activitySortDir, setActivitySortDir] = useState<SortDirection>('asc')
+   const [activitySortActive, setActivitySortActive] = useState(false)
+   const [activityColFilters, setActivityColFilters] = useState<Partial<Record<ActivitySortKey, string[]>>>({})
+   const [activityViewMode, setActivityViewMode] = useState<'list' | 'cards'>('list')
+
    const { data: deals = [] } = useGetDealsQuery()
    const { data: clients = [] } = useGetClientsQuery()
+   const { data: tasks = [] } = useGetTasksQuery()
    const currentUser = useAppSelector(selectCurrentUser)
 
    const userDeals = useMemo(
@@ -119,6 +171,13 @@ export function ReportsPage() {
    )
 
    const clientMap = useMemo(() => new Map(clients.map((c) => [c.id, c])), [clients])
+
+   const dealIndexMap = useMemo(() => {
+      const sorted = [...userDeals].sort(
+         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      )
+      return new Map(sorted.map((d, i) => [d.id, i + 1]))
+   }, [userDeals])
 
    const salesDealsBase = useMemo(() => {
       const cutoff = cutoffDate(salesPeriod)
@@ -210,6 +269,100 @@ export function ReportsPage() {
    const stagesTotalPages = Math.max(1, Math.ceil(stagesData.length / PAGE_SIZE))
    const stagesPageData = stagesData.slice((stagesPage - 1) * PAGE_SIZE, stagesPage * PAGE_SIZE)
 
+   const userClients = useMemo(
+      () => clients.filter((c) => c.createdBy === currentUser?.id && !c.deleted),
+      [clients, currentUser?.id],
+   )
+
+   const clientIndexMap = useMemo(() => {
+      const sorted = [...userClients].sort(
+         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      )
+      return new Map(sorted.map((c, i) => [c.id, i + 1]))
+   }, [userClients])
+
+   const newClientsBase = useMemo(() => {
+      const cutoff = cutoffDate(newClientsPeriod)
+      return cutoff ? userClients.filter((c) => new Date(c.createdAt) >= cutoff) : userClients
+   }, [userClients, newClientsPeriod])
+
+   const newClientsColOptions = useMemo(() => {
+      const opts: Partial<Record<NewClientsSortKey, string[]>> = {}
+      for (const { key } of NEW_CLIENTS_COLUMNS) {
+         opts[key] = [...new Set(newClientsBase.map((c) => getNewClientDisplayVal(c, key)))]
+            .filter(Boolean).sort()
+      }
+      return opts
+   }, [newClientsBase])
+
+   const newClientsData = useMemo(() => {
+      let result = newClientsBase
+      for (const [key, values] of Object.entries(newClientsColFilters)) {
+         if (!values || values.length === 0) continue
+         result = result.filter((c) =>
+            values.includes(getNewClientDisplayVal(c, key as NewClientsSortKey)),
+         )
+      }
+      return [...result].sort((a, b) => {
+         if (!newClientsSortActive)
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+         const dir = newClientsSortDir === 'asc' ? 1 : -1
+         if (newClientsSortKey === 'clientId' || newClientsSortKey === 'createdAt')
+            return dir * (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+         if (newClientsSortKey === 'company') return dir * a.company.localeCompare(b.company, 'ru')
+         return dir * firstName(a.name).localeCompare(firstName(b.name), 'ru')
+      })
+   }, [newClientsBase, newClientsColFilters, newClientsSortKey, newClientsSortDir, newClientsSortActive])
+
+   const newClientsTotalPages = Math.max(1, Math.ceil(newClientsData.length / PAGE_SIZE))
+   const newClientsPageData = newClientsData.slice((newClientsPage - 1) * PAGE_SIZE, newClientsPage * PAGE_SIZE)
+
+   const activityDataBase = useMemo((): ActivityRow[] => {
+      const cutoff = cutoffDate(activityPeriod)
+      const filtered = cutoff
+         ? userClients.filter((c) => new Date(c.createdAt) >= cutoff)
+         : userClients
+      return filtered.map((client) => {
+         const clientDeals = userDeals.filter((d) => d.clientId === client.id)
+         const dealIds = new Set(clientDeals.map((d) => d.id))
+         const completedTasks = tasks.filter(
+            (t) => t.dealId && dealIds.has(t.dealId) && t.status === 'completed',
+         ).length
+         return { clientId: client.id, name: firstName(client.name), createdAt: client.createdAt, dealCount: clientDeals.length, completedTasks }
+      })
+   }, [userClients, userDeals, tasks, activityPeriod])
+
+   const activityColOptions = useMemo(() => {
+      const opts: Partial<Record<ActivitySortKey, string[]>> = {}
+      for (const { key } of ACTIVITY_COLUMNS) {
+         opts[key] = [...new Set(activityDataBase.map((r) => getActivityDisplayVal(r, key)))]
+            .filter(Boolean).sort()
+      }
+      return opts
+   }, [activityDataBase])
+
+   const activityData = useMemo(() => {
+      let result = activityDataBase
+      for (const [key, values] of Object.entries(activityColFilters)) {
+         if (!values || values.length === 0) continue
+         result = result.filter((r) =>
+            values.includes(getActivityDisplayVal(r, key as ActivitySortKey)),
+         )
+      }
+      if (!activitySortActive) return result
+      return [...result].sort((a, b) => {
+         const dir = activitySortDir === 'asc' ? 1 : -1
+         if (activitySortKey === 'clientId')
+            return dir * (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+         if (activitySortKey === 'dealCount') return dir * (a.dealCount - b.dealCount)
+         if (activitySortKey === 'completedTasks') return dir * (a.completedTasks - b.completedTasks)
+         return dir * a.name.localeCompare(b.name, 'ru')
+      })
+   }, [activityDataBase, activityColFilters, activitySortKey, activitySortDir, activitySortActive])
+
+   const activityTotalPages = Math.max(1, Math.ceil(activityData.length / PAGE_SIZE))
+   const activityPageData = activityData.slice((activityPage - 1) * PAGE_SIZE, activityPage * PAGE_SIZE)
+
    const handleSalesSortAsc = (key: SalesSortKey) => {
       setSalesSortActive(true); setSalesSortKey(key); setSalesSortDir('asc'); setSalesPage(1)
    }
@@ -239,7 +392,7 @@ export function ReportsPage() {
          { key: 'completedAt', label: 'Дата завершения', numFmt: 'dd.mm.yyyy' },
       ]
       const rows: ExportRow[] = salesDeals.map((deal, i) => ({
-         index: i + 1,
+         index: dealIndexMap.get(deal.id) ?? i + 1,
          title: deal.title,
          clientName: firstName(clientMap.get(deal.clientId)?.name ?? '—'),
          amount: deal.amount,
@@ -252,7 +405,7 @@ export function ReportsPage() {
    const handleSalesExportPDF = () => {
       const columns = SALES_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
       const rows: ExportRow[] = salesDeals.map((deal, i) => ({
-         index: String(i + 1),
+         index: String(dealIndexMap.get(deal.id) ?? i + 1),
          title: deal.title,
          clientName: firstName(clientMap.get(deal.clientId)?.name ?? '—'),
          amount: formatCurrency(deal.amount),
@@ -282,6 +435,86 @@ export function ReportsPage() {
       }))
       const periodLabel = PERIOD_OPTIONS.find((o) => o.value === stagesPeriod)?.label ?? ''
       void exportToPDF(`Этапы сделок — ${periodLabel}`, columns, rows)
+   }
+
+   const handleNewClientsSortAsc = (key: NewClientsSortKey) => {
+      setNewClientsSortActive(true); setNewClientsSortKey(key); setNewClientsSortDir('asc'); setNewClientsPage(1)
+   }
+   const handleNewClientsSortDesc = (key: NewClientsSortKey) => {
+      setNewClientsSortActive(true); setNewClientsSortKey(key); setNewClientsSortDir('desc'); setNewClientsPage(1)
+   }
+   const handleNewClientsFilter = (key: NewClientsSortKey, values: string[]) => {
+      setNewClientsColFilters((prev) => ({ ...prev, [key]: values })); setNewClientsPage(1)
+   }
+
+   const handleActivitySortAsc = (key: ActivitySortKey) => {
+      setActivitySortActive(true); setActivitySortKey(key); setActivitySortDir('asc'); setActivityPage(1)
+   }
+   const handleActivitySortDesc = (key: ActivitySortKey) => {
+      setActivitySortActive(true); setActivitySortKey(key); setActivitySortDir('desc'); setActivityPage(1)
+   }
+   const handleActivityFilter = (key: ActivitySortKey, values: string[]) => {
+      setActivityColFilters((prev) => ({ ...prev, [key]: values })); setActivityPage(1)
+   }
+
+   const handleNewClientsExportExcel = () => {
+      const columns = [
+         { key: 'clientId', label: 'ID клиента' },
+         { key: 'name', label: 'Имя клиента' },
+         { key: 'company', label: 'Компания' },
+         { key: 'createdAt', label: 'Дата добавления', numFmt: 'dd.mm.yyyy' },
+      ]
+      const rows: ExportRow[] = newClientsData.map((c, i) => ({
+         clientId: clientIndexMap.get(c.id) ?? i + 1,
+         name: c.name,
+         company: c.company,
+         createdAt: new Date(c.createdAt),
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === newClientsPeriod)?.label ?? ''
+      exportToExcel(`Новые клиенты — ${periodLabel}`, columns, rows)
+   }
+
+   const handleNewClientsExportPDF = () => {
+      const columns = NEW_CLIENTS_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
+      const rows: ExportRow[] = newClientsData.map((c, i) => ({
+         clientId: String(clientIndexMap.get(c.id) ?? i + 1),
+         name: c.name,
+         company: c.company,
+         createdAt: formatDate(c.createdAt),
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === newClientsPeriod)?.label ?? ''
+      void exportToPDF(`Новые клиенты — ${periodLabel}`, columns, rows)
+   }
+
+   const handleActivityExportExcel = () => {
+      const fullNameMap = new Map(userClients.map((c) => [c.id, c.name]))
+      const columns = [
+         { key: 'clientId', label: 'ID клиента' },
+         { key: 'name', label: 'Имя клиента' },
+         { key: 'dealCount', label: 'Количество сделок', numFmt: '#,##0' },
+         { key: 'completedTasks', label: 'Завершённые задачи', numFmt: '#,##0' },
+      ]
+      const rows: ExportRow[] = activityData.map((r, i) => ({
+         clientId: clientIndexMap.get(r.clientId) ?? i + 1,
+         name: fullNameMap.get(r.clientId) ?? r.name,
+         dealCount: r.dealCount,
+         completedTasks: r.completedTasks,
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === activityPeriod)?.label ?? ''
+      exportToExcel(`Активности клиентов — ${periodLabel}`, columns, rows)
+   }
+
+   const handleActivityExportPDF = () => {
+      const fullNameMap = new Map(userClients.map((c) => [c.id, c.name]))
+      const columns = ACTIVITY_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
+      const rows: ExportRow[] = activityData.map((r, i) => ({
+         clientId: String(clientIndexMap.get(r.clientId) ?? i + 1),
+         name: fullNameMap.get(r.clientId) ?? r.name,
+         dealCount: String(r.dealCount),
+         completedTasks: String(r.completedTasks),
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === activityPeriod)?.label ?? ''
+      void exportToPDF(`Активности клиентов — ${periodLabel}`, columns, rows)
    }
 
    return (
@@ -327,7 +560,7 @@ export function ReportsPage() {
                               {salesPageDeals.map((deal, i) => (
                                  <div key={deal.id} className={styles.card}>
                                     <div className={styles.cardTop}>
-                                       <span className={styles.cardId}>{(salesPage - 1) * PAGE_SIZE + i + 1}</span>
+                                       <span className={styles.cardId}>{dealIndexMap.get(deal.id) ?? i + 1}</span>
                                        <span className={styles.cardClient}>{firstName(clientMap.get(deal.clientId)?.name ?? '—')}</span>
                                        <span className={styles.cardMeta}>{deal.title}</span>
                                     </div>
@@ -366,7 +599,7 @@ export function ReportsPage() {
                               salesPageDeals.map((deal, i) => (
                                  <div key={deal.id} className={styles.tableRow}>
                                     <span className={styles.cell}>
-                                       {(salesPage - 1) * PAGE_SIZE + i + 1}
+                                       {dealIndexMap.get(deal.id) ?? i + 1}
                                     </span>
                                     <span className={styles.cell}>{deal.title}</span>
                                     <span className={styles.cell}>
@@ -462,7 +695,147 @@ export function ReportsPage() {
             </div>
          )}
 
-         {activeTab !== 'sales' && (
+         {activeTab === 'clients' && (
+            <div className={styles.content}>
+               <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>Новые клиенты</h2>
+                  <SectionToolbar
+                     period={newClientsPeriod}
+                     viewMode={newClientsViewMode}
+                     onExportExcel={handleNewClientsExportExcel}
+                     onExportPDF={handleNewClientsExportPDF}
+                     onPeriodChange={(p) => { setNewClientsPeriod(p); setNewClientsPage(1) }}
+                     onViewModeChange={setNewClientsViewMode}
+                  />
+                  {newClientsViewMode === 'cards' ? (
+                     newClientsPageData.length === 0
+                        ? <p className={styles.empty}>Нет данных за выбранный период</p>
+                        : (
+                           <div className={styles.cardsGrid}>
+                              {newClientsPageData.map((client, i) => (
+                                 <div key={client.id} className={styles.card}>
+                                    <div className={styles.cardTop}>
+                                       <span className={styles.cardId}>{clientIndexMap.get(client.id) ?? i + 1}</span>
+                                       <span className={styles.cardClient}>{firstName(client.name)}</span>
+                                       <span className={styles.cardMeta}>{client.company}</span>
+                                    </div>
+                                    <div className={styles.cardBottom}>
+                                       <span className={styles.cardPrimary}>{formatDate(client.createdAt)}</span>
+                                    </div>
+                                 </div>
+                              ))}
+                           </div>
+                        )
+                  ) : (
+                     <div className={styles.tableContainer}>
+                        <div className={styles.tableHead}>
+                           {NEW_CLIENTS_COLUMNS.map(({ key, label, rightAlign }) => (
+                              <ColumnFilter
+                                 key={key}
+                                 className={styles.thFilter}
+                                 iconVariant="select"
+                                 isActive={newClientsSortKey === key && newClientsSortActive}
+                                 label={label}
+                                 options={newClientsColOptions[key] ?? []}
+                                 rightAlign={rightAlign}
+                                 selectedValues={newClientsColFilters[key] ?? []}
+                                 sortDirection={newClientsSortDir}
+                                 onFilterChange={(values) => handleNewClientsFilter(key, values)}
+                                 onSortAsc={() => handleNewClientsSortAsc(key)}
+                                 onSortDesc={() => handleNewClientsSortDesc(key)}
+                              />
+                           ))}
+                        </div>
+                        <div className={styles.tableRows}>
+                           {newClientsPageData.length === 0 ? (
+                              <p className={styles.empty}>Нет данных за выбранный период</p>
+                           ) : (
+                              newClientsPageData.map((client, i) => (
+                                 <div key={client.id} className={styles.tableRow}>
+                                    <span className={styles.cell}>{clientIndexMap.get(client.id) ?? i + 1}</span>
+                                    <span className={styles.cell}>{firstName(client.name)}</span>
+                                    <span className={styles.cell}>{client.company}</span>
+                                    <span className={`${styles.cell} ${styles.cellRight}`}>{formatDate(client.createdAt)}</span>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  )}
+                  <PaginationBar page={newClientsPage} total={newClientsTotalPages} onChange={setNewClientsPage} />
+               </div>
+
+               <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>Активности клиентов</h2>
+                  <SectionToolbar
+                     period={activityPeriod}
+                     viewMode={activityViewMode}
+                     onExportExcel={handleActivityExportExcel}
+                     onExportPDF={handleActivityExportPDF}
+                     onPeriodChange={(p) => { setActivityPeriod(p); setActivityPage(1) }}
+                     onViewModeChange={setActivityViewMode}
+                  />
+                  {activityViewMode === 'cards' ? (
+                     activityPageData.length === 0
+                        ? <p className={styles.empty}>Нет данных за выбранный период</p>
+                        : (
+                           <div className={styles.cardsGrid}>
+                              {activityPageData.map((row, i) => (
+                                 <div key={row.clientId} className={styles.card}>
+                                    <div className={styles.cardTop}>
+                                       <span className={styles.cardId}>{clientIndexMap.get(row.clientId) ?? i + 1}</span>
+                                       <span className={styles.cardClient}>{row.name}</span>
+                                    </div>
+                                    <div className={styles.cardBottom}>
+                                       <span className={styles.cardPrimary}>{row.dealCount} сделок</span>
+                                       <span className={styles.cardSecondary}>{row.completedTasks} задач</span>
+                                    </div>
+                                 </div>
+                              ))}
+                           </div>
+                        )
+                  ) : (
+                     <div className={styles.tableContainer}>
+                        <div className={styles.tableHead}>
+                           {ACTIVITY_COLUMNS.map(({ key, label, rightAlign }) => (
+                              <ColumnFilter
+                                 key={key}
+                                 className={styles.thFilter}
+                                 iconVariant="select"
+                                 isActive={activitySortKey === key && activitySortActive}
+                                 label={label}
+                                 options={activityColOptions[key] ?? []}
+                                 rightAlign={rightAlign}
+                                 selectedValues={activityColFilters[key] ?? []}
+                                 sortDirection={activitySortDir}
+                                 onFilterChange={(values) => handleActivityFilter(key, values)}
+                                 onSortAsc={() => handleActivitySortAsc(key)}
+                                 onSortDesc={() => handleActivitySortDesc(key)}
+                              />
+                           ))}
+                        </div>
+                        <div className={styles.tableRows}>
+                           {activityPageData.length === 0 ? (
+                              <p className={styles.empty}>Нет данных за выбранный период</p>
+                           ) : (
+                              activityPageData.map((row, i) => (
+                                 <div key={row.clientId} className={styles.tableRow}>
+                                    <span className={styles.cell}>{clientIndexMap.get(row.clientId) ?? i + 1}</span>
+                                    <span className={styles.cell}>{row.name}</span>
+                                    <span className={styles.cell}>{row.dealCount}</span>
+                                    <span className={styles.cell}>{row.completedTasks}</span>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  )}
+                  <PaginationBar page={activityPage} total={activityTotalPages} onChange={setActivityPage} />
+               </div>
+            </div>
+         )}
+
+         {activeTab === 'tasks' && (
             <p className={styles.stub}>Раздел в разработке</p>
          )}
       </div>
