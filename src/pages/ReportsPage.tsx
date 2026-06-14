@@ -4,6 +4,7 @@ import RowIcon from '../icons/row.svg?react'
 import { useGetClientsQuery } from '../api/clientsApi'
 import { useGetDealsQuery } from '../api/dealsApi'
 import { useGetTasksQuery } from '../api/tasksApi'
+import { useGetUsersQuery } from '../api/usersApi'
 import { useAppSelector } from '../app/hooks'
 import { ColumnFilter } from '../components/ui/ColumnFilter/ColumnFilter'
 import { Select } from '../components/ui/Select/Select'
@@ -26,6 +27,9 @@ type StageRow = { count: number; key: DealStatus; label: string; total: number }
 type NewClientsSortKey = 'clientId' | 'name' | 'company' | 'createdAt'
 type ActivitySortKey = 'clientId' | 'name' | 'dealCount' | 'completedTasks'
 type ActivityRow = { clientId: string; completedTasks: number; createdAt: string; dealCount: number; name: string }
+
+type TaskReportSortKey = 'taskId' | 'title' | 'assigneeName' | 'status' | 'dueDate'
+type TaskReportRow = { taskId: string; title: string; assigneeName: string; statusKey: string; status: string; dueDate: string; createdAt: string }
 
 const TABS: { id: Tab; label: string }[] = [
    { id: 'sales', label: 'Отчёты по продажам' },
@@ -77,6 +81,28 @@ const ACTIVITY_COLUMNS: { key: ActivitySortKey; label: string; rightAlign?: bool
    { key: 'completedTasks', label: 'Завершённые задачи' },
 ]
 
+const TASK_STATUS_LABELS: Record<string, string> = {
+   new: 'Новая',
+   in_progress: 'В работе',
+   completed: 'Завершена',
+}
+
+const TASK_REPORT_COLUMNS: { key: TaskReportSortKey; label: string; rightAlign?: boolean }[] = [
+   { key: 'taskId', label: 'ID задачи' },
+   { key: 'title', label: 'Название задачи' },
+   { key: 'assigneeName', label: 'Ответственный' },
+   { key: 'status', label: 'Статус' },
+   { key: 'dueDate', label: 'Дата срока выполнения', rightAlign: true },
+]
+
+const TASK_EXPORT_COLUMNS = [
+   { key: 'taskId', label: 'ID задачи' },
+   { key: 'title', label: 'Название задачи' },
+   { key: 'assigneeName', label: 'Ответственный' },
+   { key: 'status', label: 'Статус' },
+   { key: 'dueDate', label: 'Дата срока выполнения', numFmt: 'dd.mm.yyyy' },
+]
+
 const PAGE_SIZE = 5
 
 function cutoffDate(period: Period): Date | null {
@@ -124,6 +150,15 @@ function getActivityDisplayVal(row: ActivityRow, key: ActivitySortKey): string {
    return ''
 }
 
+function getTaskReportDisplayVal(row: TaskReportRow, key: TaskReportSortKey): string {
+   if (key === 'taskId') return ''
+   if (key === 'title') return row.title
+   if (key === 'assigneeName') return row.assigneeName
+   if (key === 'status') return row.status
+   if (key === 'dueDate') return formatDate(row.dueDate)
+   return ''
+}
+
 export function ReportsPage() {
    const [activeTab, setActiveTab] = useState<Tab>('sales')
 
@@ -160,9 +195,26 @@ export function ReportsPage() {
    const [activityColFilters, setActivityColFilters] = useState<Partial<Record<ActivitySortKey, string[]>>>({})
    const [activityViewMode, setActivityViewMode] = useState<'list' | 'cards'>('list')
 
+   const [activeTasksPeriod, setActiveTasksPeriod] = useState<Period>('year')
+   const [activeTasksPage, setActiveTasksPage] = useState(1)
+   const [activeTasksSortKey, setActiveTasksSortKey] = useState<TaskReportSortKey>('taskId')
+   const [activeTasksSortDir, setActiveTasksSortDir] = useState<SortDirection>('desc')
+   const [activeTasksSortActive, setActiveTasksSortActive] = useState(false)
+   const [activeTasksColFilters, setActiveTasksColFilters] = useState<Partial<Record<TaskReportSortKey, string[]>>>({})
+   const [activeTasksViewMode, setActiveTasksViewMode] = useState<'list' | 'cards'>('list')
+
+   const [overdueTasksPeriod, setOverdueTasksPeriod] = useState<Period>('year')
+   const [overdueTasksPage, setOverdueTasksPage] = useState(1)
+   const [overdueTasksSortKey, setOverdueTasksSortKey] = useState<TaskReportSortKey>('dueDate')
+   const [overdueTasksSortDir, setOverdueTasksSortDir] = useState<SortDirection>('asc')
+   const [overdueTasksSortActive, setOverdueTasksSortActive] = useState(false)
+   const [overdueTasksColFilters, setOverdueTasksColFilters] = useState<Partial<Record<TaskReportSortKey, string[]>>>({})
+   const [overdueTasksViewMode, setOverdueTasksViewMode] = useState<'list' | 'cards'>('list')
+
    const { data: deals = [] } = useGetDealsQuery()
    const { data: clients = [] } = useGetClientsQuery()
    const { data: tasks = [] } = useGetTasksQuery()
+   const { data: users = [] } = useGetUsersQuery()
    const currentUser = useAppSelector(selectCurrentUser)
 
    const userDeals = useMemo(
@@ -363,6 +415,107 @@ export function ReportsPage() {
    const activityTotalPages = Math.max(1, Math.ceil(activityData.length / PAGE_SIZE))
    const activityPageData = activityData.slice((activityPage - 1) * PAGE_SIZE, activityPage * PAGE_SIZE)
 
+   const userTasks = useMemo(
+      () => tasks.filter((t) => t.createdBy === currentUser?.id),
+      [tasks, currentUser?.id],
+   )
+   const dealMap = useMemo(() => new Map(deals.map((d) => [d.id, d])), [deals])
+   const userMap = useMemo(() => new Map(users.map((u) => [u.id, u])), [users])
+
+   const taskIndexMap = useMemo(() => {
+      const sorted = [...userTasks].sort(
+         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      )
+      return new Map(sorted.map((t, i) => [t.id, i + 1]))
+   }, [userTasks])
+
+   const allTaskRows = useMemo((): TaskReportRow[] => {
+      const now = new Date()
+      now.setHours(0, 0, 0, 0)
+      return userTasks.map((t) => {
+         const isOverdue = Boolean(t.dueDate && new Date(t.dueDate) < now && t.status !== 'completed')
+         return {
+            taskId: t.id,
+            title: t.title,
+            assigneeName: userMap.get(t.assigneeId)?.name.split(' ')[0] ?? '—',
+            statusKey: isOverdue ? 'overdue' : t.status,
+            status: isOverdue ? 'Просрочена' : (TASK_STATUS_LABELS[t.status] ?? t.status),
+            dueDate: t.dueDate ?? '',
+            createdAt: t.createdAt,
+         }
+      })
+   }, [userTasks, dealMap, userMap])
+
+   const activeTasksBase = useMemo(() => {
+      const cutoff = cutoffDate(activeTasksPeriod)
+      const filtered = cutoff ? allTaskRows.filter((r) => new Date(r.createdAt) >= cutoff) : allTaskRows
+      return filtered.filter((r) => r.status !== 'Просрочена')
+   }, [allTaskRows, activeTasksPeriod])
+
+   const activeTasksColOptions = useMemo(() => {
+      const opts: Partial<Record<TaskReportSortKey, string[]>> = {}
+      for (const { key } of TASK_REPORT_COLUMNS) {
+         opts[key] = [...new Set(activeTasksBase.map((r) => getTaskReportDisplayVal(r, key)))].filter(Boolean).sort()
+      }
+      return opts
+   }, [activeTasksBase])
+
+   const activeTasksData = useMemo(() => {
+      let result = activeTasksBase
+      for (const [key, values] of Object.entries(activeTasksColFilters)) {
+         if (!values || values.length === 0) continue
+         result = result.filter((r) => values.includes(getTaskReportDisplayVal(r, key as TaskReportSortKey)))
+      }
+      return [...result].sort((a, b) => {
+         if (!activeTasksSortActive)
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+         const dir = activeTasksSortDir === 'asc' ? 1 : -1
+         if (activeTasksSortKey === 'taskId')
+            return dir * (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+         if (activeTasksSortKey === 'dueDate')
+            return dir * ((a.dueDate ? new Date(a.dueDate).getTime() : 0) - (b.dueDate ? new Date(b.dueDate).getTime() : 0))
+         return dir * getTaskReportDisplayVal(a, activeTasksSortKey).localeCompare(getTaskReportDisplayVal(b, activeTasksSortKey), 'ru')
+      })
+   }, [activeTasksBase, activeTasksColFilters, activeTasksSortKey, activeTasksSortDir, activeTasksSortActive])
+
+   const activeTasksTotalPages = Math.max(1, Math.ceil(activeTasksData.length / PAGE_SIZE))
+   const activeTasksPageData = activeTasksData.slice((activeTasksPage - 1) * PAGE_SIZE, activeTasksPage * PAGE_SIZE)
+
+   const overdueTasksBase = useMemo(() => {
+      const cutoff = cutoffDate(overdueTasksPeriod)
+      const filtered = cutoff ? allTaskRows.filter((r) => new Date(r.createdAt) >= cutoff) : allTaskRows
+      return filtered.filter((r) => r.status === 'Просрочена')
+   }, [allTaskRows, overdueTasksPeriod])
+
+   const overdueTasksColOptions = useMemo(() => {
+      const opts: Partial<Record<TaskReportSortKey, string[]>> = {}
+      for (const { key } of TASK_REPORT_COLUMNS) {
+         opts[key] = [...new Set(overdueTasksBase.map((r) => getTaskReportDisplayVal(r, key)))].filter(Boolean).sort()
+      }
+      return opts
+   }, [overdueTasksBase])
+
+   const overdueTasksData = useMemo(() => {
+      let result = overdueTasksBase
+      for (const [key, values] of Object.entries(overdueTasksColFilters)) {
+         if (!values || values.length === 0) continue
+         result = result.filter((r) => values.includes(getTaskReportDisplayVal(r, key as TaskReportSortKey)))
+      }
+      return [...result].sort((a, b) => {
+         if (!overdueTasksSortActive)
+            return (a.dueDate ? new Date(a.dueDate).getTime() : 0) - (b.dueDate ? new Date(b.dueDate).getTime() : 0)
+         const dir = overdueTasksSortDir === 'asc' ? 1 : -1
+         if (overdueTasksSortKey === 'taskId')
+            return dir * (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+         if (overdueTasksSortKey === 'dueDate')
+            return dir * ((a.dueDate ? new Date(a.dueDate).getTime() : 0) - (b.dueDate ? new Date(b.dueDate).getTime() : 0))
+         return dir * getTaskReportDisplayVal(a, overdueTasksSortKey).localeCompare(getTaskReportDisplayVal(b, overdueTasksSortKey), 'ru')
+      })
+   }, [overdueTasksBase, overdueTasksColFilters, overdueTasksSortKey, overdueTasksSortDir, overdueTasksSortActive])
+
+   const overdueTasksTotalPages = Math.max(1, Math.ceil(overdueTasksData.length / PAGE_SIZE))
+   const overdueTasksPageData = overdueTasksData.slice((overdueTasksPage - 1) * PAGE_SIZE, overdueTasksPage * PAGE_SIZE)
+
    const handleSalesSortAsc = (key: SalesSortKey) => {
       setSalesSortActive(true); setSalesSortKey(key); setSalesSortDir('asc'); setSalesPage(1)
    }
@@ -515,6 +668,76 @@ export function ReportsPage() {
       }))
       const periodLabel = PERIOD_OPTIONS.find((o) => o.value === activityPeriod)?.label ?? ''
       void exportToPDF(`Активности клиентов — ${periodLabel}`, columns, rows)
+   }
+
+   const handleActiveTasksSortAsc = (key: TaskReportSortKey) => {
+      setActiveTasksSortActive(true); setActiveTasksSortKey(key); setActiveTasksSortDir('asc'); setActiveTasksPage(1)
+   }
+   const handleActiveTasksSortDesc = (key: TaskReportSortKey) => {
+      setActiveTasksSortActive(true); setActiveTasksSortKey(key); setActiveTasksSortDir('desc'); setActiveTasksPage(1)
+   }
+   const handleActiveTasksFilter = (key: TaskReportSortKey, values: string[]) => {
+      setActiveTasksColFilters((prev) => ({ ...prev, [key]: values })); setActiveTasksPage(1)
+   }
+
+   const handleOverdueTasksSortAsc = (key: TaskReportSortKey) => {
+      setOverdueTasksSortActive(true); setOverdueTasksSortKey(key); setOverdueTasksSortDir('asc'); setOverdueTasksPage(1)
+   }
+   const handleOverdueTasksSortDesc = (key: TaskReportSortKey) => {
+      setOverdueTasksSortActive(true); setOverdueTasksSortKey(key); setOverdueTasksSortDir('desc'); setOverdueTasksPage(1)
+   }
+   const handleOverdueTasksFilter = (key: TaskReportSortKey, values: string[]) => {
+      setOverdueTasksColFilters((prev) => ({ ...prev, [key]: values })); setOverdueTasksPage(1)
+   }
+
+   const handleActiveTasksExportExcel = () => {
+      const rows: ExportRow[] = activeTasksData.map((r, i) => ({
+         taskId: taskIndexMap.get(r.taskId) ?? i + 1,
+         title: r.title,
+         assigneeName: r.assigneeName,
+         status: r.status,
+         dueDate: r.dueDate ? new Date(r.dueDate) : '',
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === activeTasksPeriod)?.label ?? ''
+      exportToExcel(`Активные и завершённые задачи — ${periodLabel}`, TASK_EXPORT_COLUMNS, rows)
+   }
+
+   const handleActiveTasksExportPDF = () => {
+      const columns = TASK_REPORT_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
+      const rows: ExportRow[] = activeTasksData.map((r, i) => ({
+         taskId: String(taskIndexMap.get(r.taskId) ?? i + 1),
+         title: r.title,
+         assigneeName: r.assigneeName,
+         status: r.status,
+         dueDate: formatDate(r.dueDate),
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === activeTasksPeriod)?.label ?? ''
+      void exportToPDF(`Активные и завершённые задачи — ${periodLabel}`, columns, rows)
+   }
+
+   const handleOverdueTasksExportExcel = () => {
+      const rows: ExportRow[] = overdueTasksData.map((r, i) => ({
+         taskId: taskIndexMap.get(r.taskId) ?? i + 1,
+         title: r.title,
+         assigneeName: r.assigneeName,
+         status: r.status,
+         dueDate: r.dueDate ? new Date(r.dueDate) : '',
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === overdueTasksPeriod)?.label ?? ''
+      exportToExcel(`Просроченные задачи — ${periodLabel}`, TASK_EXPORT_COLUMNS, rows)
+   }
+
+   const handleOverdueTasksExportPDF = () => {
+      const columns = TASK_REPORT_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
+      const rows: ExportRow[] = overdueTasksData.map((r, i) => ({
+         taskId: String(taskIndexMap.get(r.taskId) ?? i + 1),
+         title: r.title,
+         assigneeName: r.assigneeName,
+         status: r.status,
+         dueDate: formatDate(r.dueDate),
+      }))
+      const periodLabel = PERIOD_OPTIONS.find((o) => o.value === overdueTasksPeriod)?.label ?? ''
+      void exportToPDF(`Просроченные задачи — ${periodLabel}`, columns, rows)
    }
 
    return (
@@ -836,7 +1059,147 @@ export function ReportsPage() {
          )}
 
          {activeTab === 'tasks' && (
-            <p className={styles.stub}>Раздел в разработке</p>
+            <div className={styles.content}>
+               <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>Активные и завершённые задачи</h2>
+                  <SectionToolbar
+                     period={activeTasksPeriod}
+                     viewMode={activeTasksViewMode}
+                     onExportExcel={handleActiveTasksExportExcel}
+                     onExportPDF={handleActiveTasksExportPDF}
+                     onPeriodChange={(p) => { setActiveTasksPeriod(p); setActiveTasksPage(1) }}
+                     onViewModeChange={setActiveTasksViewMode}
+                  />
+                  {activeTasksViewMode === 'cards' ? (
+                     activeTasksPageData.length === 0
+                        ? <p className={styles.empty}>Нет данных за выбранный период</p>
+                        : (
+                           <div className={styles.cardsGrid}>
+                              {activeTasksPageData.map((row, i) => (
+                                 <div key={row.taskId} className={styles.card}>
+                                    <div className={styles.cardTop}>
+                                       <span className={styles.cardId}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
+                                       <span className={styles.cardClient}>{row.title}</span>
+                                       <span className={styles.cardMeta}>{row.assigneeName}</span>
+                                    </div>
+                                    <div className={styles.cardBottom}>
+                                       <span className={styles.cardPrimary}>{row.status}</span>
+                                       <span className={styles.cardSecondary}>{row.dueDate ? formatDate(row.dueDate) : '—'}</span>
+                                    </div>
+                                 </div>
+                              ))}
+                           </div>
+                        )
+                  ) : (
+                     <div className={styles.tableContainer}>
+                        <div className={styles.tableHead}>
+                           {TASK_REPORT_COLUMNS.map(({ key, label, rightAlign }) => (
+                              <ColumnFilter
+                                 key={key}
+                                 className={styles.thFilter}
+                                 iconVariant="select"
+                                 isActive={activeTasksSortKey === key && activeTasksSortActive}
+                                 label={label}
+                                 options={activeTasksColOptions[key] ?? []}
+                                 rightAlign={rightAlign}
+                                 selectedValues={activeTasksColFilters[key] ?? []}
+                                 sortDirection={activeTasksSortDir}
+                                 onFilterChange={(values) => handleActiveTasksFilter(key, values)}
+                                 onSortAsc={() => handleActiveTasksSortAsc(key)}
+                                 onSortDesc={() => handleActiveTasksSortDesc(key)}
+                              />
+                           ))}
+                        </div>
+                        <div className={styles.tableRows}>
+                           {activeTasksPageData.length === 0 ? (
+                              <p className={styles.empty}>Нет данных за выбранный период</p>
+                           ) : (
+                              activeTasksPageData.map((row, i) => (
+                                 <div key={row.taskId} className={`${styles.tableRow} ${styles[`taskRow_${row.statusKey}`]}`}>
+                                    <span className={styles.cell}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
+                                    <span className={styles.cell}>{row.title}</span>
+                                    <span className={styles.cell}>{row.assigneeName}</span>
+                                    <span className={`${styles.cell} ${styles[`taskStatus_${row.statusKey}`]}`}>{row.status}</span>
+                                    <span className={`${styles.cell} ${styles.cellRight}`}>{row.dueDate ? formatDate(row.dueDate) : '—'}</span>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  )}
+                  <PaginationBar page={activeTasksPage} total={activeTasksTotalPages} onChange={setActiveTasksPage} />
+               </div>
+
+               <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>Просроченные задачи</h2>
+                  <SectionToolbar
+                     period={overdueTasksPeriod}
+                     viewMode={overdueTasksViewMode}
+                     onExportExcel={handleOverdueTasksExportExcel}
+                     onExportPDF={handleOverdueTasksExportPDF}
+                     onPeriodChange={(p) => { setOverdueTasksPeriod(p); setOverdueTasksPage(1) }}
+                     onViewModeChange={setOverdueTasksViewMode}
+                  />
+                  {overdueTasksViewMode === 'cards' ? (
+                     overdueTasksPageData.length === 0
+                        ? <p className={styles.empty}>Нет просроченных задач за выбранный период</p>
+                        : (
+                           <div className={styles.cardsGrid}>
+                              {overdueTasksPageData.map((row, i) => (
+                                 <div key={row.taskId} className={styles.card}>
+                                    <div className={styles.cardTop}>
+                                       <span className={styles.cardId}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
+                                       <span className={styles.cardClient}>{row.title}</span>
+                                       <span className={styles.cardMeta}>{row.assigneeName}</span>
+                                    </div>
+                                    <div className={styles.cardBottom}>
+                                       <span className={styles.cardPrimary}>{row.dueDate ? formatDate(row.dueDate) : '—'}</span>
+                                       <span className={styles.cardSecondary}>Просрочена</span>
+                                    </div>
+                                 </div>
+                              ))}
+                           </div>
+                        )
+                  ) : (
+                     <div className={styles.tableContainer}>
+                        <div className={styles.tableHead}>
+                           {TASK_REPORT_COLUMNS.map(({ key, label, rightAlign }) => (
+                              <ColumnFilter
+                                 key={key}
+                                 className={styles.thFilter}
+                                 iconVariant="select"
+                                 isActive={overdueTasksSortKey === key && overdueTasksSortActive}
+                                 label={label}
+                                 options={overdueTasksColOptions[key] ?? []}
+                                 rightAlign={rightAlign}
+                                 selectedValues={overdueTasksColFilters[key] ?? []}
+                                 sortDirection={overdueTasksSortDir}
+                                 onFilterChange={(values) => handleOverdueTasksFilter(key, values)}
+                                 onSortAsc={() => handleOverdueTasksSortAsc(key)}
+                                 onSortDesc={() => handleOverdueTasksSortDesc(key)}
+                              />
+                           ))}
+                        </div>
+                        <div className={styles.tableRows}>
+                           {overdueTasksPageData.length === 0 ? (
+                              <p className={styles.empty}>Нет просроченных задач за выбранный период</p>
+                           ) : (
+                              overdueTasksPageData.map((row, i) => (
+                                 <div key={row.taskId} className={`${styles.tableRow} ${styles[`taskRow_${row.statusKey}`]}`}>
+                                    <span className={styles.cell}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
+                                    <span className={styles.cell}>{row.title}</span>
+                                    <span className={styles.cell}>{row.assigneeName}</span>
+                                    <span className={`${styles.cell} ${styles[`taskStatus_${row.statusKey}`]}`}>{row.status}</span>
+                                    <span className={`${styles.cell} ${styles.cellRight}`}>{row.dueDate ? formatDate(row.dueDate) : '—'}</span>
+                                 </div>
+                              ))
+                           )}
+                        </div>
+                     </div>
+                  )}
+                  <PaginationBar page={overdueTasksPage} total={overdueTasksTotalPages} onChange={setOverdueTasksPage} />
+               </div>
+            </div>
          )}
       </div>
    )

@@ -118,19 +118,19 @@
 }
 
 .row_new {
-   background: #ffffff;
-}
-
-.row_new:hover {
-   background: #f9fafb;
-}
-
-.row_in_progress {
    background: #eff6ff;
 }
 
-.row_in_progress:hover {
+.row_new:hover {
    background: #dbeafe;
+}
+
+.row_in_progress {
+   background: #ffffff;
+}
+
+.row_in_progress:hover {
+   background: #f9fafb;
 }
 
 .row_completed {

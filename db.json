@@ -154,6 +154,17 @@
       "dueDate": "2026-03-05T15:00:00Z",
       "createdAt": "2026-02-20T11:00:00Z",
       "createdBy": "5b7a3c2d-9e4f-4a1c-b2d3-7f6e5c4b1002"
+    },
+    {
+      "title": "Подготовить договор",
+      "dealId": "8a5b759f-cd30-4a64-8205-71b0e0200a4f",
+      "description": "Подготовить договор и отправить клиенту для согласования",
+      "dueDate": "2026-06-15T00:00:00.000Z",
+      "assigneeId": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001",
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001",
+      "id": "df5a46a2-14cf-48c1-b1a9-d93a10b3156a",
+      "status": "new",
+      "createdAt": "2026-06-14T20:41:39.691Z"
     }
   ]
 }
