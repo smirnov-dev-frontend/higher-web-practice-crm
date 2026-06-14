@@ -1,7 +1,6 @@
 .page {
    display: flex;
    flex-direction: column;
-   padding: 24px 32px 40px;
    gap: 32px;
    background: #f9fafb;
    min-height: 100%;
@@ -24,6 +23,7 @@
 .tabList {
    display: flex;
    flex-direction: row;
+   align-items: flex-start;
    gap: 16px;
 }
 
@@ -38,22 +38,35 @@
 }
 
 .tabLabel {
-   padding: 0 8px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 0 16px;
+   height: 32px;
    font-family: 'Roboto', sans-serif;
    font-size: 20px;
    font-weight: 700;
-   line-height: 28px;
+   line-height: 32px;
    color: #6b7280;
    white-space: nowrap;
+   transition: color 0.15s ease;
+}
+
+.tab:hover .tabLabel {
+   color: #3b82f6;
 }
 
 .tabLabelActive {
-   padding: 0 8px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 0 16px;
+   height: 32px;
    font-family: 'Roboto', sans-serif;
    font-size: 20px;
    font-weight: 700;
-   line-height: 28px;
-   color: #2563eb;
+   line-height: 32px;
+   color: #3b82f6;
    white-space: nowrap;
 }
 
@@ -67,7 +80,7 @@
    height: 2px;
    align-self: stretch;
    border-radius: 2px;
-   background: #2563eb;
+   background: #3b82f6;
 }
 
 .tabSeparator {
@@ -94,7 +107,6 @@
    font-family: 'Inter', sans-serif;
    font-size: 16px;
    font-weight: 700;
-   line-height: 24px;
    color: #1f2937;
 }
 
@@ -128,6 +140,22 @@
    color: #1f2937;
    cursor: pointer;
    outline: none;
+   transition: border-color 0.15s ease;
+}
+
+.filterSelect:hover {
+   border-color: #2563eb;
+}
+
+.filterSelect:focus {
+   border-color: #3b82f6;
+}
+
+.filterSelect:disabled {
+   background: #f9fafb;
+   color: #d1d5db;
+   cursor: default;
+   border-color: #d1d5db;
 }
 
 .filterSelectChevron {
@@ -148,7 +176,6 @@
    font-family: 'Inter', sans-serif;
    font-size: 16px;
    font-weight: 700;
-   line-height: 24px;
    color: #1f2937;
    cursor: pointer;
    white-space: nowrap;
@@ -168,7 +195,7 @@
    display: flex;
    flex-direction: row;
    align-items: baseline;
-   padding: 0 17px 0 14px;
+   padding: 0 24px;
 }
 
 .thCell {
@@ -187,6 +214,10 @@
 
 .thCellRight {
    justify-content: flex-end;
+}
+
+.thFilter {
+   flex: 1;
 }
 
 .tableRows {
@@ -254,39 +285,209 @@
    display: flex;
    flex-direction: row;
    align-items: center;
+   gap: 24px;
+}
+
+.paginationPages {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
    gap: 8px;
 }
 
 .pageNavBtn {
    display: flex;
-   align-items: center;
    justify-content: center;
+   align-items: center;
    width: 40px;
    height: 32px;
+   padding: 8px 12px;
+   border: none;
    background: #f9fafb;
    border-radius: 4px;
-   border: none;
    cursor: pointer;
+   color: #1f2937;
+   transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pageNavBtn:hover:not(:disabled) {
+   background: #e5e7eb;
+   box-shadow: 0px 4px 8px #e5e7eb;
 }
 
 .pageNavBtn:disabled {
-   opacity: 0.4;
+   color: #d1d5db;
    cursor: default;
 }
 
-.pageCurrent {
+.arrowRight {
+   transform: scaleX(-1);
+}
+
+.pageBtn {
    display: flex;
-   align-items: center;
    justify-content: center;
+   align-items: center;
    width: 32px;
    height: 32px;
-   background: #3b82f6;
+   padding: 8px;
+   border: none;
+   background: transparent;
    border-radius: 4px;
    font-family: 'Inter', sans-serif;
    font-size: 14px;
    font-weight: 400;
    line-height: 20px;
+   color: #1f2937;
+   cursor: pointer;
+   transition: background-color 0.15s ease, font-weight 0.05s ease;
+}
+
+.pageBtn:hover {
+   background: #e5e7eb;
+   box-shadow: 0px 4px 8px #e5e7eb;
+   font-weight: 700;
+}
+
+.pageBtnActive {
+   background: #3b82f6;
    color: #f9fafb;
+}
+
+.pageBtnActive:hover {
+   background: #3b82f6;
+   box-shadow: none;
+   font-weight: 400;
+}
+
+.pageEllipsis {
+   display: flex;
+   justify-content: center;
+   align-items: flex-end;
+   width: 12px;
+   height: 32px;
+   padding-bottom: 6px;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   color: #1f2937;
+}
+
+.paginationJump {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 8px;
+}
+
+.pageJumpInput {
+   width: 41px;
+   height: 32px;
+   padding: 4px 12px;
+   background: #ffffff;
+   border: 1px solid #9ca3af;
+   border-radius: 4px;
+   font-family: 'Inter', sans-serif;
+   font-size: 16px;
+   font-weight: 400;
+   color: #1f2937;
+   outline: none;
+   text-align: center;
+}
+
+.pageJumpInput::placeholder {
+   color: #9ca3af;
+}
+
+.pageJumpLabel {
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #6b7280;
+   white-space: nowrap;
+}
+
+.cardsGrid {
+   display: grid;
+   grid-template-columns: repeat(5, 1fr);
+   gap: 8px;
+}
+
+.card {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: flex-start;
+   padding: 12px 16px;
+   gap: 6px;
+   background: #ffffff;
+   box-shadow: 0px 4px 8px #e5e7eb;
+   border-radius: 8px;
+}
+
+.cardTop {
+   display: flex;
+   flex-direction: row;
+   align-items: flex-start;
+   gap: 8px;
+   align-self: stretch;
+}
+
+.cardId {
+   flex-shrink: 0;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #1f2937;
+}
+
+.cardClient {
+   flex: 1;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #1f2937;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   min-width: 0;
+}
+
+.cardMeta {
+   flex-shrink: 1;
+   font-family: 'Inter', sans-serif;
+   font-size: 12px;
+   font-weight: 400;
+   line-height: 16px;
+   color: #6b7280;
+}
+
+.cardBottom {
+   display: flex;
+   flex-direction: row;
+   align-items: baseline;
+   gap: 6px;
+   align-self: stretch;
+}
+
+.cardPrimary {
+   flex: 1;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 700;
+   line-height: 20px;
+   color: #1f2937;
+}
+
+.cardSecondary {
+   flex-shrink: 0;
+   font-family: 'Inter', sans-serif;
+   font-size: 12px;
+   font-weight: 400;
+   line-height: 16px;
+   color: #6b7280;
 }
 
 .empty {
@@ -295,6 +496,14 @@
    font-size: 14px;
    color: #9ca3af;
 }
+
+.card.stageRow_in_progress { background: #eff6ff; }
+.card.stageRow_completed { background: #ecfdf5; }
+.card.stageRow_cancelled { background: #fff7ed; }
+
+.cardClient.stageLabel_in_progress { color: #1d4ed8; }
+.cardClient.stageLabel_completed { color: #065f46; }
+.cardClient.stageLabel_cancelled { color: #f59e0b; }
 
 .stub {
    font-family: 'Inter', sans-serif;

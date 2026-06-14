@@ -213,3 +213,27 @@
    font-size: 12px;
    color: #9ca3af;
 }
+
+.radio {
+   position: relative;
+   appearance: none;
+   -webkit-appearance: none;
+   flex-shrink: 0;
+   width: 16px;
+   height: 16px;
+   border: 1px solid #1d4ed8;
+   border-radius: 50%;
+   cursor: pointer;
+}
+
+.radio:checked::after {
+   content: '';
+   position: absolute;
+   inset: 3px;
+   background: #1d4ed8;
+   border-radius: 50%;
+}
+
+.selectIcon {
+   flex-shrink: 0;
+}

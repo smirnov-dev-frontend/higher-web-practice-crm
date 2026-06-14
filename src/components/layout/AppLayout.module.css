@@ -259,7 +259,7 @@
 .content {
   min-width: 0;
   flex: 1;
-  padding: 22px 26px 34px;
+  padding: 24px 32px;
 }
 
 @media (max-width: 900px) {
