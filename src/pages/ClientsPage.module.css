@@ -190,21 +190,15 @@
 }
 
 .cell {
-   overflow: hidden;
    color: #1f2937;
    font-size: 12px;
    line-height: 16px;
-   text-overflow: ellipsis;
-   white-space: nowrap;
 }
 
 .cellName {
-   overflow: hidden;
    color: #1f2937;
    font-size: 14px;
    line-height: 20px;
-   text-overflow: ellipsis;
-   white-space: nowrap;
 }
 
 .cellEmail {
