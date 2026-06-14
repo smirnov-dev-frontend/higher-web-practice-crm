@@ -27,6 +27,7 @@ export type CreateDealPayload = {
 export type UpdateDealPayload = {
   title?: string;
   description?: string;
+  clientId?: string;
   amount?: number;
   status?: DealStatus;
   completedAt?: string;

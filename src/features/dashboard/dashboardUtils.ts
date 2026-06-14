@@ -1,6 +1,9 @@
+import { formatCurrency, formatDate, formatShortDate } from '../../utils/format'
 import type { Client } from '../../types/client'
 import type { Deal } from '../../types/deal'
 import type { Task } from '../../types/task'
+
+export { formatCurrency, formatDate, formatShortDate }
 
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate())
 
@@ -24,38 +27,6 @@ const isAfterDate = (value: string | undefined, date: Date) => {
    }
 
    return new Date(value) >= date
-}
-
-export const formatCurrency = (value: number) =>
-   new Intl.NumberFormat('ru-RU', {
-      currency: 'RUB',
-      maximumFractionDigits: 0,
-      style: 'currency',
-   }).format(value)
-
-export const formatDate = (value: string | undefined) => {
-   if (!value) {
-      return '—'
-   }
-
-   return new Intl.DateTimeFormat('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-   })
-      .format(new Date(value))
-      .replace(' г.', '')
-}
-
-export const formatShortDate = (value: string | undefined) => {
-   if (!value) {
-      return '—'
-   }
-
-   return new Intl.DateTimeFormat('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-   }).format(new Date(value))
 }
 
 export const getDashboardStats = (clients: Client[], deals: Deal[]) => {

@@ -51,6 +51,30 @@
       "createdAt": "2026-03-01T14:00:00Z",
       "deleted": false,
       "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001"
+    },
+    {
+      "comment": "Новый тестовый клиент",
+      "company": "ООО Рога и Копыта",
+      "email": "Volodin@mail.ru",
+      "name": "Владимир Володин",
+      "phone": "79154413141",
+      "website": "site.com",
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001",
+      "id": "be1146c3-b622-4331-851a-57cd53786a9f",
+      "createdAt": "2026-06-13T19:40:23.495Z",
+      "deleted": false
+    },
+    {
+      "comment": "Клиент для удаления",
+      "company": "ООО Тестовая компания",
+      "email": "ya@polk.ru",
+      "name": "Ярополк Новый",
+      "phone": "79101234567",
+      "website": "site1.ru",
+      "createdBy": "2c4c0c9a-6b1e-4f7c-9a6b-1f9a7a2e1001",
+      "id": "029d2e11-69dc-451d-bf41-93a03ddbd90f",
+      "createdAt": "2026-06-13T19:42:47.422Z",
+      "deleted": true
     }
   ],
   "deals": [

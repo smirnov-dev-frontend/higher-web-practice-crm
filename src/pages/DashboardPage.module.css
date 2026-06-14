@@ -62,9 +62,9 @@
 }
 
 .mainNumber {
-  color: #3B82F6 !important;
-  font-size: 24px !important;
+  color: #3b82f6;
   font-family: 'Roboto', sans-serif;
+  font-size: 24px;
 }
 
 .statsRow:last-child {
@@ -136,24 +136,43 @@
 
 .dealRow {
   display: grid;
-  grid-template-columns: 556fr 300fr 140fr 140fr 120fr;
-  align-items: start;
+  grid-template-columns:
+    minmax(min-content, 556fr)
+    minmax(min-content, 300fr)
+    minmax(min-content, 140fr)
+    minmax(min-content, 140fr)
+    minmax(min-content, 120fr);
+  align-items: baseline;
   min-height: 36px;
   border-radius: 8px;
   padding: 8px 24px;
   background: #ffffff;
-  box-shadow: 0 4px 8px #E5E7EB;
-  color: #1F2937;
+  box-shadow: 0 4px 8px #e5e7eb, inset 0 0 0 1px transparent;
+  color: #1f2937;
   font-size: 14px;
   font-weight: 400;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+  cursor: pointer;
 }
 
-.dealRow span:last-child { 
-   text-align: right; 
+.dealRow:hover {
+  background: #f9fafb;
+  box-shadow: 0 4px 8px #e5e7eb, inset 0 0 0 1px #d1d5db;
+}
+
+.dealRow span:last-child {
+  text-align: right;
 }
 
 .dealRowNew {
   background: #eff6ff;
+}
+
+.dealRowNew:hover {
+  background: #dbeafe;
+  border-color: #d1d5db;
 }
 
 .dealRow strong {

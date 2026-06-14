@@ -1,0 +1,296 @@
+.page {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.title {
+   margin: 0 0 16px;
+   color: #1f2937;
+   font-family: 'Roboto', sans-serif;
+   font-size: 30px;
+   font-weight: 700;
+   line-height: 1.2;
+}
+
+.message {
+   padding: 40px 0;
+   color: #6b7280;
+   text-align: center;
+}
+
+.toolbar {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.searchWrapper {
+   position: relative;
+   display: flex;
+   flex: 1;
+   align-items: center;
+}
+
+.searchIcon {
+   position: absolute;
+   left: 14px;
+   color: #9ca3af;
+   pointer-events: none;
+}
+
+.searchInput {
+   width: 100%;
+   min-height: 40px;
+   border: 1px solid #d1d5db;
+   border-radius: 4px;
+   padding: 8px 14px 8px 44px;
+   background-color: transparent;
+   color: #1f2937;
+   font: inherit;
+   font-size: 14px;
+   outline: none;
+   transition: border-color 0.2s ease;
+}
+
+.searchInput:hover {
+   border-color: #9ca3af;
+}
+
+.searchInput:focus {
+   border-color: #3b82f6;
+}
+
+.searchInput::placeholder {
+   color: #9ca3af;
+}
+
+.searchInput::-webkit-search-cancel-button {
+   appearance: none;
+}
+
+.tableWrapper {
+   overflow-x: auto;
+   padding: 0 8px 8px;
+   margin: 0 -8px;
+}
+
+.tableHeader,
+.row {
+   display: grid;
+   grid-template-columns:
+      minmax(min-content, 296fr)
+      minmax(min-content, 116fr)
+      minmax(0, 394fr)
+      minmax(min-content, 144fr)
+      minmax(min-content, 88fr)
+      minmax(min-content, 115fr)
+      minmax(min-content, 133fr);
+   align-items: baseline;
+   gap: 16px;
+   padding: 0 24px;
+}
+
+.tableHeader {
+   padding-bottom: 4px;
+}
+
+.thBtn {
+   display: flex;
+   align-items: center;
+   border: none;
+   padding: 0;
+   background: transparent;
+   text-align: left;
+   cursor: pointer;
+   user-select: none;
+   white-space: nowrap;
+}
+
+.thBtnRight {
+   justify-content: flex-end;
+   width: 100%;
+}
+
+.thContent {
+   display: inline-flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 2px;
+   height: 16px;
+   border-radius: 2px;
+   color: #9ca3af;
+   font-size: 12px;
+   font-weight: 400;
+   line-height: 16px;
+   transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+}
+
+.thContent:hover {
+   background: #f9fafb;
+   color: #3b82f6;
+}
+
+.thContentActive {
+   color: #3b82f6;
+}
+
+.thContent:active {
+   color: #1d4ed8;
+}
+
+.sortIcon {
+   flex-shrink: 0;
+   color: currentColor;
+   transition:
+      transform 0.15s ease,
+      color 0.15s ease;
+}
+
+.thContent:hover .sortIcon {
+   color: #2563eb;
+}
+
+.thContent:active .sortIcon {
+   color: #1d4ed8;
+}
+
+.sortIconAsc {
+   transform: rotate(180deg);
+}
+
+.rows {
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+}
+
+.row {
+   min-height: 36px;
+   padding: 8px 24px;
+   border: 1px solid transparent;
+   border-radius: 8px;
+   box-shadow: 0 4px 8px #e5e7eb;
+   cursor: pointer;
+   transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+}
+
+.row:hover {
+   border-color: #d1d5db;
+}
+
+.row_new {
+   background: #eff6ff;
+}
+
+.row_new:hover {
+   background: #dbeafe;
+}
+
+.row_in_progress {
+   background: #ffffff;
+}
+
+.row_in_progress:hover {
+   background: #f9fafb;
+}
+
+.row_completed {
+   background: #f0fdf4;
+}
+
+.row_completed:hover {
+   background: #dcfce7;
+}
+
+.row_cancelled {
+   background: #fff7ed;
+}
+
+.row_cancelled:hover {
+   background: #fed7aa;
+}
+
+.cell {
+   overflow: hidden;
+   color: #1f2937;
+   font-size: 12px;
+   line-height: 16px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.cellTitle {
+   overflow: hidden;
+   color: #1f2937;
+   font-size: 14px;
+   line-height: 20px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.cellDesc {
+   overflow: hidden;
+   color: #1f2937;
+   font-size: 12px;
+   line-height: 16px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.cellAmount {
+   overflow: hidden;
+   color: #1f2937;
+   font-size: 14px;
+   line-height: 20px;
+   text-align: right;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.cellDate {
+   overflow: hidden;
+   color: #1f2937;
+   font-size: 12px;
+   line-height: 16px;
+   text-align: right;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.status_new {
+   color: #1f2937;
+}
+
+.status_in_progress {
+   color: #3b82f6;
+}
+
+.status_completed {
+   color: #10b981;
+}
+
+.status_cancelled {
+   color: #f59e0b;
+}
+
+.empty {
+   padding: 40px;
+   color: #9ca3af;
+   font-size: 14px;
+   text-align: center;
+}
+
+@media (max-width: 768px) {
+   .toolbar {
+      flex-wrap: wrap;
+   }
+
+   .searchWrapper {
+      flex: 1 1 100%;
+   }
+}
