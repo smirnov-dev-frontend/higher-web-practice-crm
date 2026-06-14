@@ -1,0 +1,110 @@
+.form {
+   display: flex;
+   flex-direction: column;
+   gap: 32px;
+}
+
+.content {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.header {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: flex-start;
+}
+
+.title {
+   margin: 0;
+   font-family: 'Roboto', sans-serif;
+   font-size: 24px;
+   font-weight: 700;
+   line-height: 32px;
+   color: #1f2937;
+}
+
+.date {
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #1f2937;
+   text-align: right;
+   white-space: nowrap;
+}
+
+.fields {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.row {
+   display: flex;
+   flex-direction: row;
+   gap: 8px;
+}
+
+.row > * {
+   flex: 1;
+   min-width: 0;
+}
+
+.textarea {
+   width: 100%;
+   height: 80px;
+   border: 1px solid #d1d5db;
+   border-radius: 4px;
+   padding: 8px 14px;
+   background: #ffffff;
+   color: #1f2937;
+   font-family: 'Inter', sans-serif;
+   font-size: 16px;
+   font-weight: 400;
+   line-height: 24px;
+   outline: none;
+   resize: none;
+   transition: border-color 0.2s ease;
+}
+
+.textarea:hover {
+   border-color: #9ca3af;
+}
+
+.textarea:focus {
+   border-color: #3b82f6;
+}
+
+.textarea::placeholder {
+   color: #9ca3af;
+}
+
+.actions {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 16px;
+}
+
+.submitBtn {
+   flex: 1;
+}
+
+.selectStatus_new {
+   color: #1f2937;
+}
+
+.selectStatus_in_progress {
+   color: #3b82f6;
+}
+
+.selectStatus_completed {
+   color: #10b981;
+}
+
+.selectStatus_overdue {
+   color: #ef4444;
+}
