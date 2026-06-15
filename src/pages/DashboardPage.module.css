@@ -268,45 +268,390 @@
   color: #6b7280;
 }
 
-@media (max-width: 1100px) {
-  .clientsGrid,
-  .tasksGrid {
-    grid-template-columns: repeat(3, minmax(160px, 1fr));
-  }
 
-  .dealRow {
-    grid-template-columns: 1.6fr 1fr 1fr;
-    gap: 8px;
-  }
-
-  .dealRow span:nth-last-child(-n + 2) {
-    display: none;
-  }
+/* Desktop: dealFooter transparent to grid */
+.dealFooter {
+  display: contents;
 }
 
-@media (max-width: 760px) {
+/* Mobile tabs: hidden on desktop */
+.mobileTabs {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .header {
+    margin-bottom: 0;
+  }
+
+  .title {
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* Tabs */
+  .mobileTabs {
+    display: flex;
+    position: relative;
+    margin-top: 40px;
+  }
+
+  .mobileTabs::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #d1d5db;
+  }
+
+  .mobileTab {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 8px 3px;
+    height: 22px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    position: relative;
+  }
+
+  .mobileTabActive {
+    color: #2563eb;
+  }
+
+  .mobileTabActive::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #2563eb;
+    border-radius: 2px;
+    z-index: 1;
+  }
+
+  .stats {
+    margin-top: 40px;
+    margin-bottom: 0;
+  }
+
   .statsHeader {
     display: none;
   }
 
   .statsRow {
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    padding: 12px;
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    align-items: start;
+    gap: 2px 8px;
+    min-height: 84px;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border-radius: 8px;
   }
 
-  .clientsGrid,
-  .tasksGrid {
-    grid-template-columns: 1fr;
+  .statsRow:last-child {
+    margin-bottom: 0;
+  }
+
+  .statsRow > strong {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #1f2937;
+    margin-bottom: 4px;
+  }
+
+  .statsRow .mainNumber {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+    align-self: start;
+    color: #3b82f6;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 28px;
+  }
+
+  .statsRow .mainNumber::after {
+    content: "на сегодня";
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #6b7280;
+  }
+
+  .statsRow .statToday {
+    grid-column: 2;
+    grid-row: 2;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #10b981;
+    text-align: right;
+  }
+
+  .statsRow .statToday::before {
+    content: "за сегодня ";
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .statsRow .statWeek {
+    grid-column: 2;
+    grid-row: 3;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #10b981;
+    text-align: right;
+  }
+
+  .statsRow .statWeek::before {
+    content: "за неделю ";
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .statsRow .statMonth {
+    grid-column: 3;
+    grid-row: 2;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #10b981;
+    text-align: right;
+  }
+
+  .statsRow .statMonth::before {
+    content: "за месяц ";
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .statsRow .statQuarter {
+    grid-column: 3;
+    grid-row: 3;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #10b981;
+    text-align: right;
+  }
+
+  .statsRow .statQuarter::before {
+    content: "за квартал ";
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  /* Tab visibility */
+  .mobileTabHidden {
+    display: none;
+  }
+
+  .section {
+    margin-top: 40px;
+  }
+
+  /* Clients section mobile */
+  .clientsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .clientCard {
+    display: flex;
+    flex-direction: column;
+    min-height: 98px;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .clientInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .clientCard h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #1f2937;
+  }
+
+  .clientCard p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 16px;
+    color: #6b7280;
+  }
+
+  .clientDeals {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-top: auto;
+  }
+
+  .clientCard strong {
+    font-size: 20px;
+    line-height: 28px;
+    color: #10b981;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+  }
+
+  .clientCard span {
+    margin-left: 0;
+    font-size: 14px;
+    line-height: 20px;
+    color: #9ca3af;
+  }
+
+  /* Deals section mobile */
+  .dealsList {
+    gap: 4px;
+    margin-bottom: 0;
   }
 
   .dealRow {
-    grid-template-columns: 1fr;
-    gap: 4px;
-    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: 108px;
+    padding: 8px 12px;
+    gap: 8px;
   }
 
-  .dealRow span:nth-last-child(-n + 2) {
-    display: block;
+  .dealRow > span:first-child {
+    font-size: 12px;
+    line-height: 16px;
+    color: #1f2937;
+    font-weight: 400;
+  }
+
+  .dealRow .clientNameCell {
+    font-size: 12px;
+    line-height: 16px;
+    color: #6b7280;
+  }
+
+  .dealRow > strong {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #1f2937;
+  }
+
+  .dealFooter {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .dealFooter .status {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .dealFooter .statusNew {
+    color: #1f2937;
+  }
+
+  .dealFooter .dateCell {
+    margin-left: auto;
+    font-size: 12px;
+    line-height: 16px;
+    color: #6b7280;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Tasks section mobile */
+  .tasksGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 0;
+  }
+
+  .taskCard {
+    min-height: 106px;
+    gap: 8px;
+  }
+
+  .taskCard h3 {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    margin-bottom: 0;
+  }
+
+  .taskCard p {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .taskCard > span {
+    margin: 0;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .taskFooter {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* Fixed button at bottom */
+  .section > a {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 20px 20px;
+    background: #f9fafb;
+    z-index: 20;
+  }
+
+  .section > a > button {
+    width: 100%;
+  }
+
+  .dashboard {
+    padding-bottom: 100px;
   }
 }

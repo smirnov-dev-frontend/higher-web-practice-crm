@@ -273,50 +273,126 @@
   padding: 24px 32px;
 }
 
-@media (max-width: 900px) {
+/* Mobile header: hidden on desktop */
+.mobileHeader {
+  display: none;
+}
+
+.mobileMenuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  padding: 3px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mobileMenuBurgerIcon {
+  width: 24px;
+  height: 24px;
+  color: #1f2937;
+}
+
+.mobileUserIcon {
+  width: 24px;
+  height: 24px;
+  color: #1f2937;
+}
+
+.mobileLogoImg {
+  height: 24px;
+  width: auto;
+}
+
+.mobileProfileLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.mobileOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgb(0 0 0 / 40%);
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  height: 100%;
+  padding: 20px 16px;
+  background: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.mobileNavClose {
+  align-self: flex-end;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  color: #6b7280;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.mobileNavLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px;
+  border-radius: 8px;
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.mobileNavLink:hover {
+  background: #f3f4f6;
+}
+
+.mobileNavLinkActive {
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+
+@media (max-width: 768px) {
   .layout {
     display: block;
   }
 
+  .mobileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px 12px;
+    height: 50px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 0 0 12px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
   .sidebar {
-    position: fixed;
-    z-index: 20;
-    top: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 64px;
-    padding: 0 12px;
-    border-top: 1px solid #e5e7eb;
-    border-right: none;
-  }
-
-  .sidebarTop,
-  .sidebarBottom {
-    display: none;
-  }
-
-  .navigation {
-    flex-direction: row;
-    justify-content: space-around;
-    height: 100%;
-  }
-
-  .navLink {
-    justify-content: center;
-    min-height: 64px;
-    border-bottom: none;
-    padding: 0;
-  }
-
-  .navText {
     display: none;
   }
 
   .content {
-  min-width: 0;
-  flex: 1;
-  padding: 24px 32px;
-}
+    padding: 20px;
+    padding-bottom: 32px;
+  }
 }
