@@ -1076,14 +1076,14 @@ export function ReportsPage() {
                         : (
                            <div className={styles.cardsGrid}>
                               {activeTasksPageData.map((row, i) => (
-                                 <div key={row.taskId} className={styles.card}>
+                                 <div key={row.taskId} className={`${styles.card} ${styles[`taskRow_${row.statusKey}`]}`}>
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
                                        <span className={styles.cardClient}>{row.title}</span>
                                        <span className={styles.cardMeta}>{row.assigneeName}</span>
                                     </div>
                                     <div className={styles.cardBottom}>
-                                       <span className={styles.cardPrimary}>{row.status}</span>
+                                       <span className={`${styles.cardPrimary} ${styles[`taskStatus_${row.statusKey}`]}`}>{row.status}</span>
                                        <span className={styles.cardSecondary}>{row.dueDate ? formatDate(row.dueDate) : '—'}</span>
                                     </div>
                                  </div>
@@ -1146,7 +1146,7 @@ export function ReportsPage() {
                         : (
                            <div className={styles.cardsGrid}>
                               {overdueTasksPageData.map((row, i) => (
-                                 <div key={row.taskId} className={styles.card}>
+                                 <div key={row.taskId} className={`${styles.card} ${styles.taskRow_overdue}`}>
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
                                        <span className={styles.cardClient}>{row.title}</span>
@@ -1154,7 +1154,7 @@ export function ReportsPage() {
                                     </div>
                                     <div className={styles.cardBottom}>
                                        <span className={styles.cardPrimary}>{row.dueDate ? formatDate(row.dueDate) : '—'}</span>
-                                       <span className={styles.cardSecondary}>Просрочена</span>
+                                       <span className={`${styles.cardSecondary} ${styles.taskStatus_overdue}`}>Просрочена</span>
                                     </div>
                                  </div>
                               ))}
