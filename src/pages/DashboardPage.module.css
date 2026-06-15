@@ -610,19 +610,19 @@
 
   .taskCard {
     min-height: 106px;
-    gap: 8px;
   }
 
   .taskCard h3 {
     font-size: 14px;
     font-weight: 700;
     line-height: 20px;
-    margin-bottom: 0;
+    margin: 0 0 2px;
   }
 
   .taskCard p {
     font-size: 12px;
     line-height: 16px;
+    margin-bottom: 2px;
   }
 
   .taskCard > span {
@@ -634,6 +634,7 @@
   .taskFooter {
     font-size: 14px;
     line-height: 20px;
+    margin-top: auto;
   }
 
   /* Fixed button at bottom */
