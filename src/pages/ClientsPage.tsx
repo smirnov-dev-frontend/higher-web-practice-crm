@@ -124,7 +124,9 @@ export function ClientsPage() {
          <h1 className={styles.title}>Клиенты</h1>
 
          <div className={styles.toolbar}>
-            <Button onClick={() => setIsAddModalOpen(true)}>Новый клиент</Button>
+            <div className={styles.toolbarAddBtn}>
+               <Button onClick={() => setIsAddModalOpen(true)}>Новый клиент</Button>
+            </div>
             <div className={styles.searchWrapper}>
                <SearchIcon className={styles.searchIcon} />
                <input
@@ -166,20 +168,12 @@ export function ClientsPage() {
                      onClick={() => setEditingClient(client)}
                   >
                      <span className={styles.cellName}>{client.name.split(' ')[0]}</span>
-                     <span className={styles.cell}>{formatPhone(client.phone)}</span>
-                     <span
-                        className={`${styles.cell} ${client.deleted ? '' : styles.cellEmail}`}
-                     >
-                        {client.email}
-                     </span>
-                     <span className={styles.cell}>{client.company}</span>
-                     <span className={styles.cell}>{formatWebsite(client.website)}</span>
-                     <span className={`${styles.cell} ${styles.cellComment}`}>
-                        {client.comment || '—'}
-                     </span>
-                     <span className={`${styles.cell} ${styles.cellDate}`}>
-                        {formatDate(client.createdAt)}
-                     </span>
+                     <span className={`${styles.cell} ${styles.cellPhone}`}>{formatPhone(client.phone)}</span>
+                     <span className={`${styles.cell} ${styles.cellEmail}`}>{client.email}</span>
+                     <span className={`${styles.cell} ${styles.cellCompany}`}>{client.company}</span>
+                     <span className={`${styles.cell} ${styles.cellWebsite}`}>{formatWebsite(client.website)}</span>
+                     <span className={`${styles.cell} ${styles.cellComment}`}>{client.comment || '—'}</span>
+                     <span className={`${styles.cell} ${styles.cellDate}`}>{formatDate(client.createdAt)}</span>
                   </div>
                ))}
             </div>
@@ -189,6 +183,10 @@ export function ClientsPage() {
                   {search ? 'По вашему запросу ничего не найдено' : 'Клиенты ещё не добавлены'}
                </p>
             )}
+         </div>
+
+         <div className={styles.mobileAdd}>
+            <Button onClick={() => setIsAddModalOpen(true)}>Новый клиент</Button>
          </div>
 
          {isAddModalOpen && (
