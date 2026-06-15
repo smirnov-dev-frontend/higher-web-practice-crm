@@ -299,6 +299,7 @@
 .mobileUserIcon {
   width: 24px;
   height: 24px;
+  color: #1f2937;
 }
 
 .mobileLogoImg {
@@ -390,9 +391,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 20px;
-  margin: 8px 0;
+  padding: 0 20px;
   height: 40px;
+  margin-bottom: 17px;
   color: #1f2937;
   font-size: 16px;
   font-weight: 400;
@@ -403,12 +404,16 @@
 .mobileNavLink::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -9px;
   left: 20px;
   right: 20px;
   height: 1px;
   background: #d1d5db;
   border-radius: 2px;
+}
+
+.mobileNavLink:last-child {
+  margin-bottom: 0;
 }
 
 .mobileNavLink:last-child::after {
