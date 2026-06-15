@@ -7,6 +7,7 @@ import ClientsIcon from '../../icons/sidebar-clients.svg?react'
 import CollapseIcon from '../../icons/sidebar-collapse.svg?react'
 import DealsIcon from '../../icons/sidebar-deals.svg?react'
 import HomeIcon from '../../icons/sidebar-home.svg?react'
+import CloseMenuIcon from '../../icons/close-menu.svg?react'
 import MenuBurgerIcon from '../../icons/menu-burger.svg?react'
 import ReportsIcon from '../../icons/sidebar-reports.svg?react'
 import TasksIcon from '../../icons/sidebar-tasks.svg?react'
@@ -76,26 +77,19 @@ export function AppLayout() {
             </NavLink>
          </header>
 
-         {isMobileMenuOpen && (
-            <div
-               className={styles.mobileOverlay}
-               role="presentation"
-               onClick={() => setIsMobileMenuOpen(false)}
-            >
-               <nav
-                  aria-label="Навигация"
-                  className={styles.mobileNav}
-                  role="dialog"
-                  onClick={(e) => e.stopPropagation()}
-               >
+         <div className={isMobileMenuOpen ? `${styles.mobileOverlay} ${styles.mobileOverlayOpen}` : styles.mobileOverlay}>
+               <div className={styles.mobileNavHeader}>
+                  <img alt="YaPlex" className={styles.mobileNavLogoImg} src="/yaplex-logo.svg" />
                   <button
                      aria-label="Закрыть меню"
                      className={styles.mobileNavClose}
                      type="button"
                      onClick={() => setIsMobileMenuOpen(false)}
                   >
-                     ✕
+                     <CloseMenuIcon aria-hidden className={styles.mobileNavCloseIcon} />
                   </button>
+               </div>
+               <nav aria-label="Навигация" className={styles.mobileNav}>
                   {navigationItems.map(({ Icon, label, to }) => (
                      <NavLink
                         className={({ isActive }) =>
@@ -111,20 +105,8 @@ export function AppLayout() {
                         {label}
                      </NavLink>
                   ))}
-                  <NavLink
-                     className={({ isActive }) =>
-                        isActive
-                           ? `${styles.mobileNavLink} ${styles.mobileNavLinkActive}`
-                           : styles.mobileNavLink
-                     }
-                     to="/profile"
-                     onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                     Профиль
-                  </NavLink>
                </nav>
             </div>
-         )}
 
          <aside
             className={
