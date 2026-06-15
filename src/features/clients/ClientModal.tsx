@@ -16,6 +16,7 @@ import { selectCurrentUser } from '../auth/authSelectors'
 import { clientSchema, type ClientFormValues } from './clientsSchema'
 import type { Client } from '../../types/client'
 import { formatDate, formatPhone, normalizePhone } from '../../utils/format'
+import RowIcon from '../../icons/row.svg?react'
 
 import styles from './ClientModal.module.css'
 
@@ -118,9 +119,14 @@ export function ClientModal({ client, draft, onClose, onDraftSave }: ClientModal
          <form className={styles.form} noValidate onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.content}>
                <div className={styles.header}>
-                  <h2 className={styles.title} id="modal-title">
-                     {client ? 'Карточка клиента' : 'Новый клиент'}
-                  </h2>
+                  <div className={styles.headerTop}>
+                     <button aria-label="Назад" className={styles.backBtn} type="button" onClick={onClose}>
+                        <RowIcon aria-hidden className={styles.backIcon} />
+                     </button>
+                     <h2 className={styles.title} id="modal-title">
+                        {client ? 'Карточка клиента' : 'Новый клиент'}
+                     </h2>
+                  </div>
                   {client && (
                      <span className={styles.date}>добавлен {formatDate(client.createdAt)}</span>
                   )}
@@ -236,7 +242,12 @@ export function ClientModal({ client, draft, onClose, onDraftSave }: ClientModal
                      {isDeleting ? 'Удаление...' : 'Удалить клиента'}
                   </Button>
                ) : (
-                  <Button type="button" variant="secondary" onClick={onClose}>
+                  <Button
+                     className={isReadOnly ? styles.closeBtn : undefined}
+                     type="button"
+                     variant="secondary"
+                     onClick={onClose}
+                  >
                      {isReadOnly ? 'Закрыть' : 'Отменить'}
                   </Button>
                )}

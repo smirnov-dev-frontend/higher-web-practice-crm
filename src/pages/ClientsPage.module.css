@@ -213,9 +213,18 @@
    text-align: right;
 }
 
+.cellPhone {}
+.cellCompany {}
+.cellWebsite {}
+
 .rowDeleted .cell,
-.rowDeleted .cellName {
+.rowDeleted .cellName,
+.rowDeleted .cellEmail {
    color: #d1d5db;
+}
+
+.mobileAdd {
+   display: none;
 }
 
 .empty {
@@ -226,11 +235,99 @@
 }
 
 @media (max-width: 768px) {
+   .page {
+      padding-bottom: 100px;
+   }
+
+   .title {
+      font-size: 24px;
+      line-height: 32px;
+      margin-bottom: 0;
+   }
+
+   .toolbarAddBtn {
+      display: none;
+   }
+
    .toolbar {
       flex-wrap: wrap;
    }
 
    .searchWrapper {
       flex: 1 1 100%;
+   }
+
+   .tableWrapper {
+      overflow-x: visible;
+      padding: 0;
+      margin: 0;
+   }
+
+   .tableHeader {
+      display: none;
+   }
+
+   .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+         "cellName cellDate"
+         "cellPhone cellCompany"
+         "cellEmail cellWebsite"
+         "cellComment cellComment";
+      column-gap: 16px;
+      row-gap: 4px;
+      padding: 12px 16px;
+      min-height: 124px;
+      align-items: baseline;
+   }
+
+   .cellName {
+      grid-area: cellName;
+      align-self: center;
+   }
+
+   .cellDate {
+      grid-area: cellDate;
+      align-self: center;
+      text-align: right;
+   }
+
+   .cellPhone {
+      grid-area: cellPhone;
+   }
+
+   .cellCompany {
+      grid-area: cellCompany;
+      font-size: 14px;
+      line-height: 20px;
+   }
+
+   .cellEmail {
+      grid-area: cellEmail;
+   }
+
+   .cellWebsite {
+      grid-area: cellWebsite;
+      text-align: right;
+   }
+
+   .cellComment {
+      grid-area: cellComment;
+   }
+
+   .mobileAdd {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 40px 20px 20px;
+      background: #f9fafb;
+      z-index: 20;
+   }
+
+   .mobileAdd button {
+      width: 100%;
    }
 }

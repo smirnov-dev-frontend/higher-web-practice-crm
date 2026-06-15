@@ -20,3 +20,22 @@
    background: #ffffff;
    box-shadow: 0 8px 16px #e5e7eb;
 }
+
+@media (max-width: 768px) {
+   .backdrop {
+      padding: 0;
+      align-items: flex-start;
+      background: transparent;
+   }
+
+   .panel {
+      max-width: none;
+      max-height: none;
+      min-height: 100dvh;
+      border-radius: 0;
+      border: none;
+      padding: 0;
+      background: #f9fafb;
+      box-shadow: none;
+   }
+}
