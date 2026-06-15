@@ -9,16 +9,19 @@ import {
    passwordRecoverySchema,
    type PasswordRecoveryFormValues,
 } from '../features/auth/schemas'
+import { useGetUsersQuery } from '../api/usersApi'
 
 import styles from './AuthPages.module.css'
 
 export function PasswordRecoveryPage() {
    const navigate = useNavigate()
+   const { data: users = [] } = useGetUsersQuery()
 
    const {
       formState: { errors, isSubmitting },
       handleSubmit,
       register,
+      setError,
    } = useForm<PasswordRecoveryFormValues>({
       resolver: zodResolver(passwordRecoverySchema),
       defaultValues: {
@@ -26,7 +29,12 @@ export function PasswordRecoveryPage() {
       },
    })
 
-   const onSubmit = () => {
+   const onSubmit = (values: PasswordRecoveryFormValues) => {
+      const exists = users.some((u) => u.email.toLowerCase() === values.email.toLowerCase())
+      if (!exists) {
+         setError('email', { message: 'Почта не найдена' })
+         return
+      }
       navigate('/email-confirmation')
    }
 
