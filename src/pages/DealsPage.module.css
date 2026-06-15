@@ -263,6 +263,15 @@
    color: #f59e0b;
 }
 
+.cellClient {}
+.cellStatus {}
+.cellCreatedAt {}
+.cellCompletedAt {}
+
+.mobileAdd {
+   display: none;
+}
+
 .empty {
    padding: 40px;
    color: #9ca3af;
@@ -271,11 +280,128 @@
 }
 
 @media (max-width: 768px) {
+   .page {
+      padding-bottom: 100px;
+   }
+
+   .title {
+      font-size: 24px;
+      line-height: 32px;
+      margin-bottom: 0;
+   }
+
+   .toolbarAddBtn {
+      display: none;
+   }
+
    .toolbar {
       flex-wrap: wrap;
    }
 
    .searchWrapper {
       flex: 1 1 100%;
+   }
+
+   .tableWrapper {
+      overflow-x: visible;
+      padding: 0;
+      margin: 0;
+   }
+
+   .tableHeader {
+      display: none;
+   }
+
+   .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+         "cellTitle cellStatus"
+         "cellClient cellAmount"
+         "cellDesc cellDesc"
+         "cellCreatedAt cellCompletedAt";
+      column-gap: 8px;
+      row-gap: 6px;
+      padding: 12px 16px;
+      min-height: 132px;
+      align-items: start;
+   }
+
+   .cellTitle {
+      grid-area: cellTitle;
+      font-size: 14px;
+      line-height: 20px;
+   }
+
+   .cellStatus {
+      grid-area: cellStatus;
+      font-size: 12px;
+      line-height: 16px;
+      text-align: right;
+   }
+
+   .cellClient {
+      grid-area: cellClient;
+      font-size: 14px;
+      line-height: 20px;
+   }
+
+   .cellAmount {
+      grid-area: cellAmount;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      text-align: right;
+   }
+
+   .cellDesc {
+      grid-area: cellDesc;
+      font-size: 12px;
+      line-height: 16px;
+   }
+
+   .cellCreatedAt {
+      grid-area: cellCreatedAt;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left;
+   }
+
+   .cellCreatedAt::before {
+      content: "создана";
+      color: #9ca3af;
+      font-size: 12px;
+      line-height: 16px;
+   }
+
+   .cellCompletedAt {
+      grid-area: cellCompletedAt;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: flex-end;
+   }
+
+   .cellCompletedAt::before {
+      content: "завершена";
+      color: #9ca3af;
+      font-size: 12px;
+      line-height: 16px;
+   }
+
+   .mobileAdd {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 40px 20px 20px;
+      background: #f9fafb;
+      z-index: 20;
+   }
+
+   .mobileAdd button {
+      width: 100%;
    }
 }

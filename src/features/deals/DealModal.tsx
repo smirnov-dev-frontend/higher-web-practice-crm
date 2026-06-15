@@ -15,13 +15,17 @@ import type { Deal } from '../../types/deal'
 import { formatDate } from '../../utils/format'
 import { dealSchema, type DealFormValues } from './dealSchema'
 
+import RowIcon from '../../icons/row.svg?react'
 import styles from './DealModal.module.css'
 
 const STATUS_OPTIONS = [
    { value: 'new', label: 'Новая' },
    { value: 'in_progress', label: 'В работе' },
+   { value: 'completed', label: 'Завершена' },
    { value: 'cancelled', label: 'Отменена' },
 ]
+
+const SELECTABLE_STATUS_OPTIONS = STATUS_OPTIONS.filter((o) => o.value !== 'completed')
 
 type DealModalProps = {
    deal?: Deal
@@ -144,15 +148,21 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
    }
 
    const isBusy = isCreating || isUpdating
+   const isReadOnly = deal?.status === 'completed'
 
    return (
-      <Modal onClose={onClose}>
+      <Modal onClose={onClose} panelStyle={isReadOnly ? { background: '#f0fdf4' } : undefined}>
          <form className={styles.form} noValidate onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.content}>
                <div className={styles.header}>
-                  <h2 className={styles.title} id="modal-title">
-                     {deal ? 'Карточка сделки' : 'Новая сделка'}
-                  </h2>
+                  <div className={styles.headerTop}>
+                     <button aria-label="Назад" className={styles.backBtn} type="button" onClick={onClose}>
+                        <RowIcon aria-hidden className={styles.backIcon} />
+                     </button>
+                     <h2 className={styles.title} id="modal-title">
+                        {deal ? 'Карточка сделки' : 'Новая сделка'}
+                     </h2>
+                  </div>
                   {deal && (
                      <span className={styles.date}>Создана {formatDate(deal.createdAt)}</span>
                   )}
@@ -164,10 +174,11 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
                         error={errors.title?.message}
                         htmlFor="deal-title"
                         label="Название"
-                        required
+                        required={!isReadOnly}
                      >
                         <Input
-                           autoFocus
+                           autoFocus={!isReadOnly}
+                           disabled={isReadOnly}
                            hasError={Boolean(errors.title)}
                            id="deal-title"
                            placeholder="Разработка сайта"
@@ -179,13 +190,14 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
                         error={errors.clientId?.message}
                         htmlFor="deal-client"
                         label="Клиент"
-                        required
+                        required={!isReadOnly}
                      >
                         <Controller
                            control={control}
                            name="clientId"
                            render={({ field }) => (
                               <Combobox
+                                 disabled={isReadOnly}
                                  hasError={Boolean(errors.clientId)}
                                  id="deal-client"
                                  options={userClients.map((c) => ({ value: c.id, label: c.name }))}
@@ -204,7 +216,7 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
                         error={errors.amount?.message}
                         htmlFor="deal-amount"
                         label="Сумма"
-                        required
+                        required={!isReadOnly}
                      >
                         <Controller
                            control={control}
@@ -217,6 +229,7 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
                               return (
                                  <Input
                                     ref={amountRef}
+                                    disabled={isReadOnly}
                                     hasError={Boolean(errors.amount)}
                                     id="deal-amount"
                                     inputMode="numeric"
@@ -228,6 +241,7 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
                                     onClick={setCursorBeforeSymbol}
                                     onFocus={setCursorBeforeSymbol}
                                     onKeyDown={(e) => {
+                                       if (isReadOnly) return
                                        if (/^\d$/.test(e.key)) {
                                           e.preventDefault()
                                           const s = num > 0 ? String(num) : ''
@@ -244,6 +258,7 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
                                        }
                                     }}
                                     onPaste={(e) => {
+                                       if (isReadOnly) return
                                        e.preventDefault()
                                        const digits = e.clipboardData.getData('text').replace(/\D/g, '')
                                        if (digits) field.onChange(parseInt(digits.slice(0, 15), 10))
@@ -261,10 +276,10 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
                            name="status"
                            render={({ field }) => (
                               <Combobox
-                                 disabled={!deal}
+                                 disabled={isReadOnly || !deal}
                                  id="deal-status"
                                  inputClassName={styles[`selectStatus_${field.value}`]}
-                                 options={STATUS_OPTIONS}
+                                 options={isReadOnly ? STATUS_OPTIONS : SELECTABLE_STATUS_OPTIONS}
                                  value={field.value}
                                  onBlur={field.onBlur}
                                  onChange={field.onChange}
@@ -281,6 +296,7 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
                   >
                      <textarea
                         className={styles.textarea}
+                        disabled={isReadOnly}
                         id="deal-description"
                         placeholder="Подготовка финальных условий для долгосрочного контракта."
                         {...register('description')}
@@ -290,11 +306,17 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
             </div>
 
             <div className={styles.actions}>
-               <Button className={styles.submitBtn} disabled={isBusy} type="submit">
-                  {isBusy ? 'Сохранение...' : deal ? 'Редактировать' : 'Создать сделку'}
-               </Button>
+               {!isReadOnly && (
+                  <Button className={styles.submitBtn} disabled={isBusy} type="submit">
+                     {isBusy ? 'Сохранение...' : deal ? 'Редактировать' : 'Создать сделку'}
+                  </Button>
+               )}
 
-               {deal && deal.status !== 'completed' && deal.status !== 'cancelled' ? (
+               {isReadOnly ? (
+                  <Button type="button" variant="secondary" onClick={onClose}>
+                     Закрыть
+                  </Button>
+               ) : deal && deal.status !== 'cancelled' ? (
                   <Button
                      disabled={isBusy}
                      type="button"
