@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { useGetClientsQuery } from '../api/clientsApi'
 import { useGetDealsQuery } from '../api/dealsApi'
@@ -63,6 +64,10 @@ export function DealsPage() {
    const [isSortActive, setIsSortActive] = useState(false)
    const [columnFilters, setColumnFilters] = useState<Partial<Record<SortKey, string[]>>>({})
    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+   const location = useLocation()
+   useEffect(() => {
+      if (location.state?.openModal) setIsAddModalOpen(true)
+   }, [location.state])
    const [editingDeal, setEditingDeal] = useState<Deal | null>(null)
    const [addDraft, setAddDraft] = useState<Partial<DealFormValues>>({})
 

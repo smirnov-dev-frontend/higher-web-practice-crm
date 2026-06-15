@@ -157,10 +157,6 @@
   cursor: pointer;
 }
 
-.dealRow:hover {
-  background: #f9fafb;
-  box-shadow: 0 4px 8px #e5e7eb, inset 0 0 0 1px #d1d5db;
-}
 
 .dealRow span:last-child {
   text-align: right;
@@ -170,10 +166,6 @@
   background: #eff6ff;
 }
 
-.dealRowNew:hover {
-  background: #dbeafe;
-  border-color: #d1d5db;
-}
 
 .dealRow strong {
   color: #1f2937;
@@ -216,6 +208,10 @@
 
 .taskCardCompleted {
   background: #f0fdf4;
+}
+
+.taskCardOverdue {
+  background: #fef2f2;
 }
 
 .taskCard h3 {
@@ -261,6 +257,10 @@
 
 .taskStatusCompleted {
   color: #9ca3af;
+}
+
+.taskStatusOverdue {
+  color: #ef4444;
 }
 
 .message {

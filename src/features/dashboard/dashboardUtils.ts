@@ -77,7 +77,10 @@ export const getTopClients = (clients: Client[], deals: Deal[]) =>
       .slice(0, 10)
 
 export const getRecentDeals = (deals: Deal[]) =>
-   [...deals].sort((first, second) => Number(new Date(second.createdAt)) - Number(new Date(first.createdAt))).slice(0, 10)
+   [...deals]
+      .filter((deal) => deal.status !== 'completed')
+      .sort((first, second) => Number(new Date(second.createdAt)) - Number(new Date(first.createdAt)))
+      .slice(0, 10)
 
 export const getRecentTasks = (tasks: Task[]) =>
    [...tasks].sort((first, second) => Number(new Date(second.createdAt)) - Number(new Date(first.createdAt))).slice(0, 10)

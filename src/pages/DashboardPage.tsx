@@ -116,7 +116,7 @@ export function DashboardPage() {
                ))}
             </div>
 
-            <Link to="/clients">
+            <Link to="/clients" state={{ openModal: true }}>
                <Button>Новый клиент</Button>
             </Link>
          </section>
@@ -155,7 +155,7 @@ export function DashboardPage() {
                })}
             </div>
 
-            <Link to="/deals">
+            <Link to="/deals" state={{ openModal: true }}>
                <Button>Новая сделка</Button>
             </Link>
          </section>
@@ -166,15 +166,18 @@ export function DashboardPage() {
             <div className={styles.tasksGrid}>
                {recentTasks.map((task) => {
                   const deal = userDeals.find((item) => item.id === task.dealId)
+                  const isOverdue = Boolean(task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed')
 
                   return (
                      <article
                         className={
-                           task.status === 'new'
-                              ? `${styles.taskCard} ${styles.taskCardNew}`
-                              : task.status === 'completed'
-                                 ? `${styles.taskCard} ${styles.taskCardCompleted}`
-                                 : styles.taskCard
+                           isOverdue
+                              ? `${styles.taskCard} ${styles.taskCardOverdue}`
+                              : task.status === 'new'
+                                 ? `${styles.taskCard} ${styles.taskCardNew}`
+                                 : task.status === 'completed'
+                                    ? `${styles.taskCard} ${styles.taskCardCompleted}`
+                                    : styles.taskCard
                         }
                         key={task.id}
                      >
@@ -186,14 +189,16 @@ export function DashboardPage() {
                            <span>до {formatShortDate(task.dueDate)}</span>
                            <strong
                               className={
-                                 task.status === 'new'
-                                    ? styles.taskStatusNew
-                                    : task.status === 'in_progress'
-                                       ? styles.taskStatusInProgress
-                                       : styles.taskStatusCompleted
+                                 isOverdue
+                                    ? styles.taskStatusOverdue
+                                    : task.status === 'new'
+                                       ? styles.taskStatusNew
+                                       : task.status === 'in_progress'
+                                          ? styles.taskStatusInProgress
+                                          : styles.taskStatusCompleted
                               }
                            >
-                              {taskStatusLabels[task.status]}
+                              {isOverdue ? 'Просрочена' : taskStatusLabels[task.status]}
                            </strong>
                         </div>
                      </article>
@@ -201,7 +206,7 @@ export function DashboardPage() {
                })}
             </div>
 
-            <Link to="/tasks">
+            <Link to="/tasks" state={{ openModal: true }}>
                <Button>Новая задача</Button>
             </Link>
          </section>
