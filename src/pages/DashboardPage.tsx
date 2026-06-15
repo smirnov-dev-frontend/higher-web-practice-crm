@@ -158,7 +158,9 @@ export function DashboardPage() {
                ))}
             </div>
 
-            <Button onClick={() => setIsClientModalOpen(true)}>Новый клиент</Button>
+            <div className={styles.sectionBtn}>
+               <Button onClick={() => setIsClientModalOpen(true)}>Новый клиент</Button>
+            </div>
          </section>
 
          <section className={`${styles.section}${mobileTab !== 'deals' ? ` ${styles.mobileTabHidden}` : ''}`}>
@@ -197,7 +199,9 @@ export function DashboardPage() {
                })}
             </div>
 
-            <Button onClick={() => setIsDealModalOpen(true)}>Новая сделка</Button>
+            <div className={styles.sectionBtn}>
+               <Button onClick={() => setIsDealModalOpen(true)}>Новая сделка</Button>
+            </div>
          </section>
 
          <section className={`${styles.section}${mobileTab !== 'tasks' ? ` ${styles.mobileTabHidden}` : ''}`}>
@@ -246,7 +250,9 @@ export function DashboardPage() {
                })}
             </div>
 
-            <Button onClick={() => setIsTaskModalOpen(true)}>Новая задача</Button>
+            <div className={styles.sectionBtn}>
+               <Button onClick={() => setIsTaskModalOpen(true)}>Новая задача</Button>
+            </div>
          </section>
 
          {isClientModalOpen && <ClientModal onClose={() => setIsClientModalOpen(false)} />}
