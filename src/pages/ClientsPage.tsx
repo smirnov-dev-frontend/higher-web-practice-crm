@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { useGetClientsQuery } from '../api/clientsApi'
 import { useAppSelector } from '../app/hooks'
@@ -49,6 +50,10 @@ export function ClientsPage() {
    const [isSortActive, setIsSortActive] = useState(false)
    const [columnFilters, setColumnFilters] = useState<Partial<Record<SortKey, string[]>>>({})
    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+   const location = useLocation()
+   useEffect(() => {
+      if (location.state?.openModal) setIsAddModalOpen(true)
+   }, [location.state])
    const [editingClient, setEditingClient] = useState<Client | null>(null)
    const [addDraft, setAddDraft] = useState<Partial<ClientFormValues>>({})
 
