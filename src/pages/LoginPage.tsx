@@ -94,6 +94,11 @@ export function LoginPage() {
                {isLoading ? 'Загрузка...' : 'Войти'}
             </Button>
          </form>
+
+         <div className={styles.mobileFooter}>
+            <p className={styles.mobileFooterText}>Нет аккаунта?</p>
+            <Link className={styles.mobileFooterLink} to="/register">Зарегистрироваться</Link>
+         </div>
       </div>
    )
 }

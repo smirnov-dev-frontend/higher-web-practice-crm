@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '../components/ui/Button/Button'
@@ -67,6 +67,11 @@ export function PasswordRecoveryPage() {
                Восстановить
             </Button>
          </form>
+
+         <div className={styles.mobileFooter}>
+            <p className={styles.mobileFooterText}>Уже зарегистрированы?</p>
+            <Link className={styles.mobileFooterLink} to="/login">Войти в аккаунт</Link>
+         </div>
       </div>
    )
 }

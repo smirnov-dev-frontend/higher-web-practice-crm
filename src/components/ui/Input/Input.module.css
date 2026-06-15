@@ -14,6 +14,14 @@
   transition: border-color 0.2s ease;
 }
 
+@media (max-width: 768px) {
+  .input {
+    height: 36px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+
 .input:hover {
   border-color: #9ca3af;
 }

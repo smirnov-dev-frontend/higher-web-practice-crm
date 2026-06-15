@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 
@@ -82,6 +83,11 @@ export function EmailConfirmationPage() {
                </Button>
             </div>
          </form>
+
+         <div className={styles.mobileFooter}>
+            <p className={styles.mobileFooterText}>Уже зарегистрированы?</p>
+            <Link className={styles.mobileFooterLink} to="/login">Войти в аккаунт</Link>
+         </div>
       </div>
    )
 }

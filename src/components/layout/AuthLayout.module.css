@@ -5,10 +5,9 @@
   align-items: center;
   justify-content: center;
   gap: 120px;
-  padding: auto 230px;
   background-color: #f8fafc;
   background: url('/auth-bg.png');
-   background-position: center;
+  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -16,6 +15,11 @@
 
 .info {
   max-width: 600px;
+}
+
+.infoContent {
+  position: relative;
+  z-index: 1;
 }
 
 .logo {
@@ -62,36 +66,132 @@
   justify-content: flex-end;
 }
 
-@media (max-width: 1024px) {
+/* Blobs: desktop hidden */
+.blobs {
+  display: none;
+}
+
+.blob {
+  position: absolute;
+  opacity: 0.3;
+  filter: blur(50px);
+}
+
+/* Mobile CTA buttons: desktop hidden */
+.mobileButtons {
+  display: none;
+}
+
+.mobileRegLink {
+  display: block;
+}
+
+@media (max-width: 768px) {
   .layout {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 48px 24px;
+    display: block;
+    background: #ffffff;
+    background-image: none;
+    padding: 0;
+  }
+
+  /* Fixed blobs fill viewport on both welcome and form screens */
+  .blobs {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .blobBlue1 {
+    width: 300px;
+    height: 500px;
+    left: -150px;
+    top: -100px;
+    background: #2563eb;
+    transform: rotate(45deg);
+  }
+
+  .blobGreen {
+    width: 335px;
+    height: 365px;
+    right: -100px;
+    top: -50px;
+    background: #10b981;
+    transform: rotate(-165deg);
+  }
+
+  .blobBlue2 {
+    width: 220px;
+    height: 370px;
+    left: -100px;
+    bottom: 50px;
+    background: #2563eb;
+    transform: rotate(-44deg);
+  }
+
+  .blobYellow {
+    width: 360px;
+    height: 300px;
+    left: 0;
+    bottom: -50px;
+    background: #f59e0b;
+    transform: rotate(15deg);
   }
 
   .info {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100svh;
     max-width: none;
   }
 
-  .content {
-    justify-content: flex-start;
+  .infoHidden {
+    display: none;
   }
-}
 
-@media (max-width: 560px) {
-  .layout {
-    padding: 32px 16px;
+  .infoContent {
+    padding: 20px;
   }
 
   .logo {
-    width: 150px;
+    width: 162px;
+    height: 40px;
+    margin-bottom: 16px;
   }
 
   .description {
-    font-size: 16px;
+    max-width: none;
+    color: #1f2937;
+    line-height: 24px;
   }
 
   .registerBlock {
-    margin-top: 32px;
+    display: none;
+  }
+
+  .mobileButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: transparent;
+  }
+
+  .contentHiddenMobile {
+    display: none;
   }
 }
