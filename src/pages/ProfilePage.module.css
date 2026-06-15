@@ -221,3 +221,75 @@
    flex-direction: row;
    gap: 24px;
 }
+
+@media (max-width: 768px) {
+   .page {
+      margin: -20px;
+      min-height: calc(100vh - 50px);
+      padding: 20px;
+      gap: 0;
+      background: #f9fafb url('/auth-bg-mobile.png') center / cover no-repeat;
+   }
+
+   .title {
+      display: none;
+   }
+
+   .card {
+      max-width: none;
+      border-radius: 12px;
+      padding: 24px 16px;
+      gap: 0;
+   }
+
+   .form {
+      gap: 32px;
+   }
+
+   .section {
+      gap: 16px;
+   }
+
+   .avatarArea {
+      margin: 0 auto;
+   }
+
+   .fieldRow {
+      flex-direction: column;
+      gap: 12px;
+   }
+
+   .emailVerifyBtn {
+      width: 100%;
+   }
+
+   .passwordSection {
+      gap: 12px;
+   }
+
+   .passwordTitle {
+      font-size: 14px;
+      line-height: 20px;
+   }
+
+   .passwordFields {
+      gap: 12px;
+   }
+
+   .bottomSection {
+      gap: 12px;
+   }
+
+   .linkRow {
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+   }
+
+   .deleteLink {
+      font-size: 16px;
+      line-height: 24px;
+      text-align: center;
+      width: 100%;
+   }
+}
