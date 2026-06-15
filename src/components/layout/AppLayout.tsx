@@ -72,7 +72,15 @@ export function AppLayout() {
 
             <img alt="YaPlex" className={styles.mobileLogoImg} src="/yaplex-logo-mobile.svg" />
 
-            <NavLink aria-label="Профиль" className={styles.mobileProfileLink} to="/profile">
+            <NavLink
+               aria-label="Профиль"
+               className={({ isActive }) =>
+                  isActive
+                     ? `${styles.mobileProfileLink} ${styles.mobileProfileLinkActive}`
+                     : styles.mobileProfileLink
+               }
+               to="/profile"
+            >
                <UserIcon aria-hidden className={styles.mobileUserIcon} />
             </NavLink>
          </header>
