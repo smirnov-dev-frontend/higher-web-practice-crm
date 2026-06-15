@@ -50,11 +50,19 @@ export function RegisterPage() {
          return
       }
 
+      const accountNameTaken = users.some((user) => user.username === values.accountName.trim())
+
+      if (accountNameTaken) {
+         setFormError('Это имя аккаунта уже занято')
+         return
+      }
+
       try {
          const createdUser = await registerUser({
             email: normalizedEmail,
             name: `${values.firstName} ${values.lastName}`,
             password: values.password,
+            username: values.accountName.trim(),
          }).unwrap()
 
          dispatch(setCurrentUser(createdUser))

@@ -70,6 +70,34 @@
 }
 
 
+.description {
+  margin: -12px 0 20px;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.demoCode {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.resendLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  color: #3b82f6;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+.resendLink:hover {
+  color: #2563eb;
+}
+
 .recoverySubmitButton {
   margin-top: 30px;
 }

@@ -37,8 +37,11 @@ export function LoginPage() {
    const onSubmit = (values: LoginFormValues) => {
       setFormError('')
 
+      const login = values.email.trim()
       const user = users.find(
-         (item) => item.email === values.email && item.password === values.password,
+         (item) =>
+            (item.email === login || item.username === login) &&
+            item.password === values.password,
       )
 
       if (!user) {
@@ -64,7 +67,7 @@ export function LoginPage() {
                   hasError={Boolean(errors.email)}
                   id="email"
                   placeholder="ivanov@yandex.ru"
-                  type="email"
+                  type="text"
                   {...register('email')}
                />
             </FormField>
