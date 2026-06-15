@@ -1,0 +1,223 @@
+.page {
+   display: flex;
+   flex-direction: column;
+   flex: 1;
+   gap: 20px;
+}
+
+.title {
+   margin: 0;
+   font-family: 'Roboto', sans-serif;
+   font-size: 30px;
+   font-weight: 700;
+   line-height: 36px;
+   color: #1f2937;
+}
+
+.card {
+   display: flex;
+   flex-direction: column;
+   flex: 1;
+   max-width: 680px;
+   background: #ffffff;
+   box-shadow: 0px 4px 8px #e5e7eb;
+   border-radius: 12px;
+   padding: 32px 24px;
+}
+
+.form {
+   display: flex;
+   flex-direction: column;
+   flex: 1;
+   gap: 32px;
+}
+
+.section {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.avatarArea {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   width: 112px;
+   height: 92px;
+}
+
+.avatar {
+   width: 92px;
+   height: 92px;
+   border-radius: 50%;
+   background: #f4c7c3;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-family: 'Inter', sans-serif;
+   font-size: 28px;
+   font-weight: 700;
+   color: #111827;
+   flex-shrink: 0;
+   margin-right: -20px;
+}
+
+.avatarImg {
+   width: 92px;
+   height: 92px;
+   border-radius: 50%;
+   object-fit: cover;
+   flex-shrink: 0;
+   margin-right: -20px;
+}
+
+.fileInput {
+   display: none;
+}
+
+.avatarBtnWrapper {
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-end;
+   width: 40px;
+   height: 92px;
+}
+
+.avatarBtn {
+   width: 40px;
+   height: 40px;
+   border-radius: 50%;
+   background: #3b82f6;
+   border: none;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 8px;
+   transition: background-color 0.15s ease;
+}
+
+.avatarBtn:hover {
+   background: #2563eb;
+}
+
+.fieldRow {
+   display: flex;
+   flex-direction: row;
+   gap: 8px;
+}
+
+.fieldRow > * {
+   flex: 1;
+   min-width: 0;
+}
+
+.emailVerify {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+}
+
+.emailVerifyHint {
+   margin: 0;
+   font-family: 'Inter', sans-serif;
+   font-size: 12px;
+   font-weight: 400;
+   line-height: 16px;
+   color: #9ca3af;
+}
+
+.emailVerifyBtn {
+   width: 312px;
+}
+
+.emailVerifyDemo {
+   margin: 0;
+   font-family: 'Inter', sans-serif;
+   font-size: 11px;
+   font-weight: 400;
+   color: #9ca3af;
+}
+
+.emailVerifyCodeRow {
+   display: flex;
+   flex-direction: row;
+   gap: 8px;
+   align-items: center;
+}
+
+.emailVerifyError {
+   margin: 0;
+   font-family: 'Inter', sans-serif;
+   font-size: 12px;
+   font-weight: 400;
+   color: #ef4444;
+}
+
+.emailVerifyResend {
+   background: none;
+   border: none;
+   padding: 0;
+   font-family: 'Inter', sans-serif;
+   font-size: 12px;
+   font-weight: 400;
+   color: #3b82f6;
+   cursor: pointer;
+   transition: color 0.15s ease;
+}
+
+.emailVerifyResend:hover {
+   color: #2563eb;
+}
+
+.passwordSection {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+}
+
+.passwordTitle {
+   margin: 0;
+   font-family: 'Inter', sans-serif;
+   font-size: 16px;
+   font-weight: 700;
+   line-height: 24px;
+   color: #1f2937;
+}
+
+.passwordFields {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.bottomSection {
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+   margin-top: auto;
+}
+
+.deleteLink {
+   background: none;
+   border: none;
+   padding: 0;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #3b82f6;
+   cursor: pointer;
+   text-align: left;
+   transition: color 0.15s ease;
+}
+
+.deleteLink:hover {
+   color: #2563eb;
+}
+
+.linkRow {
+   display: flex;
+   flex-direction: row;
+   gap: 24px;
+}

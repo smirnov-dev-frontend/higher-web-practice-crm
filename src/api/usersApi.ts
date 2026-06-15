@@ -21,6 +21,7 @@ export const usersApi = baseApi.injectEndpoints({
                ...payload,
                id: crypto.randomUUID(),
                createdAt: new Date().toISOString(),
+               emailVerified: false,
             },
          }),
          invalidatesTags: ['User'],

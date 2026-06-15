@@ -112,10 +112,17 @@ export function AppLayout() {
                   title={isSidebarCollapsed ? 'Настройки аккаунта' : undefined}
                   to="/profile"
                >
-                  <span className={styles.avatar}>{currentUser?.name?.[0] ?? 'П'}</span>
+                  <span className={styles.avatar}>
+                     {currentUser?.avatar
+                        ? <img alt="Аватар" className={styles.avatarImg} src={currentUser.avatar} />
+                        : (currentUser?.name?.[0] ?? 'П')
+                     }
+                  </span>
 
                   <span className={styles.profileInfo}>
-                     <span className={styles.profileName}>{currentUser?.name.split(' ')[0] ?? 'Пользователь'}</span>
+                     <span className={styles.profileName}>
+                        {currentUser?.username ?? currentUser?.name.split(' ')[0] ?? 'Пользователь'}
+                     </span>
                   </span>
                </NavLink>
             </div>
