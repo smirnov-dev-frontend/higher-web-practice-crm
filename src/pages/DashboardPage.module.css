@@ -638,7 +638,7 @@
   }
 
   /* Fixed button at bottom */
-  .section > a {
+  .sectionBtn {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -648,7 +648,7 @@
     z-index: 20;
   }
 
-  .section > a > button {
+  .sectionBtn button {
     width: 100%;
   }
 
