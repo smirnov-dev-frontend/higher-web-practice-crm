@@ -1,9 +1,12 @@
 export type User = {
   id: string
   email: string
+  emailVerified?: boolean
   name: string
+  username?: string
   createdAt: string
   password?: string
+  avatar?: string
 }
 
 export type UserProfile = User & {
@@ -23,6 +26,9 @@ export type LoginPayload = {
 
 export type UpdateProfilePayload = {
   email?: string
+  emailVerified?: boolean
   name?: string
+  username?: string
   password?: string
+  avatar?: string
 }
