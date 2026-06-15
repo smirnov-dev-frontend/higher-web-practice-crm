@@ -7,8 +7,10 @@ import ClientsIcon from '../../icons/sidebar-clients.svg?react'
 import CollapseIcon from '../../icons/sidebar-collapse.svg?react'
 import DealsIcon from '../../icons/sidebar-deals.svg?react'
 import HomeIcon from '../../icons/sidebar-home.svg?react'
+import MenuBurgerIcon from '../../icons/menu-burger.svg?react'
 import ReportsIcon from '../../icons/sidebar-reports.svg?react'
 import TasksIcon from '../../icons/sidebar-tasks.svg?react'
+import UserIcon from '../../icons/user.svg?react'
 
 import styles from './AppLayout.module.css'
 
@@ -43,6 +45,7 @@ const navigationItems = [
 export function AppLayout() {
    const currentUser = useAppSelector(selectCurrentUser)
    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
    const handleToggleSidebar = () => {
       setIsSidebarCollapsed((currentValue) => !currentValue)
@@ -56,6 +59,73 @@ export function AppLayout() {
                : styles.layout
          }
       >
+         <header className={styles.mobileHeader}>
+            <button
+               aria-label="Открыть меню"
+               className={styles.mobileMenuBtn}
+               type="button"
+               onClick={() => setIsMobileMenuOpen(true)}
+            >
+               <MenuBurgerIcon aria-hidden className={styles.mobileMenuBurgerIcon} />
+            </button>
+
+            <img alt="YaPlex" className={styles.mobileLogoImg} src="/yaplex-logo-mobile.svg" />
+
+            <NavLink aria-label="Профиль" className={styles.mobileProfileLink} to="/profile">
+               <UserIcon aria-hidden className={styles.mobileUserIcon} />
+            </NavLink>
+         </header>
+
+         {isMobileMenuOpen && (
+            <div
+               className={styles.mobileOverlay}
+               role="presentation"
+               onClick={() => setIsMobileMenuOpen(false)}
+            >
+               <nav
+                  aria-label="Навигация"
+                  className={styles.mobileNav}
+                  role="dialog"
+                  onClick={(e) => e.stopPropagation()}
+               >
+                  <button
+                     aria-label="Закрыть меню"
+                     className={styles.mobileNavClose}
+                     type="button"
+                     onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                     ✕
+                  </button>
+                  {navigationItems.map(({ Icon, label, to }) => (
+                     <NavLink
+                        className={({ isActive }) =>
+                           isActive
+                              ? `${styles.mobileNavLink} ${styles.mobileNavLinkActive}`
+                              : styles.mobileNavLink
+                        }
+                        key={to}
+                        to={to}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                     >
+                        <Icon aria-hidden className={styles.navIcon} />
+                        {label}
+                     </NavLink>
+                  ))}
+                  <NavLink
+                     className={({ isActive }) =>
+                        isActive
+                           ? `${styles.mobileNavLink} ${styles.mobileNavLinkActive}`
+                           : styles.mobileNavLink
+                     }
+                     to="/profile"
+                     onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                     Профиль
+                  </NavLink>
+               </nav>
+            </div>
+         )}
+
          <aside
             className={
                isSidebarCollapsed

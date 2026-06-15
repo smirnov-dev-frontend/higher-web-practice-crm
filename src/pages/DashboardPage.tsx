@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { useGetClientsQuery } from '../api/clientsApi'
@@ -35,6 +36,7 @@ const taskStatusLabels: Record<TaskStatus, string> = {
 
 export function DashboardPage() {
    const currentUser = useAppSelector(selectCurrentUser)
+   const [mobileTab, setMobileTab] = useState<'home' | 'clients' | 'deals' | 'tasks'>('home')
 
    const { data: clients = [], isLoading: isClientsLoading } = useGetClientsQuery()
    const { data: deals = [], isLoading: isDealsLoading } = useGetDealsQuery()
@@ -64,7 +66,38 @@ export function DashboardPage() {
             </p>
          </header>
 
-         <section className={styles.stats} aria-label="Сводная статистика">
+         <nav aria-label="Разделы" className={styles.mobileTabs}>
+            <button
+               className={mobileTab === 'home' ? `${styles.mobileTab} ${styles.mobileTabActive}` : styles.mobileTab}
+               type="button"
+               onClick={() => setMobileTab('home')}
+            >
+               Главная
+            </button>
+            <button
+               className={mobileTab === 'clients' ? `${styles.mobileTab} ${styles.mobileTabActive}` : styles.mobileTab}
+               type="button"
+               onClick={() => setMobileTab('clients')}
+            >
+               Клиенты
+            </button>
+            <button
+               className={mobileTab === 'deals' ? `${styles.mobileTab} ${styles.mobileTabActive}` : styles.mobileTab}
+               type="button"
+               onClick={() => setMobileTab('deals')}
+            >
+               Сделки
+            </button>
+            <button
+               className={mobileTab === 'tasks' ? `${styles.mobileTab} ${styles.mobileTabActive}` : styles.mobileTab}
+               type="button"
+               onClick={() => setMobileTab('tasks')}
+            >
+               Задачи
+            </button>
+         </nav>
+
+         <section className={`${styles.stats}${mobileTab !== 'home' ? ` ${styles.mobileTabHidden}` : ''}`} aria-label="Сводная статистика">
             <div className={styles.statsHeader}>
                <span />
                <span>на сегодня</span>
@@ -102,16 +135,20 @@ export function DashboardPage() {
             />
          </section>
 
-         <section className={styles.section}>
+         <section className={`${styles.section}${mobileTab !== 'clients' ? ` ${styles.mobileTabHidden}` : ''}`}>
             <h2 className={styles.sectionTitle}>Топ 10 активных клиентов</h2>
 
             <div className={styles.clientsGrid}>
                {topClients.map(({ client, dealsCount }) => (
                   <article className={styles.clientCard} key={client.id}>
-                     <h3>{client.name}</h3>
-                     <p>«{client.company}»</p>
-                     <strong>{dealsCount}</strong>
-                     <span>сделок</span>
+                     <div className={styles.clientInfo}>
+                        <h3>{client.name}</h3>
+                        <p>«{client.company}»</p>
+                     </div>
+                     <div className={styles.clientDeals}>
+                        <strong>{dealsCount}</strong>
+                        <span>сделок</span>
+                     </div>
                   </article>
                ))}
             </div>
@@ -121,7 +158,7 @@ export function DashboardPage() {
             </Link>
          </section>
 
-         <section className={styles.section}>
+         <section className={`${styles.section}${mobileTab !== 'deals' ? ` ${styles.mobileTabHidden}` : ''}`}>
             <h2 className={styles.sectionTitle}>Топ 10 активных сделок</h2>
 
             <div className={styles.dealsList}>
@@ -138,18 +175,20 @@ export function DashboardPage() {
                         key={deal.id}
                      >
                         <span>{deal.title}</span>
-                        <span className={styles.clientNameCell}>{client?.name ?? '—'}</span>
+                        <span className={styles.clientNameCell}>{client?.name?.split(' ')[0] ?? '—'}</span>
                         <strong>{formatCurrency(deal.amount)}</strong>
-                        <span
-                           className={
-                              deal.status === 'new'
-                                 ? `${styles.status} ${styles.statusNew}`
-                                 : styles.status
-                           }
-                        >
-                           {dealStatusLabels[deal.status]}
-                        </span>
-                        <span className={styles.dateCell}>{formatDate(deal.completedAt ?? deal.createdAt)}</span>
+                        <div className={styles.dealFooter}>
+                           <span
+                              className={
+                                 deal.status === 'new'
+                                    ? `${styles.status} ${styles.statusNew}`
+                                    : styles.status
+                              }
+                           >
+                              {dealStatusLabels[deal.status]}
+                           </span>
+                           <span className={styles.dateCell}>{formatDate(deal.completedAt ?? deal.createdAt)}</span>
+                        </div>
                      </article>
                   )
                })}
@@ -160,7 +199,7 @@ export function DashboardPage() {
             </Link>
          </section>
 
-         <section className={styles.section}>
+         <section className={`${styles.section}${mobileTab !== 'tasks' ? ` ${styles.mobileTabHidden}` : ''}`}>
             <h2 className={styles.sectionTitle}>Последние 10 задач</h2>
 
             <div className={styles.tasksGrid}>
@@ -228,10 +267,10 @@ function StatRow({ label, month, quarter, today, todayAdded, week }: StatRowProp
       <div className={styles.statsRow}>
          <strong>{label}</strong>
          <span className={styles.mainNumber}>{today}</span>
-         <span>+{todayAdded}</span>
-         <span>+{week}</span>
-         <span>+{month}</span>
-         <span>+{quarter}</span>
+         <span className={styles.statToday}>+{todayAdded}</span>
+         <span className={styles.statWeek}>+{week}</span>
+         <span className={styles.statMonth}>+{month}</span>
+         <span className={styles.statQuarter}>+{quarter}</span>
       </div>
    )
 }
