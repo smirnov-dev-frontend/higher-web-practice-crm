@@ -127,23 +127,86 @@
   line-height: 1.4;
 }
 
-@media (max-width: 560px) {
+.mobileFooter {
+  display: none;
+}
+
+.mobileFooterText {
+  margin: 0 0 4px;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.mobileFooterLink {
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+@media (max-width: 768px) {
   .card {
+    flex: 1;
     max-width: none;
     min-height: auto;
-    padding: 40px 20px 24px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
   }
 
   .title {
-    margin-bottom: 28px;
-    font-size: 26px;
+    margin-top: auto;
+    margin-bottom: 24px;
+    font-size: 20px;
+    line-height: 28px;
   }
 
-  .forgotLink {
-    font-size: 16px;
+  .form {
+    gap: 16px;
   }
 
   .submitButton {
+    margin-top: 16px;
+  }
+
+  .registerSubmitButton {
+    margin-top: 16px;
+  }
+
+  .forgotLink {
+    margin-top: 4px;
+    font-size: 14px;
+  }
+
+  .description {
+    margin: 0 0 24px;
+    color: #1f2937;
+  }
+
+  .recoverySubmitButton {
     margin-top: 24px;
+  }
+
+  .confirmationSubmitButton {
+    margin-top: 16px;
+  }
+
+  .resendBlock {
+    margin-top: 40px;
+  }
+
+  .resendText {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .mobileFooter {
+    display: block;
+    margin-top: auto;
   }
 }

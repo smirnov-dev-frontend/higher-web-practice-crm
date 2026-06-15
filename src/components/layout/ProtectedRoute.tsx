@@ -7,7 +7,7 @@ export function ProtectedRoute() {
    const isAuthenticated = useAppSelector(selectIsAuthenticated)
 
    if (!isAuthenticated) {
-      return <Navigate replace to="/" />
+      return <Navigate replace to="/login" />
    }
 
    return <Outlet />

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 
@@ -167,6 +167,11 @@ export function RegisterPage() {
                {isRegistering ? 'Регистрация...' : 'Зарегистрироваться'}
             </Button>
          </form>
+
+         <div className={styles.mobileFooter}>
+            <p className={styles.mobileFooterText}>Уже зарегистрированы?</p>
+            <Link className={styles.mobileFooterLink} to="/login">Войти в аккаунт</Link>
+         </div>
       </div>
    )
 }
