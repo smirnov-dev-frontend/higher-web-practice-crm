@@ -182,4 +182,9 @@
    .closeBtn {
       display: none;
    }
+
+   .textarea {
+      font-size: 14px;
+      line-height: 20px;
+   }
 }

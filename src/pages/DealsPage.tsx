@@ -154,7 +154,9 @@ export function DealsPage() {
          <h1 className={styles.title}>Сделки</h1>
 
          <div className={styles.toolbar}>
-            <Button onClick={() => setIsAddModalOpen(true)}>Новая сделка</Button>
+            <div className={styles.toolbarAddBtn}>
+               <Button onClick={() => setIsAddModalOpen(true)}>Новая сделка</Button>
+            </div>
             <div className={styles.searchWrapper}>
                <SearchIcon className={styles.searchIcon} />
                <input
@@ -197,14 +199,14 @@ export function DealsPage() {
                         onClick={() => setEditingDeal(deal)}
                      >
                         <span className={styles.cellTitle}>{deal.title}</span>
-                        <span className={styles.cell}>{clientName}</span>
+                        <span className={`${styles.cell} ${styles.cellClient}`}>{clientName}</span>
                         <span className={styles.cellDesc}>{deal.description || '—'}</span>
-                        <span className={`${styles.cell} ${styles[`status_${deal.status}`]}`}>
+                        <span className={`${styles.cell} ${styles.cellStatus} ${styles[`status_${deal.status}`]}`}>
                            {STATUS_LABELS[deal.status]}
                         </span>
                         <span className={styles.cellAmount}>{formatCurrency(deal.amount)}</span>
-                        <span className={styles.cellDate}>{formatDate(deal.createdAt)}</span>
-                        <span className={styles.cellDate}>{formatDate(deal.completedAt)}</span>
+                        <span className={`${styles.cellDate} ${styles.cellCreatedAt}`}>{formatDate(deal.createdAt)}</span>
+                        <span className={`${styles.cellDate} ${styles.cellCompletedAt}`}>{formatDate(deal.completedAt)}</span>
                      </div>
                   )
                })}
@@ -215,6 +217,10 @@ export function DealsPage() {
                   {search ? 'По вашему запросу ничего не найдено' : 'Сделки ещё не добавлены'}
                </p>
             )}
+         </div>
+
+         <div className={styles.mobileAdd}>
+            <Button onClick={() => setIsAddModalOpen(true)}>Новая сделка</Button>
          </div>
 
          {isAddModalOpen && (

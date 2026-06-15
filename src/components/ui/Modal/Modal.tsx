@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, type CSSProperties, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
 import styles from './Modal.module.css'
@@ -6,9 +6,10 @@ import styles from './Modal.module.css'
 type ModalProps = {
    children: ReactNode
    onClose: () => void
+   panelStyle?: CSSProperties
 }
 
-export function Modal({ children, onClose }: ModalProps) {
+export function Modal({ children, onClose, panelStyle }: ModalProps) {
    useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
          if (e.key === 'Escape') onClose()
@@ -29,7 +30,7 @@ export function Modal({ children, onClose }: ModalProps) {
          aria-labelledby="modal-title"
          onClick={onClose}
       >
-         <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
+         <div className={styles.panel} style={panelStyle} onClick={(e) => e.stopPropagation()}>
             {children}
          </div>
       </div>,

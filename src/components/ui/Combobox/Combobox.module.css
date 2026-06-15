@@ -42,6 +42,7 @@
 
 .inputDisabled {
    cursor: not-allowed;
+   color: #9ca3af;
    background: #f9fafb;
    border-color: #d1d5db;
 }
@@ -87,4 +88,12 @@
    font-family: 'Inter', sans-serif;
    font-size: 14px;
    color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+   .input {
+      height: 36px;
+      font-size: 14px;
+      line-height: 20px;
+   }
 }
