@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import { useGetClientsQuery } from '../api/clientsApi'
 import { useGetDealsQuery } from '../api/dealsApi'
 import { useGetTasksQuery } from '../api/tasksApi'
 import { useAppSelector } from '../app/hooks'
 import { Button } from '../components/ui/Button/Button'
+import { ClientModal } from '../features/clients/ClientModal'
+import { DealModal } from '../features/deals/DealModal'
+import { TaskModal } from '../features/tasks/TaskModal'
 import { selectCurrentUser } from '../features/auth/authSelectors'
 import {
    formatCurrency,
@@ -37,6 +39,9 @@ const taskStatusLabels: Record<TaskStatus, string> = {
 export function DashboardPage() {
    const currentUser = useAppSelector(selectCurrentUser)
    const [mobileTab, setMobileTab] = useState<'home' | 'clients' | 'deals' | 'tasks'>('home')
+   const [isClientModalOpen, setIsClientModalOpen] = useState(false)
+   const [isDealModalOpen, setIsDealModalOpen] = useState(false)
+   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
 
    const { data: clients = [], isLoading: isClientsLoading } = useGetClientsQuery()
    const { data: deals = [], isLoading: isDealsLoading } = useGetDealsQuery()
@@ -153,9 +158,7 @@ export function DashboardPage() {
                ))}
             </div>
 
-            <Link to="/clients" state={{ openModal: true }}>
-               <Button>Новый клиент</Button>
-            </Link>
+            <Button onClick={() => setIsClientModalOpen(true)}>Новый клиент</Button>
          </section>
 
          <section className={`${styles.section}${mobileTab !== 'deals' ? ` ${styles.mobileTabHidden}` : ''}`}>
@@ -194,9 +197,7 @@ export function DashboardPage() {
                })}
             </div>
 
-            <Link to="/deals" state={{ openModal: true }}>
-               <Button>Новая сделка</Button>
-            </Link>
+            <Button onClick={() => setIsDealModalOpen(true)}>Новая сделка</Button>
          </section>
 
          <section className={`${styles.section}${mobileTab !== 'tasks' ? ` ${styles.mobileTabHidden}` : ''}`}>
@@ -245,10 +246,12 @@ export function DashboardPage() {
                })}
             </div>
 
-            <Link to="/tasks" state={{ openModal: true }}>
-               <Button>Новая задача</Button>
-            </Link>
+            <Button onClick={() => setIsTaskModalOpen(true)}>Новая задача</Button>
          </section>
+
+         {isClientModalOpen && <ClientModal onClose={() => setIsClientModalOpen(false)} />}
+         {isDealModalOpen && <DealModal onClose={() => setIsDealModalOpen(false)} />}
+         {isTaskModalOpen && <TaskModal onClose={() => setIsTaskModalOpen(false)} />}
       </div>
    )
 }
