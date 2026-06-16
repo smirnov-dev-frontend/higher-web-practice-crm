@@ -151,7 +151,7 @@ export function DealModal({ deal, draft, onClose, onDraftSave }: DealModalProps)
    const isReadOnly = deal?.status === 'completed'
 
    return (
-      <Modal onClose={onClose} panelStyle={isReadOnly ? { background: '#f0fdf4' } : undefined}>
+      <Modal onClose={onClose} panelClassName={isReadOnly ? styles.panelCompleted : undefined}>
          <form className={styles.form} noValidate onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.content}>
                <div className={styles.header}>
