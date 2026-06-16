@@ -93,6 +93,10 @@
    border-color: #ef4444;
 }
 
+.panelCompleted {
+   background: #f0fdf4;
+}
+
 .selectStatus_new {
    color: #1f2937;
 }
