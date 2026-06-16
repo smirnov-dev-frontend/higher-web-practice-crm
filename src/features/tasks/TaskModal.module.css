@@ -108,3 +108,86 @@
 .selectStatus_overdue {
    color: #ef4444;
 }
+
+.headerTop {
+   display: contents;
+}
+
+.backBtn {
+   display: none;
+}
+
+.backIcon {
+   width: 16px;
+   height: auto;
+}
+
+@media (max-width: 768px) {
+   .form {
+      min-height: 100dvh;
+      padding: 20px;
+      gap: 40px;
+      justify-content: space-between;
+   }
+
+   .header {
+      flex-direction: column;
+      gap: 16px;
+   }
+
+   .headerTop {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+   }
+
+   .backBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      color: #1f2937;
+   }
+
+   .title {
+      font-size: 20px;
+      line-height: 28px;
+   }
+
+   .date {
+      font-size: 12px;
+      line-height: 16px;
+      text-align: left;
+   }
+
+   .row {
+      flex-direction: column;
+      gap: 8px;
+   }
+
+   .actions {
+      flex-direction: column;
+      gap: 16px;
+   }
+
+   .submitBtn {
+      flex: none;
+      width: 100%;
+   }
+
+   .actions > button {
+      width: 100%;
+   }
+
+   .textarea {
+      font-size: 14px;
+      line-height: 20px;
+   }
+}

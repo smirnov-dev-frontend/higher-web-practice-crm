@@ -16,6 +16,7 @@ import type { Task } from '../../types/task'
 import { formatDate } from '../../utils/format'
 import { taskSchema, type TaskFormValues } from './taskSchema'
 
+import RowIcon from '../../icons/row.svg?react'
 import styles from './TaskModal.module.css'
 
 const STATUS_OPTIONS = [
@@ -165,9 +166,14 @@ export function TaskModal({ task, draft, onClose, onDraftSave }: TaskModalProps)
          <form className={styles.form} noValidate onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.content}>
                <div className={styles.header}>
-                  <h2 className={styles.title} id="modal-title">
-                     {task ? 'Карточка задачи' : 'Новая задача'}
-                  </h2>
+                  <div className={styles.headerTop}>
+                     <button aria-label="Назад" className={styles.backBtn} type="button" onClick={onClose}>
+                        <RowIcon aria-hidden className={styles.backIcon} />
+                     </button>
+                     <h2 className={styles.title} id="modal-title">
+                        {task ? 'Карточка задачи' : 'Новая задача'}
+                     </h2>
+                  </div>
                   {task && (
                      <span className={styles.date}>Создана {formatDate(task.createdAt)}</span>
                   )}
