@@ -8,7 +8,7 @@ export type Task = {
 
   dealId?: string;
 
-  assigneeId: string; // userId
+  assigneeId: string;
 
   status: TaskStatus;
 

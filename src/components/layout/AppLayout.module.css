@@ -273,7 +273,6 @@
   padding: 24px 32px;
 }
 
-/* Mobile header: hidden on desktop */
 .mobileHeader {
   display: none;
 }

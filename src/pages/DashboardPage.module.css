@@ -269,12 +269,10 @@
 }
 
 
-/* Desktop: dealFooter transparent to grid */
 .dealFooter {
   display: contents;
 }
 
-/* Mobile tabs: hidden on desktop */
 .mobileTabs {
   display: none;
 }
@@ -295,7 +293,6 @@
     line-height: 20px;
   }
 
-  /* Tabs */
   .mobileTabs {
     display: flex;
     position: relative;
@@ -474,7 +471,6 @@
     font-weight: 400;
   }
 
-  /* Tab visibility */
   .mobileTabHidden {
     display: none;
   }
@@ -483,7 +479,6 @@
     margin-top: 40px;
   }
 
-  /* Clients section mobile */
   .clientsGrid {
     display: flex;
     flex-direction: column;
@@ -542,7 +537,6 @@
     color: #9ca3af;
   }
 
-  /* Deals section mobile */
   .dealsList {
     gap: 4px;
     margin-bottom: 0;
@@ -600,7 +594,6 @@
     flex-shrink: 0;
   }
 
-  /* Tasks section mobile */
   .tasksGrid {
     display: flex;
     flex-direction: column;
@@ -637,7 +630,6 @@
     margin-top: auto;
   }
 
-  /* Fixed button at bottom */
   .sectionBtn {
     position: fixed;
     bottom: 0;

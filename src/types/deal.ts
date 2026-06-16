@@ -14,7 +14,7 @@ export type Deal = {
   createdAt: string;
   completedAt?: string;
 
-  createdBy: string; // userId
+  createdBy: string;
 };
 
 export type CreateDealPayload = {

@@ -10,7 +10,7 @@ export type Client = {
   createdAt: string;
   deleted?: boolean;
 
-  createdBy: string; // userId
+  createdBy: string;
 };
 
 export type CreateClientPayload = {

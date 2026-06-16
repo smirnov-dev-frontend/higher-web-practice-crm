@@ -522,10 +522,8 @@
    padding: 24px 0;
 }
 
-/* Desktop: prefix labels (id, Клиент) hidden */
 .cardPrefixLabel { display: none; }
 
-/* Desktop: stat cells in activity card */
 .cardStat {
    flex: 1;
    font-family: 'Inter', sans-serif;
@@ -541,17 +539,14 @@
    color: #6b7280;
 }
 
-/* Desktop: short labels hidden */
 .tabLabelShort { display: none; }
 
-/* Desktop: selects inside toolbar sit side-by-side */
 .toolbarSelects {
    display: flex;
    gap: 8px;
    align-items: center;
 }
 
-/* Desktop: export buttons render as a row below data */
 .exportBtns {
    display: flex;
    gap: 8px;
@@ -566,7 +561,6 @@
       line-height: 32px;
    }
 
-   /* Tabs */
    .tabList { gap: 0; }
    .tab { flex: 1; }
    .tabLabel,
@@ -584,13 +578,11 @@
    .tabUnderline,
    .tabUnderlineActive { align-self: stretch; }
 
-   /* Selects: full width, each 50% */
    .toolbar { flex-wrap: wrap; }
    .toolbarSpacer { display: none; }
    .toolbarSelects { flex: 1 1 100%; }
    .toolbarSelects > * { flex: 1; min-width: 0; }
 
-   /* Export buttons: already in the right DOM position (below data) */
    .exportBtns { gap: 8px; }
    .exportBtns .exportBtn {
       flex: 1;
@@ -599,23 +591,19 @@
       padding: 6px 8px;
    }
 
-   /* Section layout */
    .section { gap: 8px; }
    .sectionTitle { font-size: 14px; line-height: 20px; }
 
-   /* Cards: single column, smaller gap, meta text dark */
    .cardsGrid { grid-template-columns: 1fr; gap: 4px; }
    .cardTop { gap: 16px; }
    .cardMeta { color: #1f2937; font-size: 14px; line-height: 20px; }
 
-   /* Stages card: collapse to single row on mobile */
    .stageCard { flex-direction: row; align-items: center; gap: 16px; }
    .stageCard .cardTop { flex: 0 0 auto; }
    .stageCard .cardBottom { display: contents; }
    .stageCard .cardPrimary { font-weight: 400; flex: 1; text-align: right; }
    .stageCard .cardSecondary { font-size: 14px; line-height: 20px; color: #1f2937; flex-shrink: 0; }
 
-   /* Prefix labels: show on mobile */
    .cardPrefixLabel {
       display: inline;
       font-size: 12px;
@@ -623,7 +611,6 @@
       color: #6b7280;
    }
 
-   /* New clients card */
    .newClientsCard .cardId {
       display: flex;
       align-items: baseline;
@@ -645,7 +632,6 @@
       color: #6b7280;
    }
 
-   /* Activity card: collapse to single row */
    .activityCard { flex-direction: row; align-items: center; padding: 8px 16px; gap: 12px; }
    .activityCard .cardTop { display: contents; }
    .activityCard .cardBottom { display: contents; }
@@ -658,7 +644,6 @@
    }
    .activityCard .cardStat { display: flex; align-items: baseline; gap: 2px; flex: 1; }
 
-   /* Task report cards (active + overdue): shared 2-column grid */
    .taskCard {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -700,7 +685,6 @@
       color: #6b7280;
    }
 
-   /* Active/completed: cardPrimary = статус (top-right), cardSecondary = дата (bottom-right) */
    .activeTaskCard .cardPrimary {
       grid-row: 1; grid-column: 2;
       flex: none;
@@ -717,7 +701,6 @@
       align-self: end;
    }
 
-   /* Overdue: cardSecondary = статус (top-right), cardPrimary = дата (bottom-right) */
    .overdueTaskCard .cardSecondary {
       grid-row: 1; grid-column: 2;
       font-size: 12px;
@@ -734,11 +717,9 @@
       align-self: end;
    }
 
-   /* Table list view: hide header, horizontal scroll */
    .tableHead { display: none; }
    .tableContainer { overflow-x: auto; }
 
-   /* Pagination */
    .paginationJump { display: none; }
    .paginationSingle { display: none; }
 }
