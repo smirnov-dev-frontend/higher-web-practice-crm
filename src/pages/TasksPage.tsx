@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { useGetDealsQuery } from '../api/dealsApi'
@@ -58,11 +58,8 @@ export function TasksPage() {
    const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
    const [isSortActive, setIsSortActive] = useState(false)
    const [columnFilters, setColumnFilters] = useState<Partial<Record<SortKey, string[]>>>({})
-   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
    const location = useLocation()
-   useEffect(() => {
-      if (location.state?.openModal) setIsAddModalOpen(true)
-   }, [location.state])
+   const [isAddModalOpen, setIsAddModalOpen] = useState(() => Boolean(location.state?.openModal))
    const [editingTask, setEditingTask] = useState<Task | null>(null)
    const [addDraft, setAddDraft] = useState<Partial<TaskFormValues>>({})
 

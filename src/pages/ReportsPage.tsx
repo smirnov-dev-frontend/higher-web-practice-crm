@@ -419,7 +419,6 @@ export function ReportsPage() {
       () => tasks.filter((t) => t.createdBy === currentUser?.id),
       [tasks, currentUser?.id],
    )
-   const dealMap = useMemo(() => new Map(deals.map((d) => [d.id, d])), [deals])
    const userMap = useMemo(() => new Map(users.map((u) => [u.id, u])), [users])
 
    const taskIndexMap = useMemo(() => {
@@ -444,7 +443,7 @@ export function ReportsPage() {
             createdAt: t.createdAt,
          }
       })
-   }, [userTasks, dealMap, userMap])
+   }, [userTasks, userMap])
 
    const activeTasksBase = useMemo(() => {
       const cutoff = cutoffDate(activeTasksPeriod)
