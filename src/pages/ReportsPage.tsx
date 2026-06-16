@@ -31,10 +31,10 @@ type ActivityRow = { clientId: string; completedTasks: number; createdAt: string
 type TaskReportSortKey = 'taskId' | 'title' | 'assigneeName' | 'status' | 'dueDate'
 type TaskReportRow = { taskId: string; title: string; assigneeName: string; statusKey: string; status: string; dueDate: string; createdAt: string }
 
-const TABS: { id: Tab; label: string }[] = [
-   { id: 'sales', label: 'Отчёты по продажам' },
-   { id: 'clients', label: 'Отчёты по клиентам' },
-   { id: 'tasks', label: 'Отчёты по задачам' },
+const TABS: { id: Tab; label: string; shortLabel: string }[] = [
+   { id: 'sales', label: 'Отчёты по продажам', shortLabel: 'По продажам' },
+   { id: 'clients', label: 'Отчёты по клиентам', shortLabel: 'По клиентам' },
+   { id: 'tasks', label: 'Отчёты по задачам', shortLabel: 'По задачам' },
 ]
 
 const PERIOD_OPTIONS: { value: Period; label: string }[] = [
@@ -169,11 +169,11 @@ export function ReportsPage() {
    const [salesSortActive, setSalesSortActive] = useState(false)
    const [salesColFilters, setSalesColFilters] = useState<Partial<Record<SalesSortKey, string[]>>>({})
 
-   const [salesViewMode, setSalesViewMode] = useState<'list' | 'cards'>('list')
+   const [salesViewMode, setSalesViewMode] = useState<'list' | 'cards'>(() => isMobileViewport() ? 'cards' : 'list')
 
    const [stagesPeriod, setStagesPeriod] = useState<Period>('year')
    const [stagesPage, setStagesPage] = useState(1)
-   const [stagesViewMode, setStagesViewMode] = useState<'list' | 'cards'>('list')
+   const [stagesViewMode, setStagesViewMode] = useState<'list' | 'cards'>(() => isMobileViewport() ? 'cards' : 'list')
    const [stagesSortKey, setStagesSortKey] = useState<StagesSortKey>('label')
    const [stagesSortDir, setStagesSortDir] = useState<SortDirection>('asc')
    const [stagesSortActive, setStagesSortActive] = useState(false)
@@ -185,7 +185,7 @@ export function ReportsPage() {
    const [newClientsSortDir, setNewClientsSortDir] = useState<SortDirection>('desc')
    const [newClientsSortActive, setNewClientsSortActive] = useState(false)
    const [newClientsColFilters, setNewClientsColFilters] = useState<Partial<Record<NewClientsSortKey, string[]>>>({})
-   const [newClientsViewMode, setNewClientsViewMode] = useState<'list' | 'cards'>('list')
+   const [newClientsViewMode, setNewClientsViewMode] = useState<'list' | 'cards'>(() => isMobileViewport() ? 'cards' : 'list')
 
    const [activityPeriod, setActivityPeriod] = useState<Period>('year')
    const [activityPage, setActivityPage] = useState(1)
@@ -193,7 +193,7 @@ export function ReportsPage() {
    const [activitySortDir, setActivitySortDir] = useState<SortDirection>('asc')
    const [activitySortActive, setActivitySortActive] = useState(false)
    const [activityColFilters, setActivityColFilters] = useState<Partial<Record<ActivitySortKey, string[]>>>({})
-   const [activityViewMode, setActivityViewMode] = useState<'list' | 'cards'>('list')
+   const [activityViewMode, setActivityViewMode] = useState<'list' | 'cards'>(() => isMobileViewport() ? 'cards' : 'list')
 
    const [activeTasksPeriod, setActiveTasksPeriod] = useState<Period>('year')
    const [activeTasksPage, setActiveTasksPage] = useState(1)
@@ -201,7 +201,7 @@ export function ReportsPage() {
    const [activeTasksSortDir, setActiveTasksSortDir] = useState<SortDirection>('desc')
    const [activeTasksSortActive, setActiveTasksSortActive] = useState(false)
    const [activeTasksColFilters, setActiveTasksColFilters] = useState<Partial<Record<TaskReportSortKey, string[]>>>({})
-   const [activeTasksViewMode, setActiveTasksViewMode] = useState<'list' | 'cards'>('list')
+   const [activeTasksViewMode, setActiveTasksViewMode] = useState<'list' | 'cards'>(() => isMobileViewport() ? 'cards' : 'list')
 
    const [overdueTasksPeriod, setOverdueTasksPeriod] = useState<Period>('year')
    const [overdueTasksPage, setOverdueTasksPage] = useState(1)
@@ -209,7 +209,7 @@ export function ReportsPage() {
    const [overdueTasksSortDir, setOverdueTasksSortDir] = useState<SortDirection>('asc')
    const [overdueTasksSortActive, setOverdueTasksSortActive] = useState(false)
    const [overdueTasksColFilters, setOverdueTasksColFilters] = useState<Partial<Record<TaskReportSortKey, string[]>>>({})
-   const [overdueTasksViewMode, setOverdueTasksViewMode] = useState<'list' | 'cards'>('list')
+   const [overdueTasksViewMode, setOverdueTasksViewMode] = useState<'list' | 'cards'>(() => isMobileViewport() ? 'cards' : 'list')
 
    const { data: deals = [] } = useGetDealsQuery()
    const { data: clients = [] } = useGetClientsQuery()
@@ -754,7 +754,8 @@ export function ReportsPage() {
                      onClick={() => setActiveTab(tab.id)}
                   >
                      <span className={activeTab === tab.id ? styles.tabLabelActive : styles.tabLabel}>
-                        {tab.label}
+                        <span className={styles.tabLabelFull}>{tab.label}</span>
+                        <span className={styles.tabLabelShort}>{tab.shortLabel}</span>
                      </span>
                      <span className={activeTab === tab.id ? styles.tabUnderlineActive : styles.tabUnderline} />
                   </button>
@@ -770,8 +771,6 @@ export function ReportsPage() {
                   <SectionToolbar
                      period={salesPeriod}
                      viewMode={salesViewMode}
-                     onExportExcel={handleSalesExportExcel}
-                     onExportPDF={handleSalesExportPDF}
                      onPeriodChange={(p) => { setSalesPeriod(p); setSalesPage(1) }}
                      onViewModeChange={setSalesViewMode}
                   />
@@ -840,6 +839,7 @@ export function ReportsPage() {
                         </div>
                      </div>
                   )}
+                  <ExportRow onExportPDF={handleSalesExportPDF} onExportExcel={handleSalesExportExcel} />
                   <PaginationBar page={salesPage} total={salesTotalPages} onChange={setSalesPage} />
                </div>
 
@@ -848,8 +848,6 @@ export function ReportsPage() {
                   <SectionToolbar
                      period={stagesPeriod}
                      viewMode={stagesViewMode}
-                     onExportExcel={handleStagesExportExcel}
-                     onExportPDF={handleStagesExportPDF}
                      onPeriodChange={(p) => { setStagesPeriod(p); setStagesPage(1) }}
                      onViewModeChange={setStagesViewMode}
                   />
@@ -859,12 +857,12 @@ export function ReportsPage() {
                         : (
                            <div className={styles.cardsGrid}>
                               {stagesPageData.map((stage) => (
-                                 <div key={stage.key} className={`${styles.card} ${styles[`stageRow_${stage.key}`]}`}>
+                                 <div key={stage.key} className={`${styles.card} ${styles.stageCard} ${styles[`stageRow_${stage.key}`]}`}>
                                     <div className={styles.cardTop}>
                                        <span className={`${styles.cardClient} ${styles[`stageLabel_${stage.key}`]}`}>{stage.label}</span>
                                     </div>
                                     <div className={styles.cardBottom}>
-                                       <span className={styles.cardPrimary}>{formatCurrency(stage.total)}</span>
+                                       <span className={styles.cardPrimary}>{formatCurrency(stage.total)} сумма</span>
                                        <span className={styles.cardSecondary}>{stage.count} сделок</span>
                                     </div>
                                  </div>
@@ -913,6 +911,7 @@ export function ReportsPage() {
                         </div>
                      </div>
                   )}
+                  <ExportRow onExportPDF={handleStagesExportPDF} onExportExcel={handleStagesExportExcel} />
                   <PaginationBar page={stagesPage} total={stagesTotalPages} onChange={setStagesPage} />
                </div>
             </div>
@@ -925,8 +924,6 @@ export function ReportsPage() {
                   <SectionToolbar
                      period={newClientsPeriod}
                      viewMode={newClientsViewMode}
-                     onExportExcel={handleNewClientsExportExcel}
-                     onExportPDF={handleNewClientsExportPDF}
                      onPeriodChange={(p) => { setNewClientsPeriod(p); setNewClientsPage(1) }}
                      onViewModeChange={setNewClientsViewMode}
                   />
@@ -936,10 +933,16 @@ export function ReportsPage() {
                         : (
                            <div className={styles.cardsGrid}>
                               {newClientsPageData.map((client, i) => (
-                                 <div key={client.id} className={styles.card}>
+                                 <div key={client.id} className={`${styles.card} ${styles.newClientsCard}`}>
                                     <div className={styles.cardTop}>
-                                       <span className={styles.cardId}>{clientIndexMap.get(client.id) ?? i + 1}</span>
-                                       <span className={styles.cardClient}>{firstName(client.name)}</span>
+                                       <span className={styles.cardId}>
+                                          <span className={styles.cardPrefixLabel}>id</span>
+                                          {clientIndexMap.get(client.id) ?? i + 1}
+                                       </span>
+                                       <span className={styles.cardClient}>
+                                          <span className={styles.cardPrefixLabel}>Клиент</span>
+                                          {firstName(client.name)}
+                                       </span>
                                        <span className={styles.cardMeta}>{client.company}</span>
                                     </div>
                                     <div className={styles.cardBottom}>
@@ -985,6 +988,7 @@ export function ReportsPage() {
                         </div>
                      </div>
                   )}
+                  <ExportRow onExportPDF={handleNewClientsExportPDF} onExportExcel={handleNewClientsExportExcel} />
                   <PaginationBar page={newClientsPage} total={newClientsTotalPages} onChange={setNewClientsPage} />
                </div>
 
@@ -993,8 +997,6 @@ export function ReportsPage() {
                   <SectionToolbar
                      period={activityPeriod}
                      viewMode={activityViewMode}
-                     onExportExcel={handleActivityExportExcel}
-                     onExportPDF={handleActivityExportPDF}
                      onPeriodChange={(p) => { setActivityPeriod(p); setActivityPage(1) }}
                      onViewModeChange={setActivityViewMode}
                   />
@@ -1004,14 +1006,21 @@ export function ReportsPage() {
                         : (
                            <div className={styles.cardsGrid}>
                               {activityPageData.map((row, i) => (
-                                 <div key={row.clientId} className={styles.card}>
+                                 <div key={row.clientId} className={`${styles.card} ${styles.activityCard}`}>
                                     <div className={styles.cardTop}>
-                                       <span className={styles.cardId}>{clientIndexMap.get(row.clientId) ?? i + 1}</span>
+                                       <span className={styles.cardId}>
+                                          <span className={styles.cardPrefixLabel}>id</span>
+                                          {clientIndexMap.get(row.clientId) ?? i + 1}
+                                       </span>
                                        <span className={styles.cardClient}>{row.name}</span>
                                     </div>
                                     <div className={styles.cardBottom}>
-                                       <span className={styles.cardPrimary}>{row.dealCount} сделок</span>
-                                       <span className={styles.cardSecondary}>{row.completedTasks} задач</span>
+                                       <span className={styles.cardStat}>
+                                          {row.dealCount}<span className={styles.cardStatLabel}> сделок</span>
+                                       </span>
+                                       <span className={styles.cardStat}>
+                                          {row.completedTasks}<span className={styles.cardStatLabel}> задач</span>
+                                       </span>
                                     </div>
                                  </div>
                               ))}
@@ -1053,6 +1062,7 @@ export function ReportsPage() {
                         </div>
                      </div>
                   )}
+                  <ExportRow onExportPDF={handleActivityExportPDF} onExportExcel={handleActivityExportExcel} />
                   <PaginationBar page={activityPage} total={activityTotalPages} onChange={setActivityPage} />
                </div>
             </div>
@@ -1065,8 +1075,6 @@ export function ReportsPage() {
                   <SectionToolbar
                      period={activeTasksPeriod}
                      viewMode={activeTasksViewMode}
-                     onExportExcel={handleActiveTasksExportExcel}
-                     onExportPDF={handleActiveTasksExportPDF}
                      onPeriodChange={(p) => { setActiveTasksPeriod(p); setActiveTasksPage(1) }}
                      onViewModeChange={setActiveTasksViewMode}
                   />
@@ -1076,9 +1084,12 @@ export function ReportsPage() {
                         : (
                            <div className={styles.cardsGrid}>
                               {activeTasksPageData.map((row, i) => (
-                                 <div key={row.taskId} className={`${styles.card} ${styles[`taskRow_${row.statusKey}`]}`}>
+                                 <div key={row.taskId} className={`${styles.card} ${styles[`taskRow_${row.statusKey}`]} ${styles.taskCard} ${styles.activeTaskCard}`}>
                                     <div className={styles.cardTop}>
-                                       <span className={styles.cardId}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
+                                       <span className={styles.cardId}>
+                                          <span className={styles.cardPrefixLabel}>id</span>
+                                          {taskIndexMap.get(row.taskId) ?? i + 1}
+                                       </span>
                                        <span className={styles.cardClient}>{row.title}</span>
                                        <span className={styles.cardMeta}>{row.assigneeName}</span>
                                     </div>
@@ -1127,6 +1138,7 @@ export function ReportsPage() {
                         </div>
                      </div>
                   )}
+                  <ExportRow onExportPDF={handleActiveTasksExportPDF} onExportExcel={handleActiveTasksExportExcel} />
                   <PaginationBar page={activeTasksPage} total={activeTasksTotalPages} onChange={setActiveTasksPage} />
                </div>
 
@@ -1135,8 +1147,6 @@ export function ReportsPage() {
                   <SectionToolbar
                      period={overdueTasksPeriod}
                      viewMode={overdueTasksViewMode}
-                     onExportExcel={handleOverdueTasksExportExcel}
-                     onExportPDF={handleOverdueTasksExportPDF}
                      onPeriodChange={(p) => { setOverdueTasksPeriod(p); setOverdueTasksPage(1) }}
                      onViewModeChange={setOverdueTasksViewMode}
                   />
@@ -1146,9 +1156,12 @@ export function ReportsPage() {
                         : (
                            <div className={styles.cardsGrid}>
                               {overdueTasksPageData.map((row, i) => (
-                                 <div key={row.taskId} className={`${styles.card} ${styles.taskRow_overdue}`}>
+                                 <div key={row.taskId} className={`${styles.card} ${styles.taskRow_overdue} ${styles.taskCard} ${styles.overdueTaskCard}`}>
                                     <div className={styles.cardTop}>
-                                       <span className={styles.cardId}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
+                                       <span className={styles.cardId}>
+                                          <span className={styles.cardPrefixLabel}>id</span>
+                                          {taskIndexMap.get(row.taskId) ?? i + 1}
+                                       </span>
                                        <span className={styles.cardClient}>{row.title}</span>
                                        <span className={styles.cardMeta}>{row.assigneeName}</span>
                                     </div>
@@ -1197,6 +1210,7 @@ export function ReportsPage() {
                         </div>
                      </div>
                   )}
+                  <ExportRow onExportPDF={handleOverdueTasksExportPDF} onExportExcel={handleOverdueTasksExportExcel} />
                   <PaginationBar page={overdueTasksPage} total={overdueTasksTotalPages} onChange={setOverdueTasksPage} />
                </div>
             </div>
@@ -1210,35 +1224,45 @@ const VIEW_OPTIONS: { value: 'list' | 'cards'; label: string }[] = [
    { value: 'cards', label: 'Карточками' },
 ]
 
+const MOBILE_VIEW_OPTIONS: { value: 'list' | 'cards'; label: string }[] = [
+   { value: 'cards', label: 'Списком' },
+]
+
+const isMobileViewport = () => typeof window !== 'undefined' && window.innerWidth <= 768
+
 type ToolbarProps = {
-   onExportExcel: () => void
-   onExportPDF: () => void
    onPeriodChange: (p: Period) => void
    onViewModeChange: (v: 'list' | 'cards') => void
    period: Period
    viewMode: 'list' | 'cards'
 }
 
-function SectionToolbar({ onExportExcel, onExportPDF, onPeriodChange, onViewModeChange, period, viewMode }: ToolbarProps) {
+function SectionToolbar({ onPeriodChange, onViewModeChange, period, viewMode }: ToolbarProps) {
+   const viewOptions = isMobileViewport() ? MOBILE_VIEW_OPTIONS : VIEW_OPTIONS
    return (
       <div className={styles.toolbar}>
-         <Select
-            options={PERIOD_OPTIONS}
-            value={period}
-            onChange={(v) => onPeriodChange(v as Period)}
-         />
-         <Select
-            options={VIEW_OPTIONS}
-            value={viewMode}
-            onChange={(v) => onViewModeChange(v as 'list' | 'cards')}
-         />
+         <div className={styles.toolbarSelects}>
+            <Select
+               options={PERIOD_OPTIONS}
+               value={period}
+               onChange={(v) => onPeriodChange(v as Period)}
+            />
+            <Select
+               options={viewOptions}
+               value={isMobileViewport() ? 'cards' : viewMode}
+               onChange={(v) => onViewModeChange(v as 'list' | 'cards')}
+            />
+         </div>
          <div className={styles.toolbarSpacer} />
-         <button className={styles.exportBtn} type="button" onClick={onExportPDF}>
-            Экспорт в PDF
-         </button>
-         <button className={styles.exportBtn} type="button" onClick={onExportExcel}>
-            Экспорт в XLSX
-         </button>
+      </div>
+   )
+}
+
+function ExportRow({ onExportPDF, onExportExcel }: { onExportPDF: () => void; onExportExcel: () => void }) {
+   return (
+      <div className={styles.exportBtns}>
+         <button className={styles.exportBtn} type="button" onClick={onExportPDF}>Экспорт в PDF</button>
+         <button className={styles.exportBtn} type="button" onClick={onExportExcel}>Экспорт в XLSX</button>
       </div>
    )
 }
@@ -1270,7 +1294,7 @@ function PaginationBar({ onChange, page, total }: PaginationBarProps) {
    const pages = getPageNumbers(page, total)
 
    return (
-      <div className={styles.pagination}>
+      <div className={`${styles.pagination}${total <= 1 ? ` ${styles.paginationSingle}` : ''}`}>
          <div className={styles.paginationPages}>
             <button
                className={styles.pageNavBtn}

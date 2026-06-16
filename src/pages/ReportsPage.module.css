@@ -439,7 +439,7 @@
    font-size: 14px;
    font-weight: 400;
    line-height: 20px;
-   color: #1f2937;
+   color: #3b82f6;
 }
 
 .cardClient {
@@ -520,4 +520,225 @@
    font-size: 14px;
    color: #6b7280;
    padding: 24px 0;
+}
+
+/* Desktop: prefix labels (id, Клиент) hidden */
+.cardPrefixLabel { display: none; }
+
+/* Desktop: stat cells in activity card */
+.cardStat {
+   flex: 1;
+   font-family: 'Inter', sans-serif;
+   font-size: 14px;
+   font-weight: 400;
+   line-height: 20px;
+   color: #1f2937;
+}
+
+.cardStatLabel {
+   font-size: 12px;
+   line-height: 16px;
+   color: #6b7280;
+}
+
+/* Desktop: short labels hidden */
+.tabLabelShort { display: none; }
+
+/* Desktop: selects inside toolbar sit side-by-side */
+.toolbarSelects {
+   display: flex;
+   gap: 8px;
+   align-items: center;
+}
+
+/* Desktop: export buttons render as a row below data */
+.exportBtns {
+   display: flex;
+   gap: 8px;
+   align-items: center;
+}
+
+@media (max-width: 768px) {
+   .page { gap: 20px; }
+
+   .pageTitle {
+      font-size: 24px;
+      line-height: 32px;
+   }
+
+   /* Tabs */
+   .tabList { gap: 0; }
+   .tab { flex: 1; }
+   .tabLabel,
+   .tabLabelActive {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      height: auto;
+      padding: 0 4px 3px;
+      width: 100%;
+      justify-content: center;
+   }
+   .tabLabelFull { display: none; }
+   .tabLabelShort { display: block; }
+   .tabUnderline,
+   .tabUnderlineActive { align-self: stretch; }
+
+   /* Selects: full width, each 50% */
+   .toolbar { flex-wrap: wrap; }
+   .toolbarSpacer { display: none; }
+   .toolbarSelects { flex: 1 1 100%; }
+   .toolbarSelects > * { flex: 1; min-width: 0; }
+
+   /* Export buttons: already in the right DOM position (below data) */
+   .exportBtns { gap: 8px; }
+   .exportBtns .exportBtn {
+      flex: 1;
+      font-size: 14px;
+      height: 36px;
+      padding: 6px 8px;
+   }
+
+   /* Section layout */
+   .section { gap: 8px; }
+   .sectionTitle { font-size: 14px; line-height: 20px; }
+
+   /* Cards: single column, smaller gap, meta text dark */
+   .cardsGrid { grid-template-columns: 1fr; gap: 4px; }
+   .cardTop { gap: 16px; }
+   .cardMeta { color: #1f2937; font-size: 14px; line-height: 20px; }
+
+   /* Stages card: collapse to single row on mobile */
+   .stageCard { flex-direction: row; align-items: center; gap: 16px; }
+   .stageCard .cardTop { flex: 0 0 auto; }
+   .stageCard .cardBottom { display: contents; }
+   .stageCard .cardPrimary { font-weight: 400; flex: 1; text-align: right; }
+   .stageCard .cardSecondary { font-size: 14px; line-height: 20px; color: #1f2937; flex-shrink: 0; }
+
+   /* Prefix labels: show on mobile */
+   .cardPrefixLabel {
+      display: inline;
+      font-size: 12px;
+      line-height: 16px;
+      color: #6b7280;
+   }
+
+   /* New clients card */
+   .newClientsCard .cardId {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+   }
+   .newClientsCard .cardClient {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      overflow: visible;
+      white-space: normal;
+      text-overflow: clip;
+   }
+   .newClientsCard .cardMeta { font-weight: 700; }
+   .newClientsCard .cardBottom .cardPrimary {
+      flex: none;
+      font-size: 12px;
+      font-weight: 400;
+      color: #6b7280;
+   }
+
+   /* Activity card: collapse to single row */
+   .activityCard { flex-direction: row; align-items: center; padding: 8px 16px; gap: 12px; }
+   .activityCard .cardTop { display: contents; }
+   .activityCard .cardBottom { display: contents; }
+   .activityCard .cardId {
+      color: #1f2937;
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      flex-shrink: 0;
+   }
+   .activityCard .cardStat { display: flex; align-items: baseline; gap: 2px; flex: 1; }
+
+   /* Task report cards (active + overdue): shared 2-column grid */
+   .taskCard {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      row-gap: 4px;
+      column-gap: 8px;
+      align-items: start;
+   }
+   .taskCard .cardTop { display: contents; }
+   .taskCard .cardBottom { display: contents; }
+   .taskCard .cardId {
+      grid-row: 1; grid-column: 1;
+      color: #1f2937;
+      font-weight: 700;
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+   }
+   .taskCard .cardClient {
+      grid-row: 2; grid-column: 1 / span 2;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      font-size: 14px;
+      line-height: 20px;
+   }
+   .taskCard .cardMeta {
+      grid-row: 3; grid-column: 1;
+      font-size: 14px;
+      line-height: 20px;
+      color: #1f2937;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+   }
+   .taskCard .cardMeta::after {
+      content: "Ответственный";
+      font-size: 12px;
+      line-height: 16px;
+      color: #6b7280;
+   }
+
+   /* Active/completed: cardPrimary = статус (top-right), cardSecondary = дата (bottom-right) */
+   .activeTaskCard .cardPrimary {
+      grid-row: 1; grid-column: 2;
+      flex: none;
+      font-size: 12px;
+      font-weight: 400;
+      text-align: right;
+      align-self: start;
+   }
+   .activeTaskCard .cardSecondary {
+      grid-row: 3; grid-column: 2;
+      font-size: 12px;
+      line-height: 16px;
+      text-align: right;
+      align-self: end;
+   }
+
+   /* Overdue: cardSecondary = статус (top-right), cardPrimary = дата (bottom-right) */
+   .overdueTaskCard .cardSecondary {
+      grid-row: 1; grid-column: 2;
+      font-size: 12px;
+      line-height: 16px;
+      text-align: right;
+   }
+   .overdueTaskCard .cardPrimary {
+      grid-row: 3; grid-column: 2;
+      flex: none;
+      font-size: 12px;
+      font-weight: 400;
+      color: #6b7280;
+      text-align: right;
+      align-self: end;
+   }
+
+   /* Table list view: hide header, horizontal scroll */
+   .tableHead { display: none; }
+   .tableContainer { overflow-x: auto; }
+
+   /* Pagination */
+   .paginationJump { display: none; }
+   .paginationSingle { display: none; }
 }
