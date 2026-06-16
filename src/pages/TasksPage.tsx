@@ -149,7 +149,9 @@ export function TasksPage() {
          <h1 className={styles.title}>Задачи</h1>
 
          <div className={styles.toolbar}>
-            <Button onClick={() => setIsAddModalOpen(true)}>Новая задача</Button>
+            <div className={styles.toolbarAddBtn}>
+               <Button onClick={() => setIsAddModalOpen(true)}>Новая задача</Button>
+            </div>
             <div className={styles.searchWrapper}>
                <SearchIcon className={styles.searchIcon} />
                <input
@@ -189,11 +191,11 @@ export function TasksPage() {
                      onClick={() => setEditingTask(row)}
                   >
                      <span className={styles.cellTitle}>{row.title}</span>
-                     <span className={styles.cell}>{row.dealTitle}</span>
+                     <span className={`${styles.cell} ${styles.cellDeal}`}>{row.dealTitle}</span>
                      <span className={styles.cellDesc}>{row.description || '—'}</span>
-                     <span className={styles.cell}>{formatDate(row.dueDate)}</span>
-                     <span className={styles.cell}>{row.assigneeName}</span>
-                     <span className={`${styles.cell} ${row.isOverdue ? styles.status_overdue : styles[`status_${row.status}`]}`}>
+                     <span className={`${styles.cell} ${styles.cellDue}${row.dueDate ? ` ${styles.cellDueWithDate}` : ''}`}>{formatDate(row.dueDate)}</span>
+                     <span className={`${styles.cell} ${styles.cellAssignee}`}>{row.assigneeName}</span>
+                     <span className={`${styles.cell} ${styles.cellStatus} ${row.isOverdue ? styles.status_overdue : styles[`status_${row.status}`]}`}>
                         {row.isOverdue ? 'Просрочена' : STATUS_LABELS[row.status]}
                      </span>
                      <span className={styles.cellDate}>{formatDate(row.createdAt)}</span>
@@ -206,6 +208,10 @@ export function TasksPage() {
                   {search ? 'По вашему запросу ничего не найдено' : 'Задачи ещё не добавлены'}
                </p>
             )}
+         </div>
+
+         <div className={styles.mobileAdd}>
+            <Button onClick={() => setIsAddModalOpen(true)}>Новая задача</Button>
          </div>
 
          {isAddModalOpen && (
