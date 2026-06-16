@@ -5,8 +5,24 @@ export const clientSchema = z.object({
    company: z.string().trim().min(1, 'Введите название компании'),
    email: z.string().trim().min(1, 'Введите email').email('Введите корректный email'),
    name: z.string().trim().min(1, 'Введите имя'),
-   phone: z.string().trim().min(1, 'Введите телефон'),
-   website: z.string().trim(),
+   phone: z.string().trim()
+      .min(1, 'Введите телефон')
+      .refine(
+         (v) => { const d = v.replace(/\D/g, ''); return d.length >= 10 && d.length <= 12 },
+         'Введите корректный номер телефона',
+      ),
+   website: z.string().trim().refine(
+      (v) => {
+         if (!v) return true
+         try {
+            new URL(v.startsWith('http') ? v : `https://${v}`)
+            return true
+         } catch {
+            return false
+         }
+      },
+      'Введите корректный адрес сайта',
+   ),
 })
 
 export type ClientFormValues = z.infer<typeof clientSchema>
