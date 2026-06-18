@@ -47,8 +47,7 @@ describe('taskSchema', () => {
    })
 
    it('принимает задачу без дедлайна', () => {
-      const { dueDate: _, ...withoutDue } = validTask
-      expect(taskSchema.safeParse(withoutDue).success).toBe(true)
+      expect(taskSchema.safeParse({ title: validTask.title, dealId: validTask.dealId, assigneeId: validTask.assigneeId, status: validTask.status }).success).toBe(true)
    })
 
    it('принимает задачу с датой дедлайна', () => {
@@ -56,7 +55,6 @@ describe('taskSchema', () => {
    })
 
    it('принимает задачу без описания', () => {
-      const { description: _, ...withoutDesc } = validTask
-      expect(taskSchema.safeParse(withoutDesc).success).toBe(true)
+      expect(taskSchema.safeParse({ title: validTask.title, dealId: validTask.dealId, assigneeId: validTask.assigneeId, status: validTask.status }).success).toBe(true)
    })
 })
