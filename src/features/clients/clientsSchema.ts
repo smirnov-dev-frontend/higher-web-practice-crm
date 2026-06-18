@@ -15,8 +15,9 @@ export const clientSchema = z.object({
       (v) => {
          if (!v) return true
          try {
-            new URL(v.startsWith('http') ? v : `https://${v}`)
-            return true
+            const url = new URL(v.startsWith('http') ? v : `https://${v}`)
+            const parts = url.hostname.split('.')
+            return parts.length >= 2 && parts.every((p) => p.length > 0)
          } catch {
             return false
          }

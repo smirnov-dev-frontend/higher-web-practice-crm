@@ -66,6 +66,10 @@ describe('clientSchema', () => {
       expect(clientSchema.safeParse({ ...validClient, website: 'not a url' }).success).toBe(false)
    })
 
+   it('отклоняет одиночное слово без домена', () => {
+      expect(clientSchema.safeParse({ ...validClient, website: 'site' }).success).toBe(false)
+   })
+
    it('принимает пустой комментарий', () => {
       expect(clientSchema.safeParse({ ...validClient, comment: '' }).success).toBe(true)
    })
