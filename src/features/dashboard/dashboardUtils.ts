@@ -78,7 +78,7 @@ export const getTopClients = (clients: Client[], deals: Deal[]) =>
 
 export const getRecentDeals = (deals: Deal[]) =>
    [...deals]
-      .filter((deal) => deal.status !== 'completed')
+      .filter((deal) => deal.status === 'new' || deal.status === 'in_progress')
       .sort((first, second) => Number(new Date(second.createdAt)) - Number(new Date(first.createdAt)))
       .slice(0, 10)
 
