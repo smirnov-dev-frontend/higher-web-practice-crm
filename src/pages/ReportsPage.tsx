@@ -118,6 +118,15 @@ function firstName(fullName: string): string {
    return fullName.split(' ')[0]
 }
 
+function EntityId({ id }: { id: string }) {
+   return (
+      <>
+         <span className={styles.idFull}>{id}</span>
+         <span className={styles.idShort}>{id.slice(-4)}</span>
+      </>
+   )
+}
+
 function getSalesDisplayVal(deal: Deal, key: SalesSortKey, clientMap: Map<string, Client>): string {
    if (key === 'index') return deal.id
    if (key === 'title') return deal.title
@@ -759,7 +768,7 @@ export function ReportsPage() {
                               {salesPageDeals.map((deal) => (
                                  <div key={deal.id} className={styles.card}>
                                     <div className={styles.cardTop}>
-                                       <span className={styles.cardId}>{deal.id}</span>
+                                       <span className={styles.cardId}><EntityId id={deal.id} /></span>
                                        <span className={styles.cardClient}>{firstName(clientMap.get(deal.clientId)?.name ?? '—')}</span>
                                        <span className={styles.cardMeta}>{deal.title}</span>
                                     </div>
@@ -798,7 +807,7 @@ export function ReportsPage() {
                               salesPageDeals.map((deal) => (
                                  <div key={deal.id} className={styles.tableRow}>
                                     <span className={styles.cell}>
-                                       {deal.id}
+                                       <EntityId id={deal.id} />
                                     </span>
                                     <span className={styles.cell}>{deal.title}</span>
                                     <span className={styles.cell}>
@@ -914,7 +923,7 @@ export function ReportsPage() {
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>
                                           <span className={styles.cardPrefixLabel}>id</span>
-                                          {client.id}
+                                          <EntityId id={client.id} />
                                        </span>
                                        <span className={styles.cardClient}>
                                           <span className={styles.cardPrefixLabel}>Клиент</span>
@@ -955,7 +964,7 @@ export function ReportsPage() {
                            ) : (
                               newClientsPageData.map((client) => (
                                  <div key={client.id} className={styles.tableRow}>
-                                    <span className={styles.cell}>{client.id}</span>
+                                    <span className={styles.cell}><EntityId id={client.id} /></span>
                                     <span className={styles.cell}>{firstName(client.name)}</span>
                                     <span className={styles.cell}>{client.company}</span>
                                     <span className={`${styles.cell} ${styles.cellRight}`}>{formatDate(client.createdAt)}</span>
@@ -987,7 +996,7 @@ export function ReportsPage() {
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>
                                           <span className={styles.cardPrefixLabel}>id</span>
-                                          {row.clientId}
+                                          <EntityId id={row.clientId} />
                                        </span>
                                        <span className={styles.cardClient}>{row.name}</span>
                                     </div>
@@ -1029,7 +1038,7 @@ export function ReportsPage() {
                            ) : (
                               activityPageData.map((row) => (
                                  <div key={row.clientId} className={styles.tableRow}>
-                                    <span className={styles.cell}>{row.clientId}</span>
+                                    <span className={styles.cell}><EntityId id={row.clientId} /></span>
                                     <span className={styles.cell}>{row.name}</span>
                                     <span className={styles.cell}>{row.dealCount}</span>
                                     <span className={styles.cell}>{row.completedTasks}</span>
@@ -1065,7 +1074,7 @@ export function ReportsPage() {
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>
                                           <span className={styles.cardPrefixLabel}>id</span>
-                                          {row.taskId}
+                                          <EntityId id={row.taskId} />
                                        </span>
                                        <span className={styles.cardClient}>{row.title}</span>
                                        <span className={styles.cardMeta}>{row.assigneeName}</span>
@@ -1104,7 +1113,7 @@ export function ReportsPage() {
                            ) : (
                               activeTasksPageData.map((row) => (
                                  <div key={row.taskId} className={`${styles.tableRow} ${styles[`taskRow_${row.statusKey}`]}`}>
-                                    <span className={styles.cell}>{row.taskId}</span>
+                                    <span className={styles.cell}><EntityId id={row.taskId} /></span>
                                     <span className={styles.cell}>{row.title}</span>
                                     <span className={styles.cell}>{row.assigneeName}</span>
                                     <span className={`${styles.cell} ${styles[`taskStatus_${row.statusKey}`]}`}>{row.status}</span>
@@ -1137,7 +1146,7 @@ export function ReportsPage() {
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>
                                           <span className={styles.cardPrefixLabel}>id</span>
-                                          {row.taskId}
+                                          <EntityId id={row.taskId} />
                                        </span>
                                        <span className={styles.cardClient}>{row.title}</span>
                                        <span className={styles.cardMeta}>{row.assigneeName}</span>
@@ -1176,7 +1185,7 @@ export function ReportsPage() {
                            ) : (
                               overdueTasksPageData.map((row) => (
                                  <div key={row.taskId} className={`${styles.tableRow} ${styles[`taskRow_${row.statusKey}`]}`}>
-                                    <span className={styles.cell}>{row.taskId}</span>
+                                    <span className={styles.cell}><EntityId id={row.taskId} /></span>
                                     <span className={styles.cell}>{row.title}</span>
                                     <span className={styles.cell}>{row.assigneeName}</span>
                                     <span className={`${styles.cell} ${styles[`taskStatus_${row.statusKey}`]}`}>{row.status}</span>

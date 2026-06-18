@@ -442,6 +442,9 @@
    color: #3b82f6;
 }
 
+.idFull { display: inline; }
+.idShort { display: none; }
+
 .cardClient {
    flex: 1;
    font-family: 'Inter', sans-serif;
@@ -594,6 +597,9 @@
    .section { gap: 8px; }
    .sectionTitle { font-size: 14px; line-height: 20px; }
 
+   .idFull { display: none; }
+   .idShort { display: inline; }
+
    .cardsGrid { grid-template-columns: 1fr; gap: 4px; }
    .cardTop { gap: 16px; }
    .cardMeta { color: #1f2937; font-size: 14px; line-height: 20px; }
@@ -617,14 +623,18 @@
       gap: 2px;
    }
    .newClientsCard .cardClient {
+      flex: 0 0 auto;
       display: flex;
       align-items: baseline;
       gap: 2px;
-      overflow: visible;
-      white-space: normal;
-      text-overflow: clip;
    }
-   .newClientsCard .cardMeta { font-weight: 700; }
+   .newClientsCard .cardMeta {
+      flex: 1;
+      font-weight: 700;
+      white-space: normal;
+      overflow-wrap: break-word;
+      min-width: 0;
+   }
    .newClientsCard .cardBottom .cardPrimary {
       flex: none;
       font-size: 12px;
