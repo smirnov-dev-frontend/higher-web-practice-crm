@@ -234,16 +234,16 @@ export function ProfilePage() {
                   </div>
 
                   <div className={styles.fieldRow}>
-                     <FormField error={errors.firstName?.message} htmlFor="firstName" label="Имя">
+                     <FormField required error={errors.firstName?.message} htmlFor="firstName" label="Имя">
                         <Input hasError={!!errors.firstName} id="firstName" {...register('firstName')} />
                      </FormField>
-                     <FormField error={errors.lastName?.message} htmlFor="lastName" label="Фамилия">
+                     <FormField required error={errors.lastName?.message} htmlFor="lastName" label="Фамилия">
                         <Input hasError={!!errors.lastName} id="lastName" {...register('lastName')} />
                      </FormField>
                   </div>
 
                   <div className={styles.fieldRow}>
-                     <FormField error={errors.email?.message} htmlFor="email" label="Email">
+                     <FormField required error={errors.email?.message} htmlFor="email" label="Email">
                         <Input
                            hasError={!!errors.email || showEmailVerify}
                            id="email"
