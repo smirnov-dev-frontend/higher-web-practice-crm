@@ -119,7 +119,7 @@ function firstName(fullName: string): string {
 }
 
 function getSalesDisplayVal(deal: Deal, key: SalesSortKey, clientMap: Map<string, Client>): string {
-   if (key === 'index') return ''
+   if (key === 'index') return deal.id
    if (key === 'title') return deal.title
    if (key === 'clientName') return firstName(clientMap.get(deal.clientId)?.name ?? '')
    if (key === 'amount') return formatCurrency(deal.amount)
@@ -135,7 +135,7 @@ function getStagesDisplayVal(stage: StageRow, key: StagesSortKey): string {
 }
 
 function getNewClientDisplayVal(client: Client, key: NewClientsSortKey): string {
-   if (key === 'clientId') return ''
+   if (key === 'clientId') return client.id
    if (key === 'name') return firstName(client.name)
    if (key === 'company') return client.company
    if (key === 'createdAt') return formatDate(client.createdAt)
@@ -143,7 +143,7 @@ function getNewClientDisplayVal(client: Client, key: NewClientsSortKey): string 
 }
 
 function getActivityDisplayVal(row: ActivityRow, key: ActivitySortKey): string {
-   if (key === 'clientId') return ''
+   if (key === 'clientId') return row.clientId
    if (key === 'name') return row.name
    if (key === 'dealCount') return String(row.dealCount)
    if (key === 'completedTasks') return String(row.completedTasks)
@@ -151,7 +151,7 @@ function getActivityDisplayVal(row: ActivityRow, key: ActivitySortKey): string {
 }
 
 function getTaskReportDisplayVal(row: TaskReportRow, key: TaskReportSortKey): string {
-   if (key === 'taskId') return ''
+   if (key === 'taskId') return row.taskId
    if (key === 'title') return row.title
    if (key === 'assigneeName') return row.assigneeName
    if (key === 'status') return row.status
@@ -224,13 +224,6 @@ export function ReportsPage() {
 
    const clientMap = useMemo(() => new Map(clients.map((c) => [c.id, c])), [clients])
 
-   const dealIndexMap = useMemo(() => {
-      const sorted = [...userDeals].sort(
-         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      )
-      return new Map(sorted.map((d, i) => [d.id, i + 1]))
-   }, [userDeals])
-
    const salesDealsBase = useMemo(() => {
       const cutoff = cutoffDate(salesPeriod)
       const completed = userDeals.filter((d) => d.status === 'completed')
@@ -262,7 +255,8 @@ export function ReportsPage() {
             return new Date(b.completedAt ?? 0).getTime() - new Date(a.completedAt ?? 0).getTime()
          }
          const dir = salesSortDir === 'asc' ? 1 : -1
-         if (salesSortKey === 'index' || salesSortKey === 'completedAt') {
+         if (salesSortKey === 'index') return dir * a.id.localeCompare(b.id)
+         if (salesSortKey === 'completedAt') {
             return dir * (new Date(a.completedAt ?? 0).getTime() - new Date(b.completedAt ?? 0).getTime())
          }
          if (salesSortKey === 'amount') return dir * (a.amount - b.amount)
@@ -326,13 +320,6 @@ export function ReportsPage() {
       [clients, currentUser?.id],
    )
 
-   const clientIndexMap = useMemo(() => {
-      const sorted = [...userClients].sort(
-         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      )
-      return new Map(sorted.map((c, i) => [c.id, i + 1]))
-   }, [userClients])
-
    const newClientsBase = useMemo(() => {
       const cutoff = cutoffDate(newClientsPeriod)
       return cutoff ? userClients.filter((c) => new Date(c.createdAt) >= cutoff) : userClients
@@ -359,7 +346,8 @@ export function ReportsPage() {
          if (!newClientsSortActive)
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
          const dir = newClientsSortDir === 'asc' ? 1 : -1
-         if (newClientsSortKey === 'clientId' || newClientsSortKey === 'createdAt')
+         if (newClientsSortKey === 'clientId') return dir * a.id.localeCompare(b.id)
+         if (newClientsSortKey === 'createdAt')
             return dir * (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
          if (newClientsSortKey === 'company') return dir * a.company.localeCompare(b.company, 'ru')
          return dir * firstName(a.name).localeCompare(firstName(b.name), 'ru')
@@ -404,8 +392,7 @@ export function ReportsPage() {
       if (!activitySortActive) return result
       return [...result].sort((a, b) => {
          const dir = activitySortDir === 'asc' ? 1 : -1
-         if (activitySortKey === 'clientId')
-            return dir * (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+         if (activitySortKey === 'clientId') return dir * a.clientId.localeCompare(b.clientId)
          if (activitySortKey === 'dealCount') return dir * (a.dealCount - b.dealCount)
          if (activitySortKey === 'completedTasks') return dir * (a.completedTasks - b.completedTasks)
          return dir * a.name.localeCompare(b.name, 'ru')
@@ -420,13 +407,6 @@ export function ReportsPage() {
       [tasks, currentUser?.id],
    )
    const userMap = useMemo(() => new Map(users.map((u) => [u.id, u])), [users])
-
-   const taskIndexMap = useMemo(() => {
-      const sorted = [...userTasks].sort(
-         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      )
-      return new Map(sorted.map((t, i) => [t.id, i + 1]))
-   }, [userTasks])
 
    const allTaskRows = useMemo((): TaskReportRow[] => {
       const now = new Date()
@@ -469,8 +449,7 @@ export function ReportsPage() {
          if (!activeTasksSortActive)
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
          const dir = activeTasksSortDir === 'asc' ? 1 : -1
-         if (activeTasksSortKey === 'taskId')
-            return dir * (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+         if (activeTasksSortKey === 'taskId') return dir * a.taskId.localeCompare(b.taskId)
          if (activeTasksSortKey === 'dueDate')
             return dir * ((a.dueDate ? new Date(a.dueDate).getTime() : 0) - (b.dueDate ? new Date(b.dueDate).getTime() : 0))
          return dir * getTaskReportDisplayVal(a, activeTasksSortKey).localeCompare(getTaskReportDisplayVal(b, activeTasksSortKey), 'ru')
@@ -504,8 +483,7 @@ export function ReportsPage() {
          if (!overdueTasksSortActive)
             return (a.dueDate ? new Date(a.dueDate).getTime() : 0) - (b.dueDate ? new Date(b.dueDate).getTime() : 0)
          const dir = overdueTasksSortDir === 'asc' ? 1 : -1
-         if (overdueTasksSortKey === 'taskId')
-            return dir * (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+         if (overdueTasksSortKey === 'taskId') return dir * a.taskId.localeCompare(b.taskId)
          if (overdueTasksSortKey === 'dueDate')
             return dir * ((a.dueDate ? new Date(a.dueDate).getTime() : 0) - (b.dueDate ? new Date(b.dueDate).getTime() : 0))
          return dir * getTaskReportDisplayVal(a, overdueTasksSortKey).localeCompare(getTaskReportDisplayVal(b, overdueTasksSortKey), 'ru')
@@ -543,8 +521,8 @@ export function ReportsPage() {
          { key: 'amount', label: 'Сумма, ₽', numFmt: '#,##0' },
          { key: 'completedAt', label: 'Дата завершения', numFmt: 'dd.mm.yyyy' },
       ]
-      const rows: ExportRow[] = salesDeals.map((deal, i) => ({
-         index: dealIndexMap.get(deal.id) ?? i + 1,
+      const rows: ExportRow[] = salesDeals.map((deal) => ({
+         index: deal.id,
          title: deal.title,
          clientName: firstName(clientMap.get(deal.clientId)?.name ?? '—'),
          amount: deal.amount,
@@ -556,8 +534,8 @@ export function ReportsPage() {
 
    const handleSalesExportPDF = () => {
       const columns = SALES_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
-      const rows: ExportRow[] = salesDeals.map((deal, i) => ({
-         index: String(dealIndexMap.get(deal.id) ?? i + 1),
+      const rows: ExportRow[] = salesDeals.map((deal) => ({
+         index: String(deal.id),
          title: deal.title,
          clientName: firstName(clientMap.get(deal.clientId)?.name ?? '—'),
          amount: formatCurrency(deal.amount),
@@ -616,8 +594,8 @@ export function ReportsPage() {
          { key: 'company', label: 'Компания' },
          { key: 'createdAt', label: 'Дата добавления', numFmt: 'dd.mm.yyyy' },
       ]
-      const rows: ExportRow[] = newClientsData.map((c, i) => ({
-         clientId: clientIndexMap.get(c.id) ?? i + 1,
+      const rows: ExportRow[] = newClientsData.map((c) => ({
+         clientId: c.id,
          name: c.name,
          company: c.company,
          createdAt: new Date(c.createdAt),
@@ -628,8 +606,8 @@ export function ReportsPage() {
 
    const handleNewClientsExportPDF = () => {
       const columns = NEW_CLIENTS_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
-      const rows: ExportRow[] = newClientsData.map((c, i) => ({
-         clientId: String(clientIndexMap.get(c.id) ?? i + 1),
+      const rows: ExportRow[] = newClientsData.map((c) => ({
+         clientId: c.id,
          name: c.name,
          company: c.company,
          createdAt: formatDate(c.createdAt),
@@ -646,8 +624,8 @@ export function ReportsPage() {
          { key: 'dealCount', label: 'Количество сделок', numFmt: '#,##0' },
          { key: 'completedTasks', label: 'Завершённые задачи', numFmt: '#,##0' },
       ]
-      const rows: ExportRow[] = activityData.map((r, i) => ({
-         clientId: clientIndexMap.get(r.clientId) ?? i + 1,
+      const rows: ExportRow[] = activityData.map((r) => ({
+         clientId: r.clientId,
          name: fullNameMap.get(r.clientId) ?? r.name,
          dealCount: r.dealCount,
          completedTasks: r.completedTasks,
@@ -659,8 +637,8 @@ export function ReportsPage() {
    const handleActivityExportPDF = () => {
       const fullNameMap = new Map(userClients.map((c) => [c.id, c.name]))
       const columns = ACTIVITY_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
-      const rows: ExportRow[] = activityData.map((r, i) => ({
-         clientId: String(clientIndexMap.get(r.clientId) ?? i + 1),
+      const rows: ExportRow[] = activityData.map((r) => ({
+         clientId: r.clientId,
          name: fullNameMap.get(r.clientId) ?? r.name,
          dealCount: String(r.dealCount),
          completedTasks: String(r.completedTasks),
@@ -690,8 +668,8 @@ export function ReportsPage() {
    }
 
    const handleActiveTasksExportExcel = () => {
-      const rows: ExportRow[] = activeTasksData.map((r, i) => ({
-         taskId: taskIndexMap.get(r.taskId) ?? i + 1,
+      const rows: ExportRow[] = activeTasksData.map((r) => ({
+         taskId: r.taskId,
          title: r.title,
          assigneeName: r.assigneeName,
          status: r.status,
@@ -703,8 +681,8 @@ export function ReportsPage() {
 
    const handleActiveTasksExportPDF = () => {
       const columns = TASK_REPORT_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
-      const rows: ExportRow[] = activeTasksData.map((r, i) => ({
-         taskId: String(taskIndexMap.get(r.taskId) ?? i + 1),
+      const rows: ExportRow[] = activeTasksData.map((r) => ({
+         taskId: r.taskId,
          title: r.title,
          assigneeName: r.assigneeName,
          status: r.status,
@@ -715,8 +693,8 @@ export function ReportsPage() {
    }
 
    const handleOverdueTasksExportExcel = () => {
-      const rows: ExportRow[] = overdueTasksData.map((r, i) => ({
-         taskId: taskIndexMap.get(r.taskId) ?? i + 1,
+      const rows: ExportRow[] = overdueTasksData.map((r) => ({
+         taskId: r.taskId,
          title: r.title,
          assigneeName: r.assigneeName,
          status: r.status,
@@ -728,8 +706,8 @@ export function ReportsPage() {
 
    const handleOverdueTasksExportPDF = () => {
       const columns = TASK_REPORT_COLUMNS.map((c) => ({ key: c.key, label: c.label }))
-      const rows: ExportRow[] = overdueTasksData.map((r, i) => ({
-         taskId: String(taskIndexMap.get(r.taskId) ?? i + 1),
+      const rows: ExportRow[] = overdueTasksData.map((r) => ({
+         taskId: r.taskId,
          title: r.title,
          assigneeName: r.assigneeName,
          status: r.status,
@@ -778,10 +756,10 @@ export function ReportsPage() {
                         ? <p className={styles.empty}>Нет данных за выбранный период</p>
                         : (
                            <div className={styles.cardsGrid}>
-                              {salesPageDeals.map((deal, i) => (
+                              {salesPageDeals.map((deal) => (
                                  <div key={deal.id} className={styles.card}>
                                     <div className={styles.cardTop}>
-                                       <span className={styles.cardId}>{dealIndexMap.get(deal.id) ?? i + 1}</span>
+                                       <span className={styles.cardId}>{deal.id}</span>
                                        <span className={styles.cardClient}>{firstName(clientMap.get(deal.clientId)?.name ?? '—')}</span>
                                        <span className={styles.cardMeta}>{deal.title}</span>
                                     </div>
@@ -817,10 +795,10 @@ export function ReportsPage() {
                            {salesPageDeals.length === 0 ? (
                               <p className={styles.empty}>Нет данных за выбранный период</p>
                            ) : (
-                              salesPageDeals.map((deal, i) => (
+                              salesPageDeals.map((deal) => (
                                  <div key={deal.id} className={styles.tableRow}>
                                     <span className={styles.cell}>
-                                       {dealIndexMap.get(deal.id) ?? i + 1}
+                                       {deal.id}
                                     </span>
                                     <span className={styles.cell}>{deal.title}</span>
                                     <span className={styles.cell}>
@@ -931,12 +909,12 @@ export function ReportsPage() {
                         ? <p className={styles.empty}>Нет данных за выбранный период</p>
                         : (
                            <div className={styles.cardsGrid}>
-                              {newClientsPageData.map((client, i) => (
+                              {newClientsPageData.map((client) => (
                                  <div key={client.id} className={`${styles.card} ${styles.newClientsCard}`}>
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>
                                           <span className={styles.cardPrefixLabel}>id</span>
-                                          {clientIndexMap.get(client.id) ?? i + 1}
+                                          {client.id}
                                        </span>
                                        <span className={styles.cardClient}>
                                           <span className={styles.cardPrefixLabel}>Клиент</span>
@@ -975,9 +953,9 @@ export function ReportsPage() {
                            {newClientsPageData.length === 0 ? (
                               <p className={styles.empty}>Нет данных за выбранный период</p>
                            ) : (
-                              newClientsPageData.map((client, i) => (
+                              newClientsPageData.map((client) => (
                                  <div key={client.id} className={styles.tableRow}>
-                                    <span className={styles.cell}>{clientIndexMap.get(client.id) ?? i + 1}</span>
+                                    <span className={styles.cell}>{client.id}</span>
                                     <span className={styles.cell}>{firstName(client.name)}</span>
                                     <span className={styles.cell}>{client.company}</span>
                                     <span className={`${styles.cell} ${styles.cellRight}`}>{formatDate(client.createdAt)}</span>
@@ -1004,12 +982,12 @@ export function ReportsPage() {
                         ? <p className={styles.empty}>Нет данных за выбранный период</p>
                         : (
                            <div className={styles.cardsGrid}>
-                              {activityPageData.map((row, i) => (
+                              {activityPageData.map((row) => (
                                  <div key={row.clientId} className={`${styles.card} ${styles.activityCard}`}>
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>
                                           <span className={styles.cardPrefixLabel}>id</span>
-                                          {clientIndexMap.get(row.clientId) ?? i + 1}
+                                          {row.clientId}
                                        </span>
                                        <span className={styles.cardClient}>{row.name}</span>
                                     </div>
@@ -1049,9 +1027,9 @@ export function ReportsPage() {
                            {activityPageData.length === 0 ? (
                               <p className={styles.empty}>Нет данных за выбранный период</p>
                            ) : (
-                              activityPageData.map((row, i) => (
+                              activityPageData.map((row) => (
                                  <div key={row.clientId} className={styles.tableRow}>
-                                    <span className={styles.cell}>{clientIndexMap.get(row.clientId) ?? i + 1}</span>
+                                    <span className={styles.cell}>{row.clientId}</span>
                                     <span className={styles.cell}>{row.name}</span>
                                     <span className={styles.cell}>{row.dealCount}</span>
                                     <span className={styles.cell}>{row.completedTasks}</span>
@@ -1082,12 +1060,12 @@ export function ReportsPage() {
                         ? <p className={styles.empty}>Нет данных за выбранный период</p>
                         : (
                            <div className={styles.cardsGrid}>
-                              {activeTasksPageData.map((row, i) => (
+                              {activeTasksPageData.map((row) => (
                                  <div key={row.taskId} className={`${styles.card} ${styles[`taskRow_${row.statusKey}`]} ${styles.taskCard} ${styles.activeTaskCard}`}>
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>
                                           <span className={styles.cardPrefixLabel}>id</span>
-                                          {taskIndexMap.get(row.taskId) ?? i + 1}
+                                          {row.taskId}
                                        </span>
                                        <span className={styles.cardClient}>{row.title}</span>
                                        <span className={styles.cardMeta}>{row.assigneeName}</span>
@@ -1124,9 +1102,9 @@ export function ReportsPage() {
                            {activeTasksPageData.length === 0 ? (
                               <p className={styles.empty}>Нет данных за выбранный период</p>
                            ) : (
-                              activeTasksPageData.map((row, i) => (
+                              activeTasksPageData.map((row) => (
                                  <div key={row.taskId} className={`${styles.tableRow} ${styles[`taskRow_${row.statusKey}`]}`}>
-                                    <span className={styles.cell}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
+                                    <span className={styles.cell}>{row.taskId}</span>
                                     <span className={styles.cell}>{row.title}</span>
                                     <span className={styles.cell}>{row.assigneeName}</span>
                                     <span className={`${styles.cell} ${styles[`taskStatus_${row.statusKey}`]}`}>{row.status}</span>
@@ -1154,12 +1132,12 @@ export function ReportsPage() {
                         ? <p className={styles.empty}>Нет просроченных задач за выбранный период</p>
                         : (
                            <div className={styles.cardsGrid}>
-                              {overdueTasksPageData.map((row, i) => (
+                              {overdueTasksPageData.map((row) => (
                                  <div key={row.taskId} className={`${styles.card} ${styles.taskRow_overdue} ${styles.taskCard} ${styles.overdueTaskCard}`}>
                                     <div className={styles.cardTop}>
                                        <span className={styles.cardId}>
                                           <span className={styles.cardPrefixLabel}>id</span>
-                                          {taskIndexMap.get(row.taskId) ?? i + 1}
+                                          {row.taskId}
                                        </span>
                                        <span className={styles.cardClient}>{row.title}</span>
                                        <span className={styles.cardMeta}>{row.assigneeName}</span>
@@ -1196,9 +1174,9 @@ export function ReportsPage() {
                            {overdueTasksPageData.length === 0 ? (
                               <p className={styles.empty}>Нет просроченных задач за выбранный период</p>
                            ) : (
-                              overdueTasksPageData.map((row, i) => (
+                              overdueTasksPageData.map((row) => (
                                  <div key={row.taskId} className={`${styles.tableRow} ${styles[`taskRow_${row.statusKey}`]}`}>
-                                    <span className={styles.cell}>{taskIndexMap.get(row.taskId) ?? i + 1}</span>
+                                    <span className={styles.cell}>{row.taskId}</span>
                                     <span className={styles.cell}>{row.title}</span>
                                     <span className={styles.cell}>{row.assigneeName}</span>
                                     <span className={`${styles.cell} ${styles[`taskStatus_${row.statusKey}`]}`}>{row.status}</span>
